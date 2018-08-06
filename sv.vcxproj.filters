@@ -30,12 +30,18 @@
     <ClInclude Include="src\include\GarrysMod\Lua\UserData.h">
       <Filter>Include\GarrysMod\Lua</Filter>
     </ClInclude>
+    <ClInclude Include="src\addon_launcher.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Console.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="src\gm_example.cpp">
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\addon_launcher.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

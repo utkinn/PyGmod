@@ -1,2 +1,4 @@
-.vs/
-python_extensions/build/
+.vs
+*.obj
+python_extensions/build
+*.*log

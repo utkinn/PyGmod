@@ -1,4 +1,7 @@
 .vs
 *.obj
-python_extensions/build
+python_extensions/*
+!python_extensions/*.py
+!python_extensions/*.pyx
+!python_extensions/*.pxd
 *.*log

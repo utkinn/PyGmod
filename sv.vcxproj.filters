@@ -33,6 +33,7 @@
     <ClInclude Include="src\addon_launcher.hpp">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="python_extensions\luastack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Console.cpp">
@@ -44,5 +45,11 @@
     <ClCompile Include="src\addon_launcher.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="python_extensions\luastack.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="python_extensions\gpy_startup.pyx" />
+    <None Include="python_extensions\PyLuaBase.pxd" />
+    <None Include="python_extensions\PyLuaBase.pyx" />
   </ItemGroup>
 </Project>

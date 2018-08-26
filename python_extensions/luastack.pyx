@@ -1,18 +1,12 @@
 # distutils: language = c++
 
-try:
-    from sys import lua_interface_addr
-except ImportError:
-    raise RuntimeError("this script is ran by GPython and should not be ran manually")
-
 from libcpp cimport bool
 from LuaBase cimport ILuaBase
 
 cpdef enum Special:
     GLOBAL, ENVIRONMENT, REGISTRY
 
-cdef int _addr = lua_interface_addr
-cdef ILuaBase* lua = <ILuaBase*> _addr
+cdef ILuaBase* lua = NULL
 
 def push_special(int type):
     lua.PushSpecial(type)
@@ -52,3 +46,7 @@ def get_number(int stack_pos=-1):
 
 def get_bool(int stack_pos=-1):
     return lua.GetBool(stack_pos)
+
+cdef public setup(ILuaBase* base):
+    global lua
+    lua = base

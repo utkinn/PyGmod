@@ -75,6 +75,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="python_extensions\luastack.h" />
     <ClInclude Include="src\addon_launcher.hpp" />
     <ClInclude Include="src\Console.hpp" />
     <ClInclude Include="src\include\GarrysMod\Lua\Interface.h" />
@@ -83,9 +84,15 @@
     <ClInclude Include="src\include\GarrysMod\Lua\UserData.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="python_extensions\luastack.cpp" />
     <ClCompile Include="src\addon_launcher.cpp" />
     <ClCompile Include="src\Console.cpp" />
     <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="python_extensions\gpy_startup.pyx" />
+    <None Include="python_extensions\PyLuaBase.pxd" />
+    <None Include="python_extensions\PyLuaBase.pyx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

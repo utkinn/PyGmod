@@ -14,6 +14,8 @@ const auto PYTHON_ADDONS_PATH_STR = PYTHON_ADDONS_PATH.string();
 const auto PYTHON_ADDONS_PATH_ABSOLUTE_STR = fs::absolute(PYTHON_ADDONS_PATH).string();
 
 void launchAddons(Console& cons) {
+	PyRun_SimpleString((string("import sys;sys.path.append('") + fs::path("garrysmod\\lua\\bin").string() + string("')")).c_str());
+
 	cons.log("Started addon loading process");
 
 	// Checking if Python addons directory exists at all.

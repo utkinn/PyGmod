@@ -1,5 +1,7 @@
 #include "Console.hpp"
 
+using std::to_string;
+
 void Console::println(const char* message) {
 	lua->PushSpecial(SPECIAL_GLOB);  // Pushing global table to stack
 
@@ -15,15 +17,11 @@ void Console::log(const char* message) {
 }
 
 void Console::error(const char* message) {
-	char buffer[512] = "ERROR: ";
-	strcat_s(buffer, 512, message);
-	log(buffer);
+	log(("ERROR: " + string(message)).c_str());
 }
 
 void Console::warn(const char* message) {
-	char buffer[512] = "WARN: ";
-	strcat_s(buffer, 512, message);
-	log(buffer);
+	log(("WARNING: " + string(message)).c_str());
 }
 
 void Console::println(string message) {
@@ -31,31 +29,29 @@ void Console::println(string message) {
 }
 
 void Console::log(string message) {
-	println("[GPython] " + message);
+	log(message.c_str());
 }
 
 void Console::error(string message) {
-	log("ERROR: " + message);
+	error(message.c_str());
 }
 
 void Console::warn(string message) {
-	log("WARN: " + message);
+	warn(message.c_str());
 }
 
 void Console::println(int message) {
-	char buffer[10];
-	itoa(message, buffer, 10);
-	println(buffer);
+	println(to_string(message));
 }
 
 void Console::log(int message) {
-	println("[GPython] " + message);
+	log(to_string(message));
 }
 
 void Console::error(int message) {
-	log("ERROR: " + message);
+	error(to_string(message));
 }
 
 void Console::warn(int message) {
-	log("WARN: " + message);
+	warn(to_string(message));
 }

@@ -9,24 +9,42 @@
 using namespace GarrysMod::Lua;
 using std::to_string;
 
+// Adds "luastack" and "gmodstreams" modules to builtins and initializes them.
+void addAndInitializeGPythonBuiltins() {
+    PyImport_AppendInittab("luastack", PyInit_luastack);
+	PyImport_AppendInittab("gmodstreams", PyInit_gmodstreams);
+}
+
+// Sets the "lua" variable in the "luastack" module to the pointer to ILuaBase.
+void giveILuaBasePtrToLuastack(ILuaBase* ptr) {
+    PyImport_ImportModule("luastack");
+    setup(LUA);  // Declaration and definition of this function is in "luastack.pyx"
+}
+
+// Redirects the Python stdout and stderr to Garry's Mod console.
+void redirectIO_toGmod() {
+    PyImport_ImportModule("gmodstreams");
+    // set_stream() uses "luastack" module and don't need ILuaBase pointer to be passed here.
+    // Declaration and defintion of this function is in "gmodstreams.pyx".
+    set_stream();
+}
+
 GMOD_MODULE_OPEN() {
 	Console cons(LUA);
 
 	cons.log("Binary module loaded");
 
-	PyImport_AppendInittab("luastack", PyInit_luastack);
-	PyImport_AppendInittab("gmodstreams", PyInit_gmodstreams);
+    addAndInitializeGPythonBuiltins();
+
 	Py_Initialize();
 	cons.log("Python initialized!");
 
-    //PyRun_SimpleString("import sys;sys.stdout=sys.stderr=open('gpy.log', 'a+');print(1)");
+    giveILuaBasePtrToLuastack(LUA);
+    
+    redirectIO_toGmod();
 
-	PyImport_ImportModule("luastack");
-    setup(LUA);
-	PyImport_ImportModule("gmodstreams");
-    set_stream();
     if (PyErr_Occurred()) {
-        cons.error("Setup fail");
+        cons.error("Setup failed");
         return -1;
     }
 
@@ -35,8 +53,6 @@ GMOD_MODULE_OPEN() {
     PyObject *globals = PyObject_GetAttrString(mainModule, "__dict__");
     Py_INCREF(globals);
 
-	//PyRun_SimpleString(("import sys; sys.lua_interface_addr = " + to_string((int) LUA)).c_str());
-	//cons.log("Set sys.lua_interface_addr to " + to_string((int) LUA));
 	launchAddons(cons, globals);
 
     Py_DECREF(globals);

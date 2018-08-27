@@ -25,7 +25,7 @@ void launchAddons(Console& cons, PyObject *globals) {
 	// Checking if Python addons directory exists at all.
 	// Issuing a warning and finishing loading if it doesn't exist.
 	if (!fs::is_directory(PYTHON_ADDONS_PATH)) {
-		cons.log("WARN: " + PYTHON_ADDONS_PATH_STR + " (" + PYTHON_ADDONS_PATH_ABSOLUTE_STR + ") directory does not exist");
+		cons.warn(PYTHON_ADDONS_PATH_STR + " (" + PYTHON_ADDONS_PATH_ABSOLUTE_STR + ") directory does not exist");
 		return;
 	}
 
@@ -34,7 +34,7 @@ void launchAddons(Console& cons, PyObject *globals) {
 		// Trying to create Python addon folder iterator
 		iter = fs::directory_iterator(PYTHON_ADDONS_PATH);
 	} catch (fs::filesystem_error) {
-		cons.log("ERROR: Can't create directory_iterator for path " + PYTHON_ADDONS_PATH.string() + " (" + fs::absolute(PYTHON_ADDONS_PATH).string() + ")");
+		cons.error("Can't create directory_iterator for path " + PYTHON_ADDONS_PATH.string() + " (" + fs::absolute(PYTHON_ADDONS_PATH).string() + ")");
 		return;
 	}
 

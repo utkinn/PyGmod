@@ -1,13 +1,13 @@
 # distutils: language = c++
 
-# from lua_state cimport lua_State
-
 # ctypedef int (*CFunc) (lua_State *L)
 
 from libcpp cimport bool
 
 cdef extern from "../src/include/GarrysMod/Lua/LuaBase.h" namespace "GarrysMod::Lua":
     cdef cppclass ILuaBase:
+        # Some methods are left commented because they are currently unused.
+
         # int Top()
         # void Push(int iStackPos)
         void Pop(int iAmt)

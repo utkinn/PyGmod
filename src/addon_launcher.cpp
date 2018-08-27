@@ -14,7 +14,6 @@ const auto PYTHON_ADDONS_PATH_STR = PYTHON_ADDONS_PATH.string();
 const auto PYTHON_ADDONS_PATH_ABSOLUTE_STR = fs::absolute(PYTHON_ADDONS_PATH).string();
 
 void launchAddons(Console& cons, PyObject *globals) {
-	//PyRun_SimpleString((string("import sys,pprint;sys.path.append('") + fs::path("garrysmod\\lua\\bin").string() + string("')")).c_str());
 	PyRun_SimpleString((string("import sys,pprint;sys.path.append('garrysmod\\\\lua\\\\bin')")).c_str());  // Temporary stub
     if (PyErr_Occurred()) {
         cons.error("Can't append path");
@@ -43,7 +42,7 @@ void launchAddons(Console& cons, PyObject *globals) {
 	for (auto& dir : iter) {
 		const fs::path initPath(dir.path() / fs::path("python\\__init__.py"));  // Path of the assumed addon init script
 		if (!fs::is_regular_file(initPath)) continue;  // Skipping the current directory if there is no init script
-		
+
 		const string initPathStr = initPath.string();  // Init script path as string
 		cons.log("Found addon init script: " + initPathStr);
 		cons.log("Loading " + initPathStr);

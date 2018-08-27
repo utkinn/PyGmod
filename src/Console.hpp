@@ -6,7 +6,7 @@
 using namespace GarrysMod::Lua;
 using std::string;
 
-// Provides access for Garry's Mod developer console logging.
+// Provides printing and logging functionality to Garry's Mod console.
 class Console {
 public:
 	Console(ILuaBase *lua) : lua(lua) {};
@@ -36,7 +36,7 @@ public:
 	// Prints "[GPython] ERROR: " + message to the console.
 	void error(const char* message);
 
-	// Prints "[GPython] WARN: " + message to the console.
+	// Prints "[GPython] WARNING: " + message to the console.
 	void warn(const char* message);
 
 	// int overloads
@@ -50,7 +50,7 @@ public:
 	// Prints "[GPython] ERROR: " + message to the console.
 	void error(int message);
 
-	// Prints "[GPython] WARN: " + message to the console.
+	// Prints "[GPython] WARNING: " + message to the console.
 	void warn(int message);
 
 private:

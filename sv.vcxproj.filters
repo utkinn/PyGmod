@@ -34,6 +34,7 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="python_extensions\luastack.h" />
+    <ClInclude Include="python_extensions\gmodstreams.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Console.cpp">
@@ -46,10 +47,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="python_extensions\luastack.cpp" />
+    <ClCompile Include="python_extensions\gmodstreams.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="python_extensions\gpy_startup.pyx" />
-    <None Include="python_extensions\PyLuaBase.pxd" />
-    <None Include="python_extensions\PyLuaBase.pyx" />
+    <None Include="python_extensions\gmodstreams.pyx" />
   </ItemGroup>
 </Project>

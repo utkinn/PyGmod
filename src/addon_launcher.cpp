@@ -13,8 +13,13 @@ const auto PYTHON_ADDONS_PATH_STR = PYTHON_ADDONS_PATH.string();
 // Absolute PYTHON_ADDONS_PATH as string.
 const auto PYTHON_ADDONS_PATH_ABSOLUTE_STR = fs::absolute(PYTHON_ADDONS_PATH).string();
 
-void launchAddons(Console& cons) {
-	PyRun_SimpleString((string("import sys;sys.path.append('") + fs::path("garrysmod\\lua\\bin").string() + string("')")).c_str());
+void launchAddons(Console& cons, PyObject *globals) {
+	//PyRun_SimpleString((string("import sys,pprint;sys.path.append('") + fs::path("garrysmod\\lua\\bin").string() + string("')")).c_str());
+	PyRun_SimpleString((string("import sys,pprint;sys.path.append('garrysmod\\\\lua\\\\bin')")).c_str());  // Temporary stub
+    if (PyErr_Occurred()) {
+        cons.error("Can't append path");
+        return;
+    }
 
 	cons.log("Started addon loading process");
 
@@ -44,8 +49,16 @@ void launchAddons(Console& cons) {
 		cons.log("Loading " + initPathStr);
 
 		const char* cPath = initPathStr.c_str();  // Init script path as C-style string
-		FILE *file = _Py_fopen(cPath, "r");  // Opening the script file
-		PyRun_SimpleFileEx(file, cPath, 1);  // Running the script. "1" is for closing the script after its execution.
+		//FILE *file = _Py_fopen(cPath, "r");  // Opening the script file
+		//PyRun_SimpleFileEx(file, cPath, 1);  // Running the script. "1" is for closing the script after its execution.
+        //PyObject *locals = PyDict_New();
+        //PyRun_FileEx(file, cPath, Py_file_input, globals, locals, 1);
+        //Py_DECREF(locals);
+        PyRun_SimpleString("sys.path.append('garrysmod\\\\addons_python');pprint.pprint(sys.path);import GPythonTest.python;del sys.path[-1]");  // Temporary stub
+        if (PyErr_Occurred()) {
+            cons.error("During execution");
+            return;
+        }
 
 		cons.log("Loaded " + initPathStr);
 	}

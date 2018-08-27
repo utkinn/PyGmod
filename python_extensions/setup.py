@@ -5,6 +5,6 @@ from Cython.Build import cythonize
 
 setup(
     name = 'GPython',
-    version = '0.1.0-alpha',
-    ext_modules = cythonize("luastack.pyx"),
+    version = '0.3.0-alpha',
+    ext_modules = cythonize(["luastack.pyx", "gmodstreams.pyx"]),
 )

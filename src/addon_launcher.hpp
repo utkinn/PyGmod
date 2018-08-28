@@ -8,4 +8,4 @@
 #include "Console.hpp"
 
 // Runs __init__.py scripts of all Python addons from PYTHON_ADDONS_PATH directory.
-void launchAddons(Console& cons, PyObject *globals);
+void launchAddons(Console& cons);

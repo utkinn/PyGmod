@@ -29,6 +29,11 @@ void redirectIO_toGmod() {
     set_stream();
 }
 
+// Redirects the Python stdout and stderr to "gpy.log" for debugging errors which prevent Garry's Mod IO from working.
+void redirectIO_toLogFile() {
+    PyRun_SimpleString("import sys; sys.stdout = sys.stderr = open('gpy.log', 'w+')");
+}
+
 GMOD_MODULE_OPEN() {
 	Console cons(LUA);
 
@@ -42,21 +47,14 @@ GMOD_MODULE_OPEN() {
     giveILuaBasePtrToLuastack(LUA);
     
     redirectIO_toGmod();
+    //redirectIO_toLogFile();
 
     if (PyErr_Occurred()) {
         cons.error("Setup failed");
         return -1;
     }
 
-    PyObject *mainModule = PyImport_AddModule("__main__");
-    Py_INCREF(mainModule);
-    PyObject *globals = PyObject_GetAttrString(mainModule, "__dict__");
-    Py_INCREF(globals);
-
-	launchAddons(cons, globals);
-
-    Py_DECREF(globals);
-    Py_DECREF(mainModule);
+	launchAddons(cons);
 
     if (PyErr_Occurred()) {
         cons.error("Something went wrong");

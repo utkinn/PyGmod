@@ -21,7 +21,7 @@ extensions = [
 ]
 
 setup(name='GPython',
-      version='0.3.0-alpha',
+      version='0.4a',
       ext_modules=cythonize(extensions),
       cmdclass={
           'build_ext': build_ext,

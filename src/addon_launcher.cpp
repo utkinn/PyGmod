@@ -70,9 +70,19 @@ bool checkInitScriptPresence(Console& cons, fs::path addonDir) {
     return exists;
 }
 
+// Prints a traceback surrounded by bars.
+void printTraceback(Console& cons) {
+    PyErr_Print();
+}
+
 // Imports an addon from given addon directory.
 void importAddon(Console& cons, fs::path addonDir) {
-    Py_DECREF(PyImport_ImportModule((getLastPathComponent(addonDir) + ".python").c_str()));
+    PyObject *addon = PyImport_ImportModule((getLastPathComponent(addonDir) + ".python").c_str());
+    if (addon != nullptr)  // exception not occurred
+        Py_DECREF(addon);  // Freeing reference
+    else
+        printTraceback(cons);
+
     deleteLastPath();
 
     if (PyErr_Occurred()) {

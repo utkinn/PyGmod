@@ -3,7 +3,7 @@
 """Functions for manipulating the Lua stack. The lowest level of Garry's Mod Lua interoperability."""
 
 from libcpp cimport bool
-from LuaBase cimport ILuaBase
+from .LuaBase cimport ILuaBase
 
 
 cpdef enum Special:

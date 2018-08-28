@@ -4,7 +4,7 @@
 
 from libcpp cimport bool
 
-cdef extern from "../src/include/GarrysMod/Lua/LuaBase.h" namespace "GarrysMod::Lua":
+cdef extern from "../../src/include/GarrysMod/Lua/LuaBase.h" namespace "GarrysMod::Lua":
     cdef cppclass ILuaBase:
         # Some methods are left commented because they are currently unused.
 

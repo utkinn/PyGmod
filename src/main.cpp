@@ -18,7 +18,7 @@ void addAndInitializeGPythonBuiltins() {
 // Sets the "lua" variable in the "luastack" module to the pointer to ILuaBase.
 void giveILuaBasePtrToLuastack(ILuaBase* ptr) {
     PyImport_ImportModule("luastack");
-    setup(LUA);  // Declaration and definition of this function is in "luastack.pyx"
+    setup(ptr);  // Declaration and definition of this function is in "luastack.pyx"
 }
 
 // Redirects the Python stdout and stderr to Garry's Mod console.

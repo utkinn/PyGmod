@@ -4,15 +4,15 @@
 #include "Console.hpp"
 #include "addon_launcher.hpp"
 #include "../../python_extensions/luastack.h"
-#include "../../python_extensions/gmodstreams.h"
+#include "../../python_extensions/streams.h"
 
 using namespace GarrysMod::Lua;
 using std::to_string;
 
-// Adds "luastack" and "gmodstreams" modules to builtins and initializes them.
+// Adds "luastack" and "streams" modules to builtins and initializes them.
 void addAndInitializeGPythonBuiltins() {
     PyImport_AppendInittab("luastack", PyInit_luastack);
-	PyImport_AppendInittab("gmodstreams", PyInit_gmodstreams);
+	PyImport_AppendInittab("streams", PyInit_streams);
 }
 
 // Sets the "lua" variable in the "luastack" module to the pointer to ILuaBase.
@@ -23,9 +23,9 @@ void giveILuaBasePtrToLuastack(ILuaBase* ptr) {
 
 // Redirects the Python stdout and stderr to Garry's Mod console.
 void redirectIO_toGmod() {
-    PyImport_ImportModule("gmodstreams");
+    PyImport_ImportModule("streams");
     // set_stream() uses "luastack" module and don't need ILuaBase pointer to be passed here.
-    // Declaration and defintion of this function is in "gmodstreams.pyx".
+    // Declaration and defintion of this function is in "streams.pyx".
     set_stream();
 }
 

@@ -75,7 +75,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="python_extensions\gmodstreams.h" />
+    <ClInclude Include="python_extensions\streams.h" />
     <ClInclude Include="python_extensions\luastack.h" />
     <ClInclude Include="src\addon_launcher.hpp" />
     <ClInclude Include="src\Console.hpp" />
@@ -85,14 +85,14 @@
     <ClInclude Include="src\include\GarrysMod\Lua\UserData.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="python_extensions\gmodstreams.cpp" />
+    <ClCompile Include="python_extensions\streams.cpp" />
     <ClCompile Include="python_extensions\luastack.cpp" />
     <ClCompile Include="src\addon_launcher.cpp" />
     <ClCompile Include="src\Console.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="python_extensions\gmodstreams.pyx" />
+    <None Include="python_extensions\streams.pyx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

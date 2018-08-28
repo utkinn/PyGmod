@@ -72,7 +72,12 @@ bool checkInitScriptPresence(Console& cons, fs::path addonDir) {
 
 // Prints a traceback surrounded by bars.
 void printTraceback(Console& cons) {
+    const string bar = "________________________________________________________________________________________________________________________\n";
+    Color c{ 255, 0, 0 };
+
+    cons.println(bar, c);
     PyErr_Print();
+    cons.println(bar, c);
 }
 
 // Imports an addon from given addon directory.

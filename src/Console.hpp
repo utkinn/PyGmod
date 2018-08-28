@@ -6,6 +6,10 @@
 using namespace GarrysMod::Lua;
 using std::string;
 
+struct Color {
+    int r, g, b;
+};
+
 // Provides printing and logging functionality to Garry's Mod console.
 class Console {
 public:
@@ -15,6 +19,9 @@ public:
 
 	// Prints message to the console.
 	void println(string message);
+    
+    // Prints message to the console with a color.
+	void println(string message, Color& color);
 
 	// Prints "[GPython] " + message to the console.
 	void log(string message);
@@ -30,6 +37,9 @@ public:
 	// Prints message to the console.
 	void println(const char* message);
 
+    // Prints message to the console with a color.
+    void println(const char* message, Color& color);
+
 	// Prints "[GPython] " + message to the console.
 	void log(const char* message);
 
@@ -43,6 +53,9 @@ public:
 
 	// Prints message to the console.
 	void println(int message);
+
+    // Prints message to the console with a color.
+    void println(int message, Color& color);
 
 	// Prints "[GPython] " + message to the console.
 	void log(int message);

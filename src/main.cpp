@@ -26,7 +26,7 @@ void redirectIO_toGmod() {
     PyImport_ImportModule("streams");
     // set_stream() uses "luastack" module and don't need ILuaBase pointer to be passed here.
     // Declaration and defintion of this function is in "streams.pyx".
-    set_stream();
+    set_streams();
 }
 
 // Redirects the Python stdout and stderr to "gpy.log" for debugging errors which prevent Garry's Mod IO from working.
@@ -46,8 +46,8 @@ GMOD_MODULE_OPEN() {
 
     giveILuaBasePtrToLuastack(LUA);
     
-    redirectIO_toGmod();
     //redirectIO_toLogFile();
+    redirectIO_toGmod();
 
     if (PyErr_Occurred()) {
         cons.error("Setup failed");

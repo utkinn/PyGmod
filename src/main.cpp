@@ -3,8 +3,8 @@
 
 #include "Console.hpp"
 #include "addon_launcher.hpp"
-#include "../../python_extensions/luastack.h"
-#include "../../python_extensions/streams.h"
+#include "../../python_extensions/gmod/luastack.h"
+#include "../../python_extensions/gmod/streams.h"
 
 using namespace GarrysMod::Lua;
 using std::to_string;

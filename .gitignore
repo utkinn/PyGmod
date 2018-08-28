@@ -1,8 +1,9 @@
 .vs
 *.obj
-python_extensions/*
-!python_extensions/*.py
-!python_extensions/*.pyx
-!python_extensions/*.pxd
-*.*log
+python_extensions/build
+python_extensions/*/*.c
+python_extensions/*/*.cpp
+python_extensions/*/*.h
+python_extensions/*/*.pyd
+*log
 *.vcxproj.user

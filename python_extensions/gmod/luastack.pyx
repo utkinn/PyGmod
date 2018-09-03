@@ -69,6 +69,45 @@ cpdef enum ValueType:
     FILE
 
 
+type_names = [
+    "nil",
+    "bool",
+    "lightuserdata",
+    "number",
+    "string",
+    "table",
+    "function",
+    "userdata",
+    "thread",
+    "entity",
+    "vector",
+    "angle",
+    "physobj",
+    "save",
+    "restore",
+    "damageinfo",
+    "effectdata",
+    "movedata",
+    "recipientfilter",
+    "usercmd",
+    "vehicle",
+    "material",
+    "panel",
+    "particle",
+    "particleemitter",
+    "texture",
+    "usermsg",
+    "convar",
+    "mesh",
+    "matrix",
+    "sound",
+    "pixelvishandle",
+    "dlight",
+    "video",
+    "file"
+]
+
+
 # ILuaBase pointer.
 # Being set in setup().
 cdef ILuaBase* lua = NULL
@@ -95,7 +134,7 @@ def equal(int a, int b):
     following the semantics of the Lua ``==`` operator (that is, may call metamethods).
     Otherwise returns ``False``. Also returns ``False`` if any of the indices is non valid.
     """
-    return bool(lua.Equal(a, b))
+    return <bool> lua.Equal(a, b)
 
 
 def raw_equal(int a, int b):
@@ -104,7 +143,7 @@ def raw_equal(int a, int b):
     ``a`` and ``b`` are primitively equal (that is, without calling metamethods).
     Otherwise returns ``False``. Also returns ``False`` if any of the indices are non valid.
     """
-    return bool(lua.RawEqual(a, b))
+    return <bool> lua.RawEqual(a, b)
 
 
 def insert(int destination_index):
@@ -255,3 +294,30 @@ def get_bool(int stack_pos=-1):
     Negative values can be used for indexing the stack from top.
     """
     return lua.GetBool(stack_pos)
+
+
+def create_ref():
+    """Saves the value at the top of the stack to a reference, pops it and returns the reference."""
+    return lua.ReferenceCreate()
+
+
+def free_ref(int ref):
+    """Frees the reference."""
+    lua.ReferenceFree(ref)
+
+
+def push_ref(int ref):
+    """Pushes the value saved in the reference."""
+    lua.ReferencePush(ref)
+
+
+def get_type(int stack_pos):
+    return lua.GetType(stack_pos)
+
+
+def get_type_name(ValueType type):
+    return lua.GetTypeName(type)
+
+
+def is_type(int stack_pos, ValueType type):
+    return lua.IsType(stack_pos, type)

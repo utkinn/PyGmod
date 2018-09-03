@@ -83,6 +83,19 @@ class LuaObject:
             get_table(-2)
             return LuaObject()
 
+    def __call__(self, *args):
+        push_ref(self._ref)
+        for val in args:
+            self._push_value(val)
+        call(len(args), -1)
+        returns = []
+        while top():
+            returns.insert(0, LuaObject())
+        if len(returns) == 1:
+            return returns[0]
+        elif len(returns) > 1:
+            return tuple(returns)
+
 
 push_special(Special.GLOBAL)
 G = LuaObject()

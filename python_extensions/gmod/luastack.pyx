@@ -1,6 +1,22 @@
 # distutils: language = c++
 
-"""Functions for manipulating the Lua stack. The lowest level of Garry's Mod Lua interoperability."""
+"""Functions for manipulating the Lua stack. The lowest level of Garry's Mod Lua interoperability.
+
+Lua uses a virtual stack to pass values to and from C.
+Each element in this stack represents a Lua value (``nil``, number, string, etc.).
+
+For convenience, most query operations in the API do not follow a strict stack discipline.
+Instead, they can refer to any element in the stack by using an index:
+
+- A positive index represents an absolute stack position (starting at **1**)
+- A negative index represents an offset relative to the top of the stack.
+
+More specifically, if the stack has **n** elements, then index **1** represents the first element
+(that is, the element that was pushed onto the stack first) and index **n** represents the last element;
+index **-1** also represents the last element (that is, the element at the top)
+and index **-n** represents the first element.
+We say that an index is valid if it lies between **1** and the stack top (that is, if **1 ≤ abs(index) ≤ top**).
+"""
 
 from libcpp cimport bool
 from .LuaBase cimport ILuaBase
@@ -21,60 +37,156 @@ cdef public setup(ILuaBase* base):
     lua = base
 
 
+def top():
+    """Returns the index of the top element in the stack.
+
+    Because indices start at 1,
+    this result is equal to the number of elements in the stack (and so 0 means an empty stack).
+    """
+    return lua.Top()
+
+
+def equal(int a, int b):
+    """
+    Returns ``True`` if the two values in acceptable indices ``a`` and ``b`` are equal,
+    following the semantics of the Lua ``==`` operator (that is, may call metamethods).
+    Otherwise returns ``False``. Also returns ``False`` if any of the indices is non valid.
+    """
+    return bool(lua.Equal(a, b))
+
+
+def raw_equal(int a, int b):
+    """
+    Returns ``True`` if the two values in acceptable indices
+    ``a`` and ``b`` are primitively equal (that is, without calling metamethods).
+    Otherwise returns ``False``. Also returns ``False`` if any of the indices are non valid.
+    """
+    return bool(lua.RawEqual(a, b))
+
+
+def insert(int destination_index):
+    """Moves the top element into the given valid index, shifting up the elements above this index to open space."""
+    lua.Insert(destination_index)
+
+
+def throw_error(const char* message):
+    """Raises an error with the given :class:`bytes` message.
+
+    It also adds at the beginning of the message the file name and the line number where the error occurred,
+    if this information is available.
+    """
+    lua.ThrowError(message)
+
+
+def create_table():
+    """Creates a new empty table and pushes it onto the stack."""
+    lua.CreateTable()
+
+
+def push(int stack_pos):
+    lua.Push(stack_pos)
+
+
 def push_special(int type):
     lua.PushSpecial(type)
 
 
 def push_nil():
-    """Pushes ``nil`` to the top of the stack."""
+    """Pushes a ``nil`` value onto the stack."""
     lua.PushNil()
 
 
-def push_string(const char* val):
-    """Pushes the specified ``bytes`` to the top of the stack."""
-    lua.PushString(val)
-
-
 def push_number(double num):
-    """Pushes the specified ``int``/``float`` to the top of the stack."""
+    """Pushes a number with value ``num`` onto the stack."""
     lua.PushNumber(num)
 
 
+def push_string(const char* val):
+    """Pushes a ``bytes`` onto the stack."""
+    lua.PushString(val)
+
+
 def push_bool(bool val):
-    """Pushes the specified boolean to the top of the stack."""
+    """Pushes a boolean value ``val`` onto the stack."""
     lua.PushBool(val)
 
 
 def pop(int amt=1):
-    """Removes ``amt`` values from the top of the stack."""
+    """Pops ``amt`` elements from the stack."""
     lua.Pop(amt)
 
 
 def get_table(int stack_pos):
+    """
+    Pushes onto the stack the value ``t[k]``, where ``t`` is the value at the given valid index ``stack_pos``
+    and ``k`` is the value at the top of the stack.
+
+    This function pops the key from the stack (putting the resulting value in its place).
+    """
     lua.GetTable(stack_pos)
 
 
 def get_field(int stack_pos, const char* name):
-    """Gets the value for key ``name`` of a table at index ``stack_pos``
-       of the stack and puts that value to the top of the stack.
-
-    Negative values can be used for indexing the stack from top.
-    """
+    """Pushes onto the stack the value ``t[name]``, where ``t`` is the value at the given valid index ``stack_pos``."""
     lua.GetField(stack_pos, name)
 
 
-def set_field(int stack_pos, const char* name):
-    """Sets the topmost item in the stack as the value
-       for key ``name`` of a table at index ``stack_pos`` of the stack.
+def set_table(int stack_pos):
+    """
+    Does the equivalent to ``t[k] = v``,
+    where ``t`` is the value at the given valid index ``stack_pos``,
+    ``v`` is the value at the top of the stack, and ``k`` is the value just below the top.
 
-    Negative values can be used for indexing the stack from top.
+    This function pops both the key and the value from the stack.
+    """
+    lua.SetTable(stack_pos)
+
+
+def set_field(int stack_pos, const char* name):
+    """
+    Does the equivalent to ``t[k] = v``,
+    where ``t`` is the value at the given valid index ``stack_pos``
+    and ``v`` is the value at the top of the stack.
+
+    This function pops the value from the stack.
     """
     lua.SetField(stack_pos, name)
 
 
 def call(int args, int results):
-    """Calls the topmost function in the stack using ``args`` items after the function as arguments
-       and puts ``results`` items to the top of the stack."""
+    """Calls a function.
+
+    To call a function you must use the following protocol:
+
+    1. The function to be called is pushed onto the stack
+    2. The arguments to the function are pushed in direct order; that is, the first argument is pushed first.
+    3. You call this function; ``args`` is the number of arguments that you pushed onto the stack.
+
+    All arguments and the function value are popped from the stack when the function is called.
+    The function results are pushed onto the stack when the function returns.
+    The number of results is adjusted to ``results``.
+    The function results are pushed onto the stack in direct order (the first result is pushed first),
+    so that after the call the last result is on the top of the stack.
+
+    The following example shows how the host program can do the equivalent to this Lua code::
+
+      a = f("how", t.x, 14)
+
+    Here it is in GPython::
+
+      push_special(Special.GLOBAL)
+      get_field(1, "f")  # function to be called
+      push_string("how")  # 1st argument
+      get_field(1, "t")  # table to be indexed
+      get_field(-1, "x")  # push result of t.x (2nd arg)
+      remove(-2)  # remove 't' from the stack
+      push_number(14)  # 3rd argument
+      call(3, 1)  # call 'f' with 3 arguments and 1 result
+      set_field(1, "a")  # set global 'a'
+
+    Note that the code above is "balanced": at its end, the stack is back to its original configuration.
+    This is considered good programming practice.
+    """
     lua.Call(args, results)
 
 

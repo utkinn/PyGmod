@@ -26,8 +26,51 @@ cpdef enum Special:
     GLOBAL, ENVIRONMENT, REGISTRY
 
 
+cpdef enum ValueType:
+    NIL,
+    BOOL,
+    LIGHTUSERDATA,
+    NUMBER,
+    STRING,
+    TABLE,
+    FUNCTION,
+    USERDATA,
+    THREAD,
+
+    # UserData
+    ENTITY,
+    VECTOR,
+    ANGLE,
+    PHYSOBJ,
+    SAVE,
+    RESTORE,
+    DAMAGEINFO,
+    EFFECTDATA,
+    MOVEDATA,
+    RECIPIENTFILTER,
+    USERCMD,
+    SCRIPTEDVEHICLE,
+
+    # Client Only
+    MATERIAL,
+    PANEL,
+    PARTICLE,
+    PARTICLEEMITTER,
+    TEXTURE,
+    USERMSG,
+
+    CONVAR,
+    IMESH,
+    MATRIX,
+    SOUND,
+    PIXELVISHANDLE,
+    DLIGHT,
+    VIDEO,
+    FILE
+
+
 # ILuaBase pointer.
-# Being set in ``setup()``.
+# Being set in setup().
 cdef ILuaBase* lua = NULL
 
 

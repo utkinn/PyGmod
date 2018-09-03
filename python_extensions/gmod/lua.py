@@ -11,14 +11,14 @@ class Reference:
     def __enter__(self):
         push_ref(self._ref)
 
-    def __exit__(self):
+    def __exit__(self, exc_type, exc_value, traceback):
         pop(1)
 
 
 class LuaObject:
     def __init__(self):
         self._ref = create_ref()
-        self._context = _Reference(self._ref)
+        self._context = Reference(self._ref)
 
     def __del__(self):
         free_ref(self._ref)
@@ -50,20 +50,20 @@ class LuaObject:
             return get_bool(-1)
 
     def _push_kv(self, kv, s):
-        if value is None:
+        if kv is None:
             push_nil()
-        if isinstance(key, int) or isinstance(key, float):
-            push_number(key)
-        elif isinstance(value, LuaObject):
-            push_ref(value._ref)
-        elif isinstance(value, str):
-            push_string(value.encode())
-        elif isinstance(value, bytes):
-            push_string(value)
-        elif isinstance(value, bool):
-            push_bool(value)
+        if isinstance(kv, int) or isinstance(kv, float):
+            push_number(kv)
+        elif isinstance(kv, LuaObject):
+            push_ref(kv._ref)
+        elif isinstance(kv, str):
+            push_string(kv.encode())
+        elif isinstance(kv, bytes):
+            push_string(kv)
+        elif isinstance(kv, bool):
+            push_bool(kv)
         else:
-            raise KeyError(f'unsupported {s} type: {type(key)}')
+            raise kvError(f'unsupported {s} type: {type(kv)}')
 
     def _push_key(self, key):
         self._push_kv(key, 'key')

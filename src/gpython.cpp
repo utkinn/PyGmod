@@ -34,7 +34,7 @@ void redirectIO_toLogFile() {
     PyRun_SimpleString("import sys; sys.stdout = sys.stderr = open('gpy.log', 'w+')");
 }
 
-GMOD_MODULE_OPEN() {
+DLL_EXPORT int gpython_run(lua_State *state, bool client) {
 	Console cons(LUA);
 
 	cons.log("Binary module loaded");
@@ -64,7 +64,7 @@ GMOD_MODULE_OPEN() {
 	return 0;
 }
 
-GMOD_MODULE_CLOSE() {
+DLL_EXPORT int gpython_finalize(lua_State *state) {
 	Console cons(LUA);
 
 	cons.log("Binary module shutting down.");

@@ -9,3 +9,4 @@ python_extensions/*/*.pyd
 *log
 *.vcxproj.user
 build
+*pdb

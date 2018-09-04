@@ -28,10 +28,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>G:\SteamLibrary\steamapps\common\GarrysMod\garrysmod\lua\bin\</OutDir>
-    <IntDir>
-    </IntDir>
-    <TargetName>gmsv_gpython_win32</TargetName>
+    <OutDir>$(SolutionDir)build\</OutDir>
+    <IntDir>shared\</IntDir>
+    <TargetName>gpython</TargetName>
     <TargetExt>.dll</TargetExt>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
@@ -89,7 +88,7 @@
     <ClCompile Include="python_extensions\gmod\streams.cpp" />
     <ClCompile Include="src\addon_launcher.cpp" />
     <ClCompile Include="src\Console.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\gpython.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="python_extensions\streams.pyx" />

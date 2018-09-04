@@ -40,14 +40,14 @@
     <ClCompile Include="src\Console.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="src\addon_launcher.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="python_extensions\gmod\streams.cpp" />
     <ClCompile Include="python_extensions\gmod\luastack.cpp" />
+    <ClCompile Include="src\gpython.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="python_extensions\streams.pyx" />

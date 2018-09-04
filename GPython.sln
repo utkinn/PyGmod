@@ -1,17 +1,43 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sv", "sv.vcxproj", "{3DFB7CE3-FA65-5E43-B09E-F520DFEB934E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "server", "bin_modules\server\server\server.vcxproj", "{4B0642B3-3FF5-4430-B506-FADAED94E6A2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3DFB7CE3-FA65-5E43-B09E-F520DFEB934E} = {3DFB7CE3-FA65-5E43-B09E-F520DFEB934E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
 		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3DFB7CE3-FA65-5E43-B09E-F520DFEB934E}.Debug|Win32.ActiveCfg = Release|Win32
+		{3DFB7CE3-FA65-5E43-B09E-F520DFEB934E}.Debug|Win32.Build.0 = Release|Win32
+		{3DFB7CE3-FA65-5E43-B09E-F520DFEB934E}.Debug|x64.ActiveCfg = Release|Win32
+		{3DFB7CE3-FA65-5E43-B09E-F520DFEB934E}.Debug|x64.Build.0 = Release|Win32
 		{3DFB7CE3-FA65-5E43-B09E-F520DFEB934E}.Release|Win32.ActiveCfg = Release|Win32
 		{3DFB7CE3-FA65-5E43-B09E-F520DFEB934E}.Release|Win32.Build.0 = Release|Win32
+		{3DFB7CE3-FA65-5E43-B09E-F520DFEB934E}.Release|x64.ActiveCfg = Release|Win32
+		{4B0642B3-3FF5-4430-B506-FADAED94E6A2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4B0642B3-3FF5-4430-B506-FADAED94E6A2}.Debug|Win32.Build.0 = Debug|Win32
+		{4B0642B3-3FF5-4430-B506-FADAED94E6A2}.Debug|x64.ActiveCfg = Debug|x64
+		{4B0642B3-3FF5-4430-B506-FADAED94E6A2}.Debug|x64.Build.0 = Debug|x64
+		{4B0642B3-3FF5-4430-B506-FADAED94E6A2}.Release|Win32.ActiveCfg = Release|Win32
+		{4B0642B3-3FF5-4430-B506-FADAED94E6A2}.Release|Win32.Build.0 = Release|Win32
+		{4B0642B3-3FF5-4430-B506-FADAED94E6A2}.Release|x64.ActiveCfg = Release|x64
+		{4B0642B3-3FF5-4430-B506-FADAED94E6A2}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {22A2FEAD-53F9-4308-B285-F29AD8D89888}
 	EndGlobalSection
 EndGlobal

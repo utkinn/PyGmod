@@ -99,3 +99,40 @@ class LuaObject:
 
 push_special(Special.GLOBAL)
 G = LuaObject()
+
+
+def lua_exec(code):
+    """Executes the given Lua code block. Returns nothing."""
+    push_special(Special.GLOBAL)
+
+    get_field(-1, 'RunString')
+    push_string(code.encode())  # Arg 1: code
+    push_string('GPython lua_exec')  # Arg 2: identifier
+    push_bool(True)  # Arg 3: throw error if error occurred during code exec
+
+    call(3, 0) # Call RunString and pop it from the stack
+
+    pop(1)  # GLOBAL
+
+
+def lua_eval(expr):
+    """Evaluates a single Lua expression. Returns :class:`LuaObject` with evaluation result."""
+    push_special(Special.GLOBAL)
+
+    get_field(-1, 'RunString')
+    push_string(f'_gpy_temp = {expr}'.encode())  # Assign expression to temporary var _gpy_temp
+    push_string('GPython lua_eval')
+    push_bool(True)
+
+    call(3, 0)
+
+    # Grabbing the result from _gpy_temp
+    get_field(-1, '_gpy_temp')
+    obj = LuaObject()
+
+    # Cleaning up: setting _gpy_temp to nil
+    push_nil()
+    set_field(-2, '_gpy_temp')
+
+    pop(1)  # GLOBAL
+    return obj

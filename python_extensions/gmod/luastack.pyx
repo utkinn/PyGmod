@@ -198,6 +198,11 @@ def pop(int amt=1):
     lua.Pop(amt)
 
 
+def clear():
+    """Clears the stack."""
+    pop(top())
+
+
 def get_table(int stack_pos):
     """
     Pushes onto the stack the value ``t[k]``, where ``t`` is the value at the given valid index ``stack_pos``

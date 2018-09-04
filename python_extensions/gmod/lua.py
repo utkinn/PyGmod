@@ -49,44 +49,38 @@ class LuaObject:
         with self._context:
             return get_bool(-1)
 
-    def _push_kv(self, kv, s):
-        if kv is None:
+    def _push_key_or_value(self, key_or_value):
+        if key_or_value is None:
             push_nil()
-        if isinstance(kv, int) or isinstance(kv, float):
-            push_number(kv)
-        elif isinstance(kv, LuaObject):
-            push_ref(kv._ref)
-        elif isinstance(kv, str):
-            push_string(kv.encode())
-        elif isinstance(kv, bytes):
-            push_string(kv)
-        elif isinstance(kv, bool):
-            push_bool(kv)
+        if isinstance(key_or_value, int) or isinstance(key_or_value, float):
+            push_number(key_or_value)
+        elif isinstance(key_or_value, LuaObject):
+            push_ref(key_or_value._ref)
+        elif isinstance(key_or_value, str):
+            push_string(key_or_value.encode())
+        elif isinstance(key_or_value, bytes):
+            push_string(key_or_value)
+        elif isinstance(key_or_value, bool):
+            push_bool(key_or_value)
         else:
-            raise kvError(f'unsupported {s} type: {type(kv)}')
-
-    def _push_key(self, key):
-        self._push_kv(key, 'key')
-
-    def _push_value(self, value):
-        self._push_kv(value, 'value')
+            raise TypeError(f'unsupported key/value type: {type(key_or_value)}')
 
     def __setitem__(self, key, value):
         with self._context:
-            self._push_key(key)
-            self._push_value(value)
+            self._push_key_or_value(key)
+            self._push_key_or_value(value)
             set_table(-3)
 
     def __getitem__(self, key):
         with self._context:
-            self._push_key(key)
+            self._push_key_or_value(key)
             get_table(-2)
             return LuaObject()
 
     def __call__(self, *args):
         push_ref(self._ref)
         for val in args:
-            self._push_value(val)
+            self._push_key_or_value(val)
         call(len(args), -1)
         returns = []
         while top():

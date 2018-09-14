@@ -1,5 +1,3 @@
-# distutils: language = c++
-
 """Classes for redirecting IO to Garry's Mod."""
 
 import sys, os
@@ -44,8 +42,13 @@ class GmodConsoleErr(StringIO):
         return len(s)
 
 
-cdef public set_streams():
-    """Sets ``sys.stdout`` and ``sys.stderr`` to a new GmodConsoleOut instance.
-       Being called in ``redirectIO_toGmod()`` in main.cpp of the C++ module."""
+def setup():
+    """
+    Sets ``sys.stdout`` and ``sys.stderr`` to a new GmodConsoleOut instance.
+    Being called in ``redirectIO_toGmod()`` in main.cpp of the C++ module.
+    """
+    print('streams: setup called')
+    debug_print()
     sys.stdout = GmodConsoleOut()
     sys.stderr = GmodConsoleErr()
+    print('streams: setup finished')

@@ -3,10 +3,12 @@
 python_extensions/build
 python_extensions/my_setup.py
 python_extensions/*/*.c
+python_extensions/*.cpp
 python_extensions/*/*.cpp
+python_extensions/*.h
 python_extensions/*/*.h
-python_extensions/*/*.pyd
+*.pyd
 *log
 *.vcxproj.user
 build
-*pdb
+*.pdb

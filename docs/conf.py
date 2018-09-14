@@ -102,6 +102,9 @@ html_static_path = ['_static']
 # 'searchbox.html']``.
 #
 # html_sidebars = {}
+import corlab_theme
+html_theme      = 'corlab_theme'
+html_theme_path = [ corlab_theme.get_theme_dir() ]
 
 
 # -- Options for HTMLHelp output ---------------------------------------------

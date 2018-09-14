@@ -10,5 +10,6 @@ python_extensions/*/*.h
 *.pyd
 *log
 *.vcxproj.user
-build
+*build
 *.pdb
+*.pyc

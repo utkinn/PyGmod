@@ -80,7 +80,9 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+import corlab_theme
+html_theme      = 'corlab_theme'
+html_theme_path = [ corlab_theme.get_theme_dir() ]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -102,9 +104,6 @@ html_static_path = ['_static']
 # 'searchbox.html']``.
 #
 # html_sidebars = {}
-import corlab_theme
-html_theme      = 'corlab_theme'
-html_theme_path = [ corlab_theme.get_theme_dir() ]
 
 
 # -- Options for HTMLHelp output ---------------------------------------------

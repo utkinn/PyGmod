@@ -1,7 +1,7 @@
-from .luastack import *
+from luastack import *
 
 
-__all__ = ['G']
+__all__ = ['G', 'lua_exec', 'lua_eval']
 
 
 class Reference:

@@ -4,7 +4,7 @@
 #include "Console.hpp"
 #include "addon_launcher.hpp"
 #include "../../python_extensions/gmod/luastack.h"
-#include "../../python_extensions/gmod/streams.h"
+#include "lua2py_interop.hpp"
 
 using namespace GarrysMod::Lua;
 using std::to_string;
@@ -56,6 +56,9 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
         cons.error("Setup failed");
         return -1;
     }
+
+    extendLua(LUA);
+    cons.log("Lua2Python Lua extensions loaded");
 
 	launchAddons(cons);
 

@@ -33,8 +33,10 @@
     <ClInclude Include="src\addon_launcher.hpp">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="python_extensions\gmod\streams.h" />
     <ClInclude Include="python_extensions\gmod\luastack.h" />
+    <ClInclude Include="src\lua2py_interop.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Console.cpp">
@@ -43,13 +45,12 @@
     <ClCompile Include="src\addon_launcher.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="python_extensions\gmod\streams.cpp" />
     <ClCompile Include="python_extensions\gmod\luastack.cpp" />
     <ClCompile Include="src\gpython.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="python_extensions\streams.pyx" />
+    <ClCompile Include="src\lua2py_interop.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

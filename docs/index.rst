@@ -3,13 +3,12 @@ Welcome to GPython's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Module Reference:
+   :glob:
 
+   reference/*
 
+===================
 
-Indices and tables
-==================
-
-* :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`

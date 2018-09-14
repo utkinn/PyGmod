@@ -1,3 +1,8 @@
+"""
+This module provides tools for Garry's Mod Lua interoperability, for example getting, setting values, indexing tables
+and calling functions.
+"""
+
 from luastack import *
 
 

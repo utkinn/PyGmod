@@ -46,15 +46,15 @@ cdef extern from "../src/include/GarrysMod/Lua/LuaBase.h" namespace "GarrysMod::
         # void PushCClosure(CFunc val, int iVars)
         # void PushUserdata(void*)
 
-        # int ReferenceCreate()
-        # void ReferenceFree(int i)
-        # void ReferencePush(int i)
+        int ReferenceCreate()
+        void ReferenceFree(int i)
+        void ReferencePush(int i)
 
         void PushSpecial(int iType)
 
         bool IsType(int iStackPos, int iType)
         int GetType(int iStackPos)
-        # const char* GetTypeName(int iType)
+        const char* GetTypeName(int iType)
         #
         # void CreateMetaTableType(const char* strName, int iType)
         #

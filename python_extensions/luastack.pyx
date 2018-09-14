@@ -20,7 +20,6 @@ We say that an index is valid if it lies between **1** and the stack top (that i
 
 from libcpp cimport bool
 from LuaBase cimport ILuaBase
-from libc.stdint cimport uintptr_t
 
 
 cpdef enum Special:
@@ -70,37 +69,54 @@ cpdef enum ValueType:
     FILE
 
 
+type_names = [
+    "nil",
+    "bool",
+    "lightuserdata",
+    "number",
+    "string",
+    "table",
+    "function",
+    "userdata",
+    "thread",
+    "entity",
+    "vector",
+    "angle",
+    "physobj",
+    "save",
+    "restore",
+    "damageinfo",
+    "effectdata",
+    "movedata",
+    "recipientfilter",
+    "usercmd",
+    "vehicle",
+    "material",
+    "panel",
+    "particle",
+    "particleemitter",
+    "texture",
+    "usermsg",
+    "convar",
+    "mesh",
+    "matrix",
+    "sound",
+    "pixelvishandle",
+    "dlight",
+    "video",
+    "file"
+]
+
+
 # ILuaBase pointer.
 # Being set in setup().
-cdef ILuaBase* server_lua = NULL
-cdef ILuaBase* client_lua = NULL
 cdef ILuaBase* lua = NULL
 
 
-cdef public server_setup(ILuaBase* base):
+cdef public setup(ILuaBase* base):
     """This function is called in ``giveILuaBasePtrToLuastack()`` in ``main.cpp`` of the C++ module."""
-    global server_lua
-    server_lua = base
-    set_realm('s')
-
-
-cdef public client_setup(ILuaBase* base):
-    """This function is called in ``giveILuaBasePtrToLuastack()`` in ``main.cpp`` of the C++ module."""
-    global client_lua
-    client_lua = base
-    set_realm('c')
-
-
-cdef public set_realm(char realm):
     global lua
-    if realm == 's':
-        lua = server_lua
-    elif realm == 'c':
-        lua = client_lua
-
-
-def debug_print():
-    print(<uintptr_t> server_lua, <uintptr_t> client_lua, <uintptr_t> lua)
+    lua = base
 
 
 def top():
@@ -180,6 +196,11 @@ def push_bool(bool val):
 def pop(int amt=1):
     """Pops ``amt`` elements from the stack."""
     lua.Pop(amt)
+
+
+def clear():
+    """Clears the stack."""
+    pop(top())
 
 
 def get_table(int stack_pos):
@@ -278,3 +299,30 @@ def get_bool(int stack_pos=-1):
     Negative values can be used for indexing the stack from top.
     """
     return lua.GetBool(stack_pos)
+
+
+def create_ref():
+    """Saves the value at the top of the stack to a reference, pops it and returns the reference."""
+    return lua.ReferenceCreate()
+
+
+def free_ref(int ref):
+    """Frees the reference."""
+    lua.ReferenceFree(ref)
+
+
+def push_ref(int ref):
+    """Pushes the value saved in the reference."""
+    lua.ReferencePush(ref)
+
+
+def get_type(int stack_pos):
+    return lua.GetType(stack_pos)
+
+
+def get_type_name(ValueType type):
+    return lua.GetTypeName(type)
+
+
+def is_type(int stack_pos, ValueType type):
+    return lua.IsType(stack_pos, type)

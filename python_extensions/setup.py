@@ -12,12 +12,12 @@ from Cython.Build import cythonize, build_ext
 
 
 extensions = [
-    Extension(name='gmod.luastack',
-              sources=['gmod/luastack.pyx'],
+    Extension(name='luastack',
+              sources=['luastack.pyx'],
               language='c++'),
-    Extension(name='gmod.streams',
-              sources=['gmod/streams.pyx'],
-              language='c++'),
+    #Extension(name='gmod.streams',
+    #          sources=['gmod/streams.pyx'],
+    #          language='c++'),
 ]
 
 setup(name='GPython',

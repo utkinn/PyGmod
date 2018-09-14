@@ -6,22 +6,24 @@ There is two realms that are available for executing any user code, whether it b
 
 The **Client** state is basically the game client. It handles things such as visual rendering.
 
-A common issue is to give the client too much freedom, the client should only respond to what the server tells it,
-and not the other way around.
-
 The **Server** state handles things on the server; it's the only state used on Dedicated Servers. This handles things
 like telling entities what to do, controlling weapons/players and all game logic
 (what happens when and how in gamemodes).
+
+You can use :data:`CLIENT` and :data:`SERVER` constants to check the current realm.
 """
 
+from luastack import IN_GMOD
 from .lua import *
 
-# client/server bool constants, same as in GLua
-CLIENT = bool(G['CLIENT'])
-SERVER = not CLIENT
+# Don't define this if we're generating docs
+if IN_GMOD:
+    # client/server bool constants, same as in GLua
+    CLIENT = bool(G['CLIENT'])
+    SERVER = not CLIENT
 
-# String version of the current realm
-REALM = 'client' if CLIENT else 'server'
+    # String version of the current realm
+    REALM = 'client' if CLIENT else 'server'
 
 
 # class RealmError(Exception):

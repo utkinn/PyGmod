@@ -12,7 +12,6 @@ using std::to_string;
 // Adds "luastack" and "streams" modules to builtins and initializes them.
 void addAndInitializeGPythonBuiltins() {
     PyImport_AppendInittab("luastack", PyInit_luastack);
-	PyImport_AppendInittab("streams", PyInit_streams);
 }
 
 // Sets the "lua" variable in the "luastack" module to the pointer to ILuaBase.
@@ -23,10 +22,7 @@ void giveILuaBasePtrToLuastack(ILuaBase* ptr) {
 
 // Redirects the Python stdout and stderr to Garry's Mod console.
 void redirectIO_toGmod() {
-    PyImport_ImportModule("streams");
-    // set_stream() uses "luastack" module and don't need ILuaBase pointer to be passed here.
-    // Declaration and defintion of this function is in "streams.pyx".
-    set_streams();
+    PyRun_SimpleString("import gmod.streams, sys; sys.stdout = gmod.streams.GmodConsoleOut(); sys.stderr = gmod.streams.GmodConsoleErr()");
 }
 
 // Redirects the Python stdout and stderr to "gpy.log" for debugging errors which prevent Garry's Mod IO from working.
@@ -41,7 +37,14 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
 
     addAndInitializeGPythonBuiltins();
 
-	Py_Initialize();
+    if (!client) {
+	    Py_Initialize();
+        PyRun_SimpleString("import sys, os.path; sys.path.append(os.path.abspath('garrysmod\\\\gpython'))");
+    } else {
+        PyThreadState *clientInterp = Py_NewInterpreter();
+        PyThreadState_Swap(clientInterp);
+    }
+    
 	cons.log("Python initialized!");
 
     giveILuaBasePtrToLuastack(LUA);

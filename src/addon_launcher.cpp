@@ -15,20 +15,16 @@ const auto PYTHON_ADDONS_PATH_ABSOLUTE_STR = fs::absolute(PYTHON_ADDONS_PATH).st
 
 // Appends the given path to sys.path.
 void appendPath(const char* pathString) {
-    PyObject *sys = PyImport_ImportModule("sys");
-    PyObject *path = PyObject_GetAttrString(sys, "path");
+    //PyObject *sys = PyImport_ImportModule("sys");
+    PyObject *path = PySys_GetObject("path");
+    Py_INCREF(path);
     PyObject *pathPyString = PyUnicode_FromString(pathString);
 
     PyList_Append(path, pathPyString);
 
     Py_DECREF(pathPyString);
     Py_DECREF(path);
-    Py_DECREF(sys);
-}
-
-// Appends GPython modules directory (garrysmod\gpython\) to sys.path.
-void appendModulesPath() {
-    appendPath("garrysmod\\\\gpython");
+    //Py_DECREF(sys);
 }
 
 // Deletes the last item from sys.path.
@@ -88,7 +84,7 @@ void importAddon(Console& cons, fs::path addonDir) {
     else
         printTraceback(cons);
 
-    deleteLastPath();
+    //deleteLastPath();
 
     if (PyErr_Occurred()) {
         cons.error("During execution of " + addonDir.string());
@@ -97,14 +93,14 @@ void importAddon(Console& cons, fs::path addonDir) {
 }
 
 void launchAddons(Console& cons) {
-    appendModulesPath();
-
 	cons.log("Started addon loading process");
 
 	// Checking if Python addons directory exists at all.
 	// Issuing a warning and finishing loading if it doesn't exist.
 	if (!checkAddonsDirectoryPresence(cons))
 		return;
+
+    appendPath(fs::absolute(PYTHON_ADDONS_PATH).string().c_str());  // Appending "garrysmod\addons_python" to sys.path, so we can import addons from its subdirectiories
 
 	fs::directory_iterator iter;
 	try {
@@ -125,7 +121,6 @@ void launchAddons(Console& cons) {
 
 		cons.log("Found addon: " + dirPathString + ", loading...");
 
-        appendPath(PYTHON_ADDONS_PATH_STR.c_str());  // Appending "garrysmod\addons_python" to sys.path, so we can import addons from its subdirectiories
         importAddon(cons, dirPath);
 
 		cons.log("Loaded " + dirPathString);

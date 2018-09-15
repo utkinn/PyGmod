@@ -38,3 +38,7 @@ Final directory structure should looks like this:
                                                                                ├─ lua.py
                                                                                ├─ ...
                                                                               ...
+
+.. seealso::
+
+    :doc:`Building documentation <building_docs>`

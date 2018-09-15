@@ -24,6 +24,9 @@ if IN_GMOD:
 
     # String version of the current realm
     REALM = 'client' if CLIENT else 'server'
+else:
+    # Dummy definitions to keep imports working
+    CLIENT, SERVER, REALM = None, None, None
 
 
 # class RealmError(Exception):

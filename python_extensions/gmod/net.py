@@ -9,7 +9,7 @@ from .realms import CLIENT
 
 
 class SizeError(Exception):
-    pass
+    """Indicates that there are too many values. Raised by :func:`send` if more than 255 values are passed."""
 
 
 # def register_net_message_name(name):
@@ -22,9 +22,9 @@ class SizeError(Exception):
 def _write_py2py_netmsg_data(values):
     """Appends the message data for sending from Python and receiving in Python.
 
-    #. Pickles all objects.
-    #. Creates a header string which holds data about the pickled objects' lengths.
-    #. Writes the header, then the pickled objects.
+    1. Pickles all objects.
+    2. Creates a header string which holds data about the pickled objects' lengths.
+    3. Writes the header, then the pickled objects.
     """
     values_lst = list(values)  # Creating a copy in case if we got an iterator
     if len(values_lst) > 255:
@@ -60,6 +60,7 @@ def send(message_name, *values, addressee=None, lua_receiver=False):
     :type addressee: Player or iterable[Player] or None
     :param bool lua_receiver: Whether this message is intended to be received by Lua code.
     :raises ValueError: if the addressee is None when sending **from** server.
+    :raises SizeError: if more than 255 values are passed and ``lua_receiver`` is ``False``.
     """
     if not isinstance(message_name, str):
         raise TypeError(f'message name type must be str, not {type(name).__name__}')

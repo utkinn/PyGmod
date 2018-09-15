@@ -101,7 +101,13 @@ G = LuaObject()
 
 
 def lua_exec(code):
-    """Executes the given Lua code block. Returns nothing."""
+    """Executes the given Lua code block. Returns nothing.
+
+    ::
+
+        code = 'MsgN("test")'
+        lua_exec(code)  # 'test' will be printed to the console
+    """
     push_special(Special.GLOBAL)
 
     get_field(-1, 'RunString')
@@ -115,7 +121,19 @@ def lua_exec(code):
 
 
 def lua_eval(expr):
-    """Evaluates a single Lua expression. Returns :class:`LuaObject` with evaluation result."""
+    """Evaluates a single Lua expression. Returns :class:`LuaObject` with evaluation result.
+
+    ::
+
+        expr = 'game.SinglePlayer()'  # Returns "true" if the current session is a single player game
+        single_player_luaobj = lua_eval(expr)
+        # Remember that we need to convert the evaluation result to bool explicitly
+        single_player = bool(single_player_luaobj)
+
+        # Now we can use it
+        if single_player:
+            ...
+    """
     push_special(Special.GLOBAL)
 
     get_field(-1, 'RunString')

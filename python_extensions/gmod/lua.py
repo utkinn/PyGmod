@@ -3,10 +3,12 @@ This module provides tools for Garry's Mod Lua interoperability, for example get
 and calling functions.
 """
 
+from abc import ABC, abstractmethod
+
 from luastack import *
 
 
-__all__ = ['G', 'lua_exec', 'lua_eval']
+__all__ = ['G', 'lua_exec', 'lua_eval', 'table', 'LuaObjectWrapper']
 
 
 class Reference:
@@ -20,8 +22,29 @@ class Reference:
         pop(1)
 
 
+def push_key_or_value(key_or_value):
+    """Pushes a Python value of a primitive type or a ``LuaObject``."""
+    if key_or_value is None:
+        push_nil()
+    if isinstance(key_or_value, int) or isinstance(key_or_value, float):
+        push_number(key_or_value)
+    elif isinstance(key_or_value, LuaObject):
+        push_ref(key_or_value._ref)
+    elif isinstance(key_or_value, str):
+        push_string(key_or_value.encode())
+    elif isinstance(key_or_value, bytes):
+        push_string(key_or_value)
+    elif isinstance(key_or_value, bool):
+        push_bool(key_or_value)
+    elif isinstance(key_or_value, LuaObjectWrapper):
+        push_ref(key_or_value.lua_obj._ref)
+    else:
+        raise TypeError(f'unsupported key/value type: {type(key_or_value)}')
+
+
 class LuaObject:
     def __init__(self):
+        """Creates a ``LuaObject`` which points to the topmost stack value and pops it."""
         self._ref = create_ref()
         self._context = Reference(self._ref)
 
@@ -30,11 +53,13 @@ class LuaObject:
 
     @property
     def type(self):
+        """Returns the :class:`luastack.ValueType` of the held value."""
         with self._context:
             return get_type(-1)
 
     @property
     def type_name(self):
+        """Returns the :class:`str` type representation of the held value."""
         with self._context:
             return get_type_name(get_type(-1))
 
@@ -54,38 +79,22 @@ class LuaObject:
         with self._context:
             return get_bool(-1)
 
-    def _push_key_or_value(self, key_or_value):
-        if key_or_value is None:
-            push_nil()
-        if isinstance(key_or_value, int) or isinstance(key_or_value, float):
-            push_number(key_or_value)
-        elif isinstance(key_or_value, LuaObject):
-            push_ref(key_or_value._ref)
-        elif isinstance(key_or_value, str):
-            push_string(key_or_value.encode())
-        elif isinstance(key_or_value, bytes):
-            push_string(key_or_value)
-        elif isinstance(key_or_value, bool):
-            push_bool(key_or_value)
-        else:
-            raise TypeError(f'unsupported key/value type: {type(key_or_value)}')
-
     def __setitem__(self, key, value):
         with self._context:
-            self._push_key_or_value(key)
-            self._push_key_or_value(value)
+            push_key_or_value(key)
+            push_key_or_value(value)
             set_table(-3)
 
     def __getitem__(self, key):
         with self._context:
-            self._push_key_or_value(key)
+            push_key_or_value(key)
             get_table(-2)
             return LuaObject()
 
     def __call__(self, *args):
         push_ref(self._ref)
         for val in args:
-            self._push_key_or_value(val)
+            push_key_or_value(val)
         call(len(args), -1)
         returns = []
         while top():
@@ -96,6 +105,7 @@ class LuaObject:
             return tuple(returns)
 
 
+# Lua global table
 push_special(Special.GLOBAL)
 G = LuaObject()
 
@@ -153,3 +163,34 @@ def lua_eval(expr):
 
     pop(1)  # GLOBAL
     return obj
+
+
+def table(iterable):
+    """Creates and returns a :class:`LuaObject` of a new Lua table from ``iterable``."""
+    create_table()
+    push_special(Special.GLOBAL)
+    get_field(-1, 'table')
+    for v in iterable:
+        get_field(-1, 'insert')
+        push(1)  # Repush that new table
+        try:
+            push_key_or_value(v)
+        except TypeError:  # In case of unpushable value
+            clear()
+            raise  # Reraising TypeError
+        call(2, 0)
+    pop(2)  # Pop the 'table' namespace and the global table
+
+    return LuaObject()  # The new table is grabbed and popped by the LuaObject's constructor
+
+
+class LuaObjectWrapper:
+    """Abstract class for Lua class wrappers, such as :class:`gmod.entity.Entity`.
+
+    Subclasses must implement a ``lua_obj`` property that should return the wrapped :class:``LuaObject``.
+    """
+
+    @property
+    @abstractmethod
+    def lua_obj(self):
+        pass

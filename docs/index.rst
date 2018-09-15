@@ -6,6 +6,16 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
 
 .. toctree::
     :maxdepth: 2
+    :caption: For Users:
+
+.. toctree::
+    :maxdepth: 2
+    :caption: For Addon developers:
+
+    lua_reference
+
+.. toctree::
+    :maxdepth: 2
     :caption: For GPython internal developers:
 
     for_gpython_developers/building

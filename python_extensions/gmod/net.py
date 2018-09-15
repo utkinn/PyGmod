@@ -3,9 +3,10 @@ This module provides tools for communication between *client* and *server*.
 """
 
 import pickle
+from collections.abc import Iterable
 
-from .lua import G
-from .realms import CLIENT
+from .lua import G, table
+from .realms import CLIENT, SERVER
 
 
 class SizeError(Exception):
@@ -55,8 +56,13 @@ def send(message_name, *values, addressee=None, lua_receiver=False):
     :raises ValueError: if the addressee is None when sending **from** server.
     :raises SizeError: if more than 255 values are passed and ``lua_receiver`` is ``False``.
     """
+    
     if not isinstance(message_name, str):
         raise TypeError(f'message name type must be str, not {type(name).__name__}')
+
+    if SERVER and not (isinstance(addressee, Player) or isinstance(addressee, Iterable)):
+        raise ValueError('addressee must be a Player object or an iterable of Player objects '
+                        f'when sending messages from server. Got {type(addressee).__name__} instead.')
 
     G['net']['Start']()
 
@@ -70,4 +76,9 @@ def send(message_name, *values, addressee=None, lua_receiver=False):
     if CLIENT:
         G['net']['SendToServer']()
     else:
-        G['net']['Send'](...)  # TODO
+        if isinstance(addressee, Player):
+            G['net']['Send'](addressee)
+        elif isinstance(addressee, Iterable):
+            G['net']['Send'](table(addressee))
+        else:
+            assert False

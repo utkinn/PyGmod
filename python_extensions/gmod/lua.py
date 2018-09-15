@@ -23,7 +23,7 @@ class Reference:
 
 
 def push_key_or_value(key_or_value):
-    """Pushes a Python value of a primitive type or a ``LuaObject``."""
+    """Pushes a Python value of a primitive type or a :class:`LuaObject`."""
     if key_or_value is None:
         push_nil()
     if isinstance(key_or_value, int) or isinstance(key_or_value, float):
@@ -44,7 +44,7 @@ def push_key_or_value(key_or_value):
 
 class LuaObject:
     def __init__(self):
-        """Creates a ``LuaObject`` which points to the topmost stack value and pops it."""
+        """Creates a :class:`LuaObject` which points to the topmost stack value and pops it."""
         self._ref = create_ref()
         self._context = Reference(self._ref)
 
@@ -187,7 +187,7 @@ def table(iterable):
 class LuaObjectWrapper:
     """Abstract class for Lua class wrappers, such as :class:`gmod.entity.Entity`.
 
-    Subclasses must implement a ``lua_obj`` property that should return the wrapped :class:``LuaObject``.
+    Subclasses must implement a ``lua_obj`` property that should return the wrapped :class:`LuaObject`.
     """
 
     @property

@@ -12,13 +12,6 @@ class SizeError(Exception):
     """Indicates that there are too many values. Raised by :func:`send` if more than 255 values are passed."""
 
 
-# def register_net_message_name(name):
-#     """Wrapper for GLua's `util.AddNetworkString <http://wiki.garrysmod.com/page/util/AddNetworkString>`_."""
-#     if not isinstance(name, str):
-#         raise TypeError(f'message name type must be str, not {type(name).__name__}')
-#     G['util']['AddNetworkString'](name)
-
-
 def _write_py2py_netmsg_data(values):
     """Appends the message data for sending from Python and receiving in Python.
 
@@ -53,8 +46,8 @@ def send(message_name, *values, addressee=None, lua_receiver=False):
     """Sends a net message to the opposite realm.
 
     :param str message_name: The message name. Has to be registered with
-                             `util.AddNetworkString <http://wiki.garrysmod.com/page/util/AddNetworkString>`_
-                             GLua function or :func:`register_net_message_name`.
+                             `util.AddNetworkString() <http://wiki.garrysmod.com/page/util/AddNetworkString>`_
+                             GLua function.
     :param iterable values: Iterable of values to append to this message.
     :param addressee: Message addressee. Ignored when sending **to** server, but required when sending **from** server.
     :type addressee: Player or iterable[Player] or None

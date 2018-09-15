@@ -19,13 +19,17 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
     :caption: For GPython internal developers:
 
     for_gpython_developers/building
+    reference/internal
 
 .. toctree::
-    :maxdepth: 2
     :caption: Module Reference:
+    :maxdepth: 1
     :glob:
 
-    reference/*
+    reference/lua
+    reference/net
+    reference/realms
+    reference/internal
 
 ===================
 

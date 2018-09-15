@@ -30,6 +30,8 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
 
     reference/lua
     reference/net
+    reference/player
+    reference/entity
     reference/realms
     reference/internal
 

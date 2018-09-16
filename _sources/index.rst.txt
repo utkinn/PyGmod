@@ -9,9 +9,10 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
     :caption: For Users:
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
     :caption: For Addon developers:
 
+    for_addon_developers/tutorial
     lua_reference
 
 .. toctree::

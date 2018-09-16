@@ -1,0 +1,202 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Addon creation tutorial &#8212; GPython 0.8a documentation</title>
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Lua Reference" href="../lua_reference.html" />
+    <link rel="prev" title="Welcome to GPython’s documentation!" href="../index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../lua_reference.html" title="Lua Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to GPython’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">GPython 0.8a documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="addon-creation-tutorial">
+<h1>Addon creation tutorial<a class="headerlink" href="#addon-creation-tutorial" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial you will learn how to create a simple “Hello world” addon with GPython.</p>
+<div class="section" id="create-addon-folders">
+<h2>1. Create addon folders<a class="headerlink" href="#create-addon-folders" title="Permalink to this headline">¶</a></h2>
+<p>Open the folder where your Garry’s Mod is installed. It’s path approximately looks like
+<code class="docutils literal notranslate"><span class="pre">...\SteamApps\GarrysMod\</span></code>.</p>
+<div class="section" id="if-you-don-t-know-where-your-garry-s-mod-copy-is-installed">
+<h3>If you don’t know where your Garry’s Mod copy is installed<a class="headerlink" href="#if-you-don-t-know-where-your-garry-s-mod-copy-is-installed" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>Open <strong>Steam</strong>.</li>
+<li>Go to <strong>Library</strong> tab.</li>
+</ol>
+<img alt="../_images/library_tab.png" src="../_images/library_tab.png" />
+<ol class="arabic simple" start="3">
+<li>Right-click <strong>Garry’s Mod</strong> and select <strong>Properties</strong> option.</li>
+</ol>
+<img alt="../_images/properties_option.png" src="../_images/properties_option.png" />
+<ol class="arabic simple" start="4">
+<li>Select <strong>Local files</strong> tab and click <strong>Browse local files…</strong> button. Your Garry’s Mod folder will be opened.</li>
+</ol>
+<img alt="../_images/browse_local_files.png" src="../_images/browse_local_files.png" />
+<hr class="docutils" />
+<p>Go to <code class="docutils literal notranslate"><span class="pre">garrysmod\addons\</span></code> folder.</p>
+<img alt="../_images/garrysmod_addons.png" src="../_images/garrysmod_addons.png" />
+<p>Create a new folder here. Let’s name it <code class="docutils literal notranslate"><span class="pre">hello_world</span></code>.</p>
+<img alt="../_images/hello_world_folder.png" src="../_images/hello_world_folder.png" />
+<p>Open it and create <code class="docutils literal notranslate"><span class="pre">python</span></code> folder. Then, in <code class="docutils literal notranslate"><span class="pre">python</span></code> folder, create <code class="docutils literal notranslate"><span class="pre">__autorun__</span></code> folder.</p>
+<p>The folder structure should look like:</p>
+<img alt="../_images/addon_folder_structure.png" src="../_images/addon_folder_structure.png" />
+</div>
+</div>
+<div class="section" id="create-the-initialization-script">
+<h2>2. Create the initialization script<a class="headerlink" href="#create-the-initialization-script" title="Permalink to this headline">¶</a></h2>
+<p>When GPython sees your addon each time you start a new game in Garry’s Mod, GPython runs
+<code class="docutils literal notranslate"><span class="pre">(your</span> <span class="pre">addon</span> <span class="pre">folder</span> <span class="pre">name,</span> <span class="pre">&quot;hello_world&quot;</span> <span class="pre">in</span> <span class="pre">our</span> <span class="pre">case)\python\__autorun__\__init__.py</span></code>. As you can see,
+we have to create <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> in <code class="docutils literal notranslate"><span class="pre">__autorun__</span></code> folder to do anything useful.</p>
+<hr class="docutils" />
+<ol class="arabic">
+<li><p class="first">Open <strong>Notepad</strong>.</p>
+</li>
+<li><p class="first">Paste this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Go to <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Save</span> <span class="pre">as...</span></code> and find <code class="docutils literal notranslate"><span class="pre">hello_world\python\__autorun__\</span></code> folder.</p>
+</li>
+<li><p class="first">Open <strong>File type</strong> box and select <strong>All files (*.*)</strong> option instead of <strong>Text document (*.txt)</strong>.</p>
+</li>
+<li><p class="first">Change <strong>Encoding</strong> to <strong>UTF-8</strong>.</p>
+</li>
+<li><p class="first">Type <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> to <strong>File name</strong> field and click <strong>Save</strong>.</p>
+</li>
+</ol>
+<img alt="../_images/init_script.png" src="../_images/init_script.png" />
+</div>
+<div class="section" id="seeing-it-running">
+<h2>3. Seeing it running<a class="headerlink" href="#seeing-it-running" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Launch <strong>Garry’s Mod</strong>.</li>
+<li>Go to <strong>Settings</strong>, <strong>Keyboard</strong> tab. Click <strong>Advanced…</strong></li>
+</ol>
+<img alt="../_images/gmod_advanced.png" src="../_images/gmod_advanced.png" />
+<ol class="arabic simple" start="3">
+<li>Tick <strong>Enable developer console</strong> flag.</li>
+<li>Start a new game and wait for it to load.</li>
+<li>Press <code class="docutils literal notranslate"><span class="pre">~</span></code> key (just below <code class="docutils literal notranslate"><span class="pre">Esc</span></code>). You will see <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">world!</span></code> printed two times:
+first time with the blue color, second time with the yellow color.</li>
+</ol>
+<img alt="../_images/hello_world_msgs.png" src="../_images/hello_world_msgs.png" />
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Most likely you won’t see <code class="docutils literal notranslate"><span class="pre">Hello,</span> <span class="pre">world!</span></code> messages going one after another.
+You might have to look closely to find them among other console messages.</p>
+</div>
+<hr class="docutils" />
+<p>Congratulations! You just made your first GPython addon.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/docs-logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Addon creation tutorial</a><ul>
+<li><a class="reference internal" href="#create-addon-folders">1. Create addon folders</a><ul>
+<li><a class="reference internal" href="#if-you-don-t-know-where-your-garry-s-mod-copy-is-installed">If you don’t know where your Garry’s Mod copy is installed</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#create-the-initialization-script">2. Create the initialization script</a></li>
+<li><a class="reference internal" href="#seeing-it-running">3. Seeing it running</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Welcome to GPython’s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../lua_reference.html"
+                        title="next chapter">Lua Reference</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/for_addon_developers/tutorial.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../lua_reference.html" title="Lua Reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to GPython’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">GPython 0.8a documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, javabird25 (Protocs).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+    </div>
+  </body>
+</html>

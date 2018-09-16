@@ -1,29 +1,23 @@
 
-
-<!doctype html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>player: player utilities &#8212; GPython 0.8a documentation</title>
-    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="entity: entity utilities" href="entity.html" />
-    <link rel="prev" title="net: communication between Client and Server" href="net.html" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <!--[if lt IE 9]>
-    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
-    <![endif]-->
+    <link rel="prev" title="net: communication between Client and Server" href="net.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -42,7 +36,35 @@
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">GPython 0.8a documentation</a> &#187;</li> 
       </ul>
-    </div>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-gmod.player">
+<span id="player-player-utilities"></span><h1><code class="docutils literal notranslate"><span class="pre">player</span></code>: player utilities<a class="headerlink" href="#module-gmod.player" title="Permalink to this headline">¶</a></h1>
+<p>This module contains the <a class="reference internal" href="#gmod.player.Player" title="gmod.player.Player"><code class="xref py py-class docutils literal notranslate"><span class="pre">Player</span></code></a> class which wraps the Lua <code class="docutils literal notranslate"><span class="pre">Player</span></code> class.</p>
+<dl class="class">
+<dt id="gmod.player.Player">
+<em class="property">class </em><code class="descclassname">gmod.player.</code><code class="descname">Player</code><a class="headerlink" href="#gmod.player.Player" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class that wraps the <code class="docutils literal notranslate"><span class="pre">Player</span></code> Lua class.</p>
+<dl class="classmethod">
+<dt id="gmod.player.Player.get_by_user_id">
+<em class="property">classmethod </em><code class="descname">get_by_user_id</code><span class="sig-paren">(</span><em>user_id: int</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.player.Player.get_by_user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <a class="reference internal" href="#gmod.player.Player" title="gmod.player.Player"><code class="xref py py-class docutils literal notranslate"><span class="pre">Player</span></code></a> instance with the user ID <code class="docutils literal notranslate"><span class="pre">user_id</span></code>.</p>
+<p><em>Lua similar:</em> <a class="reference external" href="http://wiki.garrysmod.com/page/Global/Player">Player()</a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
@@ -70,34 +92,6 @@
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <div class="section" id="module-gmod.player">
-<span id="player-player-utilities"></span><h1><code class="docutils literal notranslate"><span class="pre">player</span></code>: player utilities<a class="headerlink" href="#module-gmod.player" title="Permalink to this headline">¶</a></h1>
-<p>This module contains the <a class="reference internal" href="#gmod.player.Player" title="gmod.player.Player"><code class="xref py py-class docutils literal notranslate"><span class="pre">Player</span></code></a> class which wraps the Lua <code class="docutils literal notranslate"><span class="pre">Player</span></code> class.</p>
-<dl class="class">
-<dt id="gmod.player.Player">
-<em class="property">class </em><code class="descclassname">gmod.player.</code><code class="descname">Player</code><a class="headerlink" href="#gmod.player.Player" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class that wraps the <code class="docutils literal notranslate"><span class="pre">Player</span></code> Lua class.</p>
-<dl class="classmethod">
-<dt id="gmod.player.Player.get_by_user_id">
-<em class="property">classmethod </em><code class="descname">get_by_user_id</code><span class="sig-paren">(</span><em>user_id: int</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.player.Player.get_by_user_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the <a class="reference internal" href="#gmod.player.Player" title="gmod.player.Player"><code class="xref py py-class docutils literal notranslate"><span class="pre">Player</span></code></a> instance with the user ID <code class="docutils literal notranslate"><span class="pre">user_id</span></code>.</p>
-<p><em>Lua similar:</em> <a class="reference external" href="http://wiki.garrysmod.com/page/Global/Player">Player()</a></p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-
-
-          </div>
         </div>
       </div>
       <div class="clearer"></div>

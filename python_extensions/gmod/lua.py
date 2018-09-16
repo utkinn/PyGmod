@@ -106,8 +106,11 @@ class LuaObject:
 
 
 # Lua global table
-push_special(Special.GLOBAL)
-G = LuaObject()
+if IN_GMOD:
+    push_special(Special.GLOBAL)
+    G = LuaObject()
+else:
+    G = None
 
 
 def lua_exec(code):

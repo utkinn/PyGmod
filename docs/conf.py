@@ -15,7 +15,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('..\\python_extensions'))
+sys.path.insert(0, os.path.abspath('../python_extensions'))
 
 
 # -- Project information -----------------------------------------------------
@@ -105,6 +105,9 @@ html_static_path = ['_static']
 # 'searchbox.html']``.
 #
 # html_sidebars = {}
+
+html_logo = os.path.abspath('../logos/docs-logo.png')
+html_favicon = os.path.abspath('../logos/favicon.ico')
 
 
 # -- Options for HTMLHelp output ---------------------------------------------

@@ -13,7 +13,7 @@ __all__ = ['G', 'lua_exec', 'lua_eval', 'table', 'LuaObjectWrapper']
 
 class Reference:
     def __init__(self, ref):
-        self._ref = ref
+        self._ref = int(ref)
 
     def __enter__(self):
         push_ref(self._ref)

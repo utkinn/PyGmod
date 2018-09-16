@@ -13,3 +13,4 @@ python_extensions/*/*.h
 *build
 *.pdb
 *.pyc
+*.idb

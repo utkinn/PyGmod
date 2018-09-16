@@ -3,7 +3,7 @@
 
 #include "Console.hpp"
 #include "addon_launcher.hpp"
-#include "../../python_extensions/gmod/luastack.h"
+#include "../../python_extensions/luastack.h"
 #include "lua2py_interop.hpp"
 
 using namespace GarrysMod::Lua;
@@ -18,6 +18,7 @@ void addAndInitializeGPythonBuiltins() {
 void giveILuaBasePtrToLuastack(ILuaBase* ptr) {
     PyImport_ImportModule("luastack");
     setup(ptr);  // Declaration and definition of this function is in "luastack.pyx"
+    PyRun_SimpleString("import luastack; luastack.IN_GMOD = True");
 }
 
 // Redirects the Python stdout and stderr to Garry's Mod console.

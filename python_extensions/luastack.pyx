@@ -128,12 +128,12 @@ cdef public setup(ILuaBase* base):
 def _stack(func):
     """Decorator for stack manipulation functions.
 
-    Makes the decorated function to be called only if :const:`IN_GMOD` is `True`.
+    Makes the decorated function to be called only if :const:`IN_GMOD` is ``True``.
     """
 
     def decorated(*args, **kwargs):
         if IN_GMOD:
-            func(*args, **kwargs)
+            return func(*args, **kwargs)
 
     return decorated
 

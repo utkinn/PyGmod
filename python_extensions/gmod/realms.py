@@ -13,11 +13,11 @@ like telling entities what to do, controlling weapons/players and all game logic
 You can use :data:`CLIENT` and :data:`SERVER` constants to check the current realm.
 """
 
-from luastack import IN_GMOD
+import luastack
 from .lua import *
 
 # Don't define this if we're generating docs
-if IN_GMOD:
+if luastack.IN_GMOD:
     # client/server bool constants, same as in GLua
     CLIENT = bool(G['CLIENT'])
     SERVER = not CLIENT

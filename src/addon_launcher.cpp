@@ -5,7 +5,7 @@ using namespace std;
 namespace fs = filesystem;
 
 // fs::path of directory where Python addons reside.
-const auto PYTHON_ADDONS_PATH = fs::path("garrysmod\\addons_python");
+const auto PYTHON_ADDONS_PATH = fs::path("garrysmod\\addons");
 
 // PYTHON_ADDONS_PATH as string.
 const auto PYTHON_ADDONS_PATH_STR = PYTHON_ADDONS_PATH.string();
@@ -15,7 +15,6 @@ const auto PYTHON_ADDONS_PATH_ABSOLUTE_STR = fs::absolute(PYTHON_ADDONS_PATH).st
 
 // Appends the given path to sys.path.
 void appendPath(const char* pathString) {
-    //PyObject *sys = PyImport_ImportModule("sys");
     PyObject *path = PySys_GetObject("path");
     Py_INCREF(path);
     PyObject *pathPyString = PyUnicode_FromString(pathString);
@@ -24,7 +23,6 @@ void appendPath(const char* pathString) {
 
     Py_DECREF(pathPyString);
     Py_DECREF(path);
-    //Py_DECREF(sys);
 }
 
 // Deletes the last item from sys.path.
@@ -45,7 +43,7 @@ string getLastPathComponent(fs::path path) {
     return pathString.substr(lastSlashIndex + 1, string::npos);
 }
 
-// Returns true if there is "garrysmod\addons_python" directory, returns false and prints a warning otherwise.
+// Returns true if there is "garrysmod\addons" directory, returns false and prints a warning otherwise.
 bool checkAddonsDirectoryPresence(Console& cons) {
     const bool exists = fs::is_directory(PYTHON_ADDONS_PATH);
 
@@ -55,13 +53,13 @@ bool checkAddonsDirectoryPresence(Console& cons) {
     return exists;
 }
 
-// Returns true if there is __init__.py in (addonDir)\python directory, returns false and prints a warning otherwise.
+// Returns true if there is __init__.py in (addonDir)\python\__autorun__ directory, returns false and prints a warning otherwise.
 bool checkInitScriptPresence(Console& cons, fs::path addonDir) {
-    const fs::path initScriptPath = addonDir / fs::path("python\\__init__.py");  // Path of the assumed __init__.py
+    const fs::path initScriptPath = addonDir / fs::path("python\\__autorun__\\__init__.py");  // Path of the assumed __init__.py
     const bool exists = fs::is_regular_file(initScriptPath);
 
-    if (!exists)
-        cons.warn("__init__.py not found in " + addonDir.string() + ", skipping.");
+    /*if (!exists)
+        cons.warn("__init__.py not found in " + addonDir.string() + ", skipping.");*/
 
     return exists;
 }
@@ -78,7 +76,7 @@ void printTraceback(Console& cons) {
 
 // Imports an addon from given addon directory.
 void importAddon(Console& cons, fs::path addonDir) {
-    PyObject *addon = PyImport_ImportModule((getLastPathComponent(addonDir) + ".python").c_str());
+    PyObject *addon = PyImport_ImportModule((getLastPathComponent(addonDir) + ".python.__autorun__").c_str());
     if (addon != nullptr)  // exception not occurred
         Py_DECREF(addon);  // Freeing reference
     else
@@ -100,7 +98,7 @@ void launchAddons(Console& cons) {
 	if (!checkAddonsDirectoryPresence(cons))
 		return;
 
-    appendPath(fs::absolute(PYTHON_ADDONS_PATH).string().c_str());  // Appending "garrysmod\addons_python" to sys.path, so we can import addons from its subdirectiories
+    appendPath(fs::absolute(PYTHON_ADDONS_PATH).string().c_str());  // Appending "garrysmod\addons" to sys.path, so we can import addons from its subdirectiories
 
 	fs::directory_iterator iter;
 	try {
@@ -120,8 +118,11 @@ void launchAddons(Console& cons) {
             continue;
 
 		cons.log("Found addon: " + dirPathString + ", loading...");
-
+        
+        // Appending the (addon)\python\ dir to sys.path, so packages and modules in this dir can be imported by scripts in __autorun__
+        appendPath((dirPath / fs::path("python")).string().c_str());
         importAddon(cons, dirPath);
+        PyRun_SimpleString("del sys.path[-1]");  // Removing that path to avoid collision between addons
 
 		cons.log("Loaded " + dirPathString);
 	}

@@ -5,7 +5,7 @@ This module contains the :class:`BaseEntity` class.
 
 .. warning::
 
-    :class:`BaseEntity` is not intended for instantination.
+    :class:`BaseEntity` is not intended for public use or instantination.
 """
 
 from .lua import G, LuaObjectWrapper
@@ -16,3 +16,8 @@ class BaseEntity(LuaObjectWrapper):
 
     def __init__(self, lua_obj):
         self.lua_obj = lua_obj
+
+    @property
+    def index(self):
+        """Returns the index of this entity."""
+        return int(self.lua_obj['EntIndex'](self.lua_obj))

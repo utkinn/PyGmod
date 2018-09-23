@@ -15,8 +15,4 @@ class Player(BaseEntity):
 
         *Lua similar:* `Player() <http://wiki.garrysmod.com/page/Global/Player>`_
         """
-        ply = Player()
-        ply.user_id = user_id
-        ply.lua_obj = G['Player'](user_id)
-
-        return ply
+        return Player(G['Player'](user_id))

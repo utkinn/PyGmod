@@ -1,6 +1,6 @@
 """This module contains custom I/O classes which redirect I/O to Garry's Mod."""
 
-import sys, os
+import sys
 from io import StringIO
 from luastack import *
 

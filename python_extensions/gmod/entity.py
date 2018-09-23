@@ -3,7 +3,7 @@ This module contains the :class:`Entity` class which wraps the Lua ``Entity`` cl
 """
 
 from ._base_entity import BaseEntity
-from .lua import G, LuaObjectWrapper
+from .lua import G
 
 
 class Entity(BaseEntity):

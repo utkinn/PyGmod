@@ -9,8 +9,6 @@ In this case, the arguments are passed to callbacks.
 You can register hooks with :func:`hook` decorator.
 """
 
-from collections import defaultdict
-
 from . import lua
 
 __all__ = ['hook']
@@ -28,7 +26,7 @@ def register_callback(event, callback):
     callback_list = callbacks.get(event, [])
     new_index = len(callbacks)
     callback_list.append(callback)
-    callbacks[event] = callbacks_list
+    callbacks[event] = callback_list
     return new_index
 
 
@@ -44,12 +42,12 @@ def hook(event: str):
     """Decorator which hooks the decorated function to event ``event``.
 
     You can find the list of available events at http://wiki.garrysmod.com/page/Category:GM_Hooks and
-	http://wiki.garrysmod.com/page/Category:SANDBOX_Hooks.
+    http://wiki.garrysmod.com/page/Category:SANDBOX_Hooks.
 
-	.. note::
+    .. note::
 
-		Hooks with ``GM`` prefix are available for any gamemode, whereas ``SANDBOX`` hooks are available only for
-		the Sandbox gamemode.
+        Hooks with ``GM`` prefix are available for any gamemode, whereas ``SANDBOX`` hooks are available only for
+        the Sandbox gamemode.
 
     .. note::
 
@@ -68,7 +66,7 @@ def hook(event: str):
 
     Some hooks have arguments which are passed to the hooked function.
     For example, event ``PlayerSay`` has 3 arguments:
-	the message sender, the message text and whether it was sent to the team chat.
+    the message sender, the message text and whether it was sent to the team chat.
 
     ::
 
@@ -77,9 +75,9 @@ def hook(event: str):
             prefix = '(TEAM)' if bool(team_chat) else ''
             file.write(Player(sender).nick + prefix + ': ' + str(text))
 
-	.. note::
+    .. note::
 
-		Arguments are actually :class:`gmod.lua.LuaObject`\ s, so you have to explicitly convert them to right types.
+        Arguments are actually :class:`gmod.lua.LuaObject`\ s, so you have to explicitly convert them to right types.
     """
 
     def decorator(func):
@@ -96,7 +94,7 @@ def hook(event: str):
 
         # This hook's ID
         id_ = f'gpy_hook_{event}{index}'
-        lua.G['hook']['add'](event, lua_eval(lua_callback), id_)
+        lua.G['hook']['add'](event, lua.lua_eval(lua_callback), id_)
 
         def remove(self):
             lua.G['hook']['Remove'](event, id_)

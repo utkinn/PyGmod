@@ -7,6 +7,7 @@ from collections.abc import Iterable
 
 from .lua import G, table
 from .realms import CLIENT, SERVER
+from .player import Player
 
 
 class SizeError(Exception):
@@ -56,13 +57,13 @@ def send(message_name, *values, addressee=None, lua_receiver=False):
     :raises ValueError: if the addressee is None when sending **from** server.
     :raises SizeError: if more than 255 values are passed and ``lua_receiver`` is ``False``.
     """
-    
+
     if not isinstance(message_name, str):
-        raise TypeError(f'message name type must be str, not {type(name).__name__}')
+        raise TypeError(f'message name type must be str, not {type(message_name).__name__}')
 
     if SERVER and not (isinstance(addressee, Player) or isinstance(addressee, Iterable)):
         raise ValueError('addressee must be a Player object or an iterable of Player objects '
-                        f'when sending messages from server. Got {type(addressee).__name__} instead.')
+                         f'when sending messages from server. Got {type(addressee).__name__} instead.')
 
     G['net']['Start']()
 

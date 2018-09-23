@@ -14,3 +14,5 @@ python_extensions/*/*.h
 *.pdb
 *.pyc
 *.idb
+*.iml
+.idea

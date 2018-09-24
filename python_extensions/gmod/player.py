@@ -2,8 +2,8 @@
 This module contains the :class:`Player` class which wraps the Lua ``Player`` class.
 """
 
-from .lua import G
 from ._base_entity import BaseEntity
+from .lua import G
 
 
 class Player(BaseEntity):

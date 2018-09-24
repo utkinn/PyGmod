@@ -6,8 +6,8 @@ import pickle
 from collections.abc import Iterable
 
 from .lua import G, table
-from .realms import CLIENT, SERVER
 from .player import Player
+from .realms import CLIENT, SERVER
 
 
 class SizeError(Exception):

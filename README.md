@@ -6,3 +6,5 @@ Experimental project which strives to provide the possibility to create addons f
 with Python 3 programming language.
 
 [Documentation](https://javabird25.github.io/GPython/)
+
+[**MegaTech**: example GPython addon](https://github.com/javabird25/MegaTech/)

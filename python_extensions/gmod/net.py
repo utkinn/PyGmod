@@ -10,10 +10,6 @@ from .player import Player
 from .realms import CLIENT, SERVER
 
 
-class SizeError(Exception):
-    """Indicates that there are too many values. Raised by :func:`send` if more than 255 values are passed."""
-
-
 def _write_py2py_netmsg_data(values):
     """Appends the message data for sending from Python and receiving in Python.
 

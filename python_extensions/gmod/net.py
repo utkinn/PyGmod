@@ -17,31 +17,12 @@ class SizeError(Exception):
 def _write_py2py_netmsg_data(values):
     """Appends the message data for sending from Python and receiving in Python.
 
-    1. Pickles all objects.
-    2. Creates a header string which holds data about the pickled objects' lengths.
-    3. Writes the header, then the pickled objects.
+    Pickles the ``values`` tuple to :class:`bytes` object, then writes its length and himself.
     """
-    values_lst = list(values)  # Creating a copy in case if we got an iterator
-    if len(values_lst) > 255:
-        raise SizeError('maximal supported appended value quantity is 255. Try putting them all into a list.')
-
-    # header is a string that contains data about the appended data.
-    # The format is "x x x ...".
-    # Each "x" is the length of an object in bytes.
-    header = ''
-
-    # Pickling all values
-    pickled_values = [pickle.dumps(v, pickle.HIGHEST_PROTOCOL) for v in values_lst]
-
-    # Adding length data to header
-    for v in pickled_values:
-        header += ' ' + str(len(v))
-
-    # Writing the header
-    G['net']['WriteString'](header)
-    # Writing the pickled objects
-    for v in pickled_values:
-        G['net']['WriteData'](v, len(v))
+    pickled = pickle.dumps(values, pickle.HIGHEST_PROTOCOL)
+    length = len(pickled)
+    G['net']['WriteUInt'](length, 32)
+    G['net']['WriteData'](pickled, length)
 
 
 def send(message_name, *values, addressee=None, lua_receiver=False):
@@ -81,5 +62,3 @@ def send(message_name, *values, addressee=None, lua_receiver=False):
             G['net']['Send'](addressee)
         elif isinstance(addressee, Iterable):
             G['net']['Send'](table(addressee))
-        else:
-            assert False

@@ -53,8 +53,8 @@ bool checkAddonsDirectoryPresence(Console& cons) {
     return exists;
 }
 
-// Returns true if there is __init__.py in (addonDir)\python\__autorun__ directory, returns false and prints a warning otherwise.
-bool checkInitScriptPresence(Console& cons, fs::path addonDir) {
+// Returns true if there is __init__.py in any (addonDir)\python\__*_autorun__ directory, returns false otherwise.
+bool checkInitScriptPresence(fs::path addonDir) {
     const fs::path addonCodePath = addonDir / fs::path("python");
     const bool isGPythonAddon = fs::is_regular_file(addonCodePath / fs::path("__shared_autorun__\\__init__.py")) 
                                 || fs::is_regular_file(addonCodePath / fs::path("__client_autorun__\\__init__.py"))
@@ -124,6 +124,7 @@ void launchAddons(Console& cons, bool client) {
         const fs::path& dirPath = dir.path();  // Addon directory path
         const string dirPathString = dirPath.string(); // Addon directory path as string
 
+        if (!checkInitScriptPresence(dirPath))
             continue;
 
 		cons.log("Found addon: " + dirPathString + ", loading...");

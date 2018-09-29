@@ -61,7 +61,7 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
     extendLua(LUA);
     cons.log("Lua2Python Lua extensions loaded");
 
-	launchAddons(cons);
+	launchAddons(cons, client);
 
     if (PyErr_Occurred()) {
         cons.error("Something went wrong");

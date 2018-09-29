@@ -55,13 +55,12 @@ bool checkAddonsDirectoryPresence(Console& cons) {
 
 // Returns true if there is __init__.py in (addonDir)\python\__autorun__ directory, returns false and prints a warning otherwise.
 bool checkInitScriptPresence(Console& cons, fs::path addonDir) {
-    const fs::path initScriptPath = addonDir / fs::path("python\\__autorun__\\__init__.py");  // Path of the assumed __init__.py
-    const bool exists = fs::is_regular_file(initScriptPath);
+    const fs::path addonCodePath = addonDir / fs::path("python");
+    const bool isGPythonAddon = fs::is_regular_file(addonCodePath / fs::path("__shared_autorun__\\__init__.py")) 
+                                || fs::is_regular_file(addonCodePath / fs::path("__client_autorun__\\__init__.py"))
+                                || fs::is_regular_file(addonCodePath / fs::path("__server_autorun__\\__init__.py"));
 
-    /*if (!exists)
-        cons.warn("__init__.py not found in " + addonDir.string() + ", skipping.");*/
-
-    return exists;
+    return isGPythonAddon;
 }
 
 // Prints a traceback surrounded by bars.
@@ -74,15 +73,26 @@ void printTraceback(Console& cons) {
     cons.println(bar, c);
 }
 
-// Imports an addon from given addon directory.
-void importAddon(Console& cons, fs::path addonDir) {
-    PyObject *addon = PyImport_ImportModule((getLastPathComponent(addonDir) + ".python.__autorun__").c_str());
-    if (addon != nullptr)  // exception not occurred
-        Py_DECREF(addon);  // Freeing reference
-    else
-        printTraceback(cons);
+// Imports a single package "(addonDir).python.(pkgName)".
+void importPkg(Console& cons, fs::path &addonDir, string pkgName) {
+    PyObject *pkg = PyImport_ImportModule((getLastPathComponent(addonDir) + ".python." + pkgName).c_str());
+    if (pkg != nullptr)  // exception not occurred
+        Py_DECREF(pkg);  // Freeing reference
+    else {
+        cons.warn("package " + pkgName + " at " + addonDir.string() + " not found.");
+        PyErr_Clear();
+    }
+}
 
-    //deleteLastPath();
+// Imports an addon from given addon directory.
+void importAddon(Console& cons, fs::path addonDir, bool client) {
+    // Selecting a realm-dependent package
+    string realmAutorunPackage = client ? "__client_autorun__" : "__server_autorun__";
+
+    // Importing shared code package
+    importPkg(cons, addonDir, "__shared_autorun__");
+    // Importing realm-dependent package
+    importPkg(cons, addonDir, realmAutorunPackage);
 
     if (PyErr_Occurred()) {
         cons.error("During execution of " + addonDir.string());
@@ -90,7 +100,7 @@ void importAddon(Console& cons, fs::path addonDir) {
     }
 }
 
-void launchAddons(Console& cons) {
+void launchAddons(Console& cons, bool client) {
 	cons.log("Started addon loading process");
 
 	// Checking if Python addons directory exists at all.
@@ -114,14 +124,13 @@ void launchAddons(Console& cons) {
         const fs::path& dirPath = dir.path();  // Addon directory path
         const string dirPathString = dirPath.string(); // Addon directory path as string
 
-        if (!checkInitScriptPresence(cons, dirPath))
             continue;
 
 		cons.log("Found addon: " + dirPathString + ", loading...");
         
-        // Appending the (addon)\python\ dir to sys.path, so packages and modules in this dir can be imported by scripts in __autorun__
+        // Appending the (addon)\python\ dir to sys.path, so packages and modules in this dir can be imported by scripts in __*_autorun__
         appendPath((dirPath / fs::path("python")).string().c_str());
-        importAddon(cons, dirPath);
+        importAddon(cons, dirPath, client);
         PyRun_SimpleString("del sys.path[-1]");  // Removing that path to avoid collision between addons
 
 		cons.log("Loaded " + dirPathString);

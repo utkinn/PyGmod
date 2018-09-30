@@ -21,30 +21,29 @@ def _write_py2py_netmsg_data(values):
     G['net']['WriteData'](pickled, length)
 
 
-def send(message_name, *values, addressee=None, lua_receiver=False):
+def send(message_name, *values, receiver=None, handled_in_lua=False):
     """Sends a net message to the opposite realm.
 
     :param str message_name: The message name. Has to be registered with
                              `util.AddNetworkString() <http://wiki.garrysmod.com/page/util/AddNetworkString>`_
                              GLua function.
     :param iterable values: Iterable of values to append to this message.
-    :param addressee: Message addressee. Ignored when sending **to** server, but required when sending **from** server.
-    :type addressee: Player or iterable[Player] or None
-    :param bool lua_receiver: Whether this message is intended to be received by Lua code.
-    :raises ValueError: if the addressee is None when sending **from** server.
-    :raises SizeError: if more than 255 values are passed and ``lua_receiver`` is ``False``.
+    :param receiver: Message receiver. Ignored when sending **to** server, but required when sending **from** server.
+    :type receiver: Player or iterable[Player] or None
+    :param bool handled_in_lua: Whether this message is intended to be received by Lua code.
+    :raises ValueError: if ``receiver`` is ``None`` when sending **from** server.
     """
 
     if not isinstance(message_name, str):
         raise TypeError(f'message name type must be str, not {type(message_name).__name__}')
 
-    if SERVER and not (isinstance(addressee, Player) or isinstance(addressee, Iterable)):
-        raise ValueError('addressee must be a Player object or an iterable of Player objects '
-                         f'when sending messages from server. Got {type(addressee).__name__} instead.')
+    if SERVER and not (isinstance(receiver, Player) or isinstance(receiver, Iterable)):
+        raise ValueError('receiver must be a Player object or an iterable of Player objects '
+                         f'when sending messages from server. Got {type(receiver).__name__} instead.')
 
     G['net']['Start']()
 
-    if lua_receiver:
+    if handled_in_lua:
         # Just writing the values if the message is intended to be received by Lua code
         for v in values:
             G['net']['WriteType'](v)
@@ -54,7 +53,7 @@ def send(message_name, *values, addressee=None, lua_receiver=False):
     if CLIENT:
         G['net']['SendToServer']()
     else:
-        if isinstance(addressee, Player):
-            G['net']['Send'](addressee)
-        elif isinstance(addressee, Iterable):
-            G['net']['Send'](table(addressee))
+        if isinstance(receiver, Player):
+            G['net']['Send'](receiver)
+        elif isinstance(receiver, Iterable):
+            G['net']['Send'](table(receiver))

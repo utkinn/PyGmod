@@ -9,8 +9,10 @@ from .lua import G, table
 from .player import Player
 from .realms import CLIENT, SERVER
 
+__all__ = ['send', 'receive', 'client', 'server', 'default_receiver']
 
-def _write_py2py_netmsg_data(values):
+
+def write_py2py_netmsg_data(values):
     """Appends the message data for sending from Python and receiving in Python.
 
     Pickles the ``values`` tuple to :class:`bytes` object, then writes its length and himself.
@@ -48,7 +50,7 @@ def send(message_name, *values, receiver=None, handled_in_lua=False):
         for v in values:
             G['net']['WriteType'](v)
     else:
-        _write_py2py_netmsg_data(values)
+        write_py2py_netmsg_data(values)
 
     if CLIENT:
         G['net']['SendToServer']()
@@ -57,3 +59,179 @@ def send(message_name, *values, receiver=None, handled_in_lua=False):
             G['net']['Send'](receiver)
         elif isinstance(receiver, Iterable):
             G['net']['Send'](table(receiver))
+
+
+def receive(message):
+    """Decorator for net message receivers.
+
+    Example of sending in Python and receiving in Python::
+
+        if SERVER:
+            G['util']['AddNetworkString']('foo')
+
+
+            @net.receive('foo')
+            def foo_receiver(a, b):
+                print(a, b)
+
+
+        if CLIENT:
+            net.send('foo', 'message', 'received', receiver=get_player_by_userid(1))
+            # 'message received' will be printed in the console of the player with the UserID 1.
+
+    Sending in Lua and receiving in Python::
+
+        --- sv_init.lua ---
+
+        util.AddNetworkString('foo')
+
+        net.Start('foo')
+            net.WriteString('message')
+            net.WriteString('received')
+        net.Send(Player(1))
+
+
+        --- __client_autorun__\__init__.py ---
+
+        from gmod import net
+
+
+        @net.receive('foo')
+        def foo_receiver(a, b):
+            print(a, b)
+    """
+    ...
+
+
+# Default receiver of functions decorated by "client".
+# Net messages will be sent to this player when receiver is not specified.
+# Context manager "default_receiver" can be used to set the default receiver.
+default_recv = None
+
+
+def select_receiver(kwargs):
+    try:
+        return kwargs['receiver']
+    except KeyError:  # Receiver is not specified in kwargs
+        if default_recv is not None:
+            # Using the default receiver, if it is set
+            return default_recv
+        else:
+            raise TypeError('receiver is not specified and default receiver is not set')
+
+
+def client(func):
+    """Decorator for *client-side* functions.
+
+    Functions decorated by :func:`client` act like regular functions when called in the *client* realm.
+    When they are called in the *server* realm, a net message is sent from the *server* to the *client*.
+    Arguments which were passed to a function are attached to this message.
+
+    Example of shared code::
+
+        @net.client
+        def spam(message):
+            chat.print(message)
+
+
+        if CLIENT:
+            spam('eggs')  # Will print 'eggs' to the client's chat.
+        else:  # Server
+            # Receiver has to be specified when calling server-decorated functions.
+            # Will print "foo" to the chat of the player with the UserID 1.
+            spam('foo', receiver=get_player_by_userid(1))
+
+    .. warning::
+
+        This decorator will work properly only when the decorated function is defined in the *shared* realm.
+    """
+    net_string = f'gpython_net:{func.__module__}.{func.__qualname__}'
+
+    if SERVER:
+        G['util']['AddNetworkString'](net_string)  # TODO
+
+    def decorated(*args, **kwargs):
+        if CLIENT:
+            # Removing the receiver argument, so we don't get "TypeError: got an unexpected keyword argument 'receiver'"
+            del kwargs['receiver']
+            func(*args, **kwargs)
+        else:  # Server
+            receiver = select_receiver(kwargs)
+            send(net_string, args, kwargs, receiver=receiver)
+
+    return decorated
+
+
+def server(func):
+    """Decorator for *client-side* functions.
+
+    Functions decorated by :func:`client` act like regular functions when called in the *client* realm.
+    When they are called in the *server* realm, a net message is sent from the *server* to the *client*.
+    Arguments which were passed to a function are attached to this message.
+
+    Example of shared code::
+
+        @net.client
+        def spam(message):
+            chat.print(message)
+
+
+        if CLIENT:
+            spam('eggs')  # Will print 'eggs' to the client's chat.
+        else:  # Server
+            # Receiver has to be specified when calling server-decorated functions.
+            # Will print "foo" to the chat of the player with the UserID 1.
+            spam('foo', receiver=get_player_by_userid(1))
+
+    .. warning::
+
+        This decorator will work properly only when the decorated function is defined in the *shared* realm.
+    """
+    net_string = f'gpython_net:{func.__module__}.{func.__qualname__}'
+
+    if SERVER:
+        G['util']['AddNetworkString'](net_string)
+
+    def decorated(*args, **kwargs):
+        if SERVER:
+            # Removing the receiver argument, so we don't get "TypeError: got an unexpected keyword argument 'receiver'"
+            del kwargs['receiver']
+            func(*args, **kwargs)
+        else:  # Client
+            send(net_string, args, kwargs)
+
+    return decorated
+
+
+class default_receiver:
+    """Context manager which sets the default receiver.
+
+    Instead of specifying the receiver on each call::
+
+        recv = get_player_by_userid(1)
+
+        chat.print('spam', receiver=recv)
+        chat.print('eggs', receiver=recv)
+        chat.print('foo', receiver=recv)
+        chat.print('bar', receiver=recv)
+
+    you can use :class:`default_receiver`::
+
+        recv = get_player_by_userid(1)
+        with net.default_receiver(recv):
+            chat.print('spam')
+            chat.print('eggs')
+            chat.print('foo')
+            chat.print('bar')
+    """
+
+    def __init__(self, receiver):
+        self.receiver = receiver
+
+    def __enter__(self):
+        global default_recv
+        default_recv = self.receiver
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        global default_recv
+        default_recv = None

@@ -84,7 +84,7 @@ def hook(event: str):
         index = register_callback(event, func)
 
         lua_callback = f'''function(...)
-            py._hook_cb_args = {{}}  -- Curly brackets are inserted in f-strings by repeating them two times
+            py._hook_cb_args = {{}}  -- Curly brackets are escaped in f-strings by repeating them two times
             for _, v in pairs(...) do
                 table.insert(py._hook_cb_args, v)
             end

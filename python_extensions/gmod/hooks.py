@@ -77,7 +77,7 @@ def hook(event: str):
 
     .. note::
 
-        Arguments are actually :class:`gmod.lua.LuaObject`\ s, so you have to explicitly convert them to right types.
+        Arguments are actually :class:`gmod.lua.LuaObject`\\ s, so you have to explicitly convert them to right types.
     """
 
     def decorator(func):

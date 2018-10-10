@@ -30,7 +30,8 @@ def send(message_name, *values, receiver=None, handled_in_lua=False):
                              `util.AddNetworkString() <http://wiki.garrysmod.com/page/util/AddNetworkString>`_
                              GLua function.
     :param iterable values: Iterable of values to append to this message.
-    :param receiver: Message receiver. Ignored when sending **to** server, but required when sending **from** server.
+    :param receiver: Message receiver(s). Ignored and can be ``None`` when sending **to** server,
+                     but required when sending **from** server.
     :type receiver: Player or iterable[Player] or None
     :param bool handled_in_lua: Whether this message is intended to be received by Lua code.
     :raises ValueError: if ``receiver`` is ``None`` when sending **from** server.
@@ -91,7 +92,7 @@ def receive(message):
         net.Send(Player(1))
 
 
-        --- __client_autorun__\__init__.py ---
+        --- __client_autorun__\\__init__.py ---
 
         from gmod import net
 

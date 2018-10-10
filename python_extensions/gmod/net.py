@@ -44,7 +44,7 @@ def send(message_name, *values, receiver=None, handled_in_lua=False):
         raise ValueError('receiver must be a Player object or an iterable of Player objects '
                          f'when sending messages from server. Got {type(receiver).__name__} instead.')
 
-    G['net']['Start']()
+    G['net']['Start'](message_name)
 
     if handled_in_lua:
         # Just writing the values if the message is intended to be received by Lua code
@@ -70,7 +70,6 @@ def receive(message):
         if SERVER:
             G['util']['AddNetworkString']('foo')
 
-
             @net.receive('foo')
             def foo_receiver(a, b):
                 print(a, b)
@@ -95,7 +94,6 @@ def receive(message):
         --- __client_autorun__\\__init__.py ---
 
         from gmod import net
-
 
         @net.receive('foo')
         def foo_receiver(a, b):

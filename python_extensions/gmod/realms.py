@@ -14,7 +14,7 @@ You can use :data:`CLIENT` and :data:`SERVER` constants to check the current rea
 """
 
 import luastack
-from .lua import *
+from .lua import G
 
 # Don't define this if we're generating docs
 if luastack.IN_GMOD:

@@ -4,6 +4,7 @@ and calling functions.
 """
 
 from abc import ABC, abstractmethod
+from numbers import Number
 
 from luastack import LuaStack, Special
 
@@ -23,24 +24,37 @@ class Reference:
         ls.pop(1)
 
 
-def push_key_or_value(key_or_value):
-    """Pushes a Python value of a primitive type or a :class:`LuaObject`."""
-    if key_or_value is None:
+def push_pyval_to_stack(val):
+    """Converts a Python value to a Lua value and pushes it to the Lua stack.
+
+    Supported types:
+
+    ==============================  ========================================================
+            Python type                                      Lua type
+    ==============================  ========================================================
+    ``None``                        ``nil``
+    Any number                      number
+    :class:`LuaObject`              Whatever ``LuaObject.ref`` is pointing to
+    :class:`str`, :class:`bytes`    string
+    :class:`bool`                   bool
+    :class:`LuaObjectWrapper`       Whatever ``LuaObjectWrapper.lua_obj.ref is pointing to
+    """
+    if val is None:
         ls.push_nil()
-    if isinstance(key_or_value, int) or isinstance(key_or_value, float):
-        ls.push_number(key_or_value)
-    elif isinstance(key_or_value, LuaObject):
-        ls.push_ref(key_or_value.ref)
-    elif isinstance(key_or_value, str):
-        ls.push_string(key_or_value.encode())
-    elif isinstance(key_or_value, bytes):
-        ls.push_string(key_or_value)
-    elif isinstance(key_or_value, bool):
-        ls.push_bool(key_or_value)
-    elif isinstance(key_or_value, LuaObjectWrapper):
-        ls.push_ref(key_or_value.lua_obj.ref)
+    if isinstance(val, Number):
+        ls.push_number(val)
+    elif isinstance(val, LuaObject):
+        ls.push_ref(val.ref)
+    elif isinstance(val, str):
+        ls.push_string(val.encode())
+    elif isinstance(val, bytes):
+        ls.push_string(val)
+    elif isinstance(val, bool):
+        ls.push_bool(val)
+    elif isinstance(val, LuaObjectWrapper):
+        ls.push_ref(val.lua_obj.ref)
     else:
-        raise TypeError(f'unsupported key/value type: {type(key_or_value)}')
+        raise TypeError(f'unsupported value type: {type(val)}')
 
 
 class LuaObject:
@@ -82,20 +96,20 @@ class LuaObject:
 
     def __setitem__(self, key, value):
         with self._context:
-            push_key_or_value(key)
-            push_key_or_value(value)
+            push_pyval_to_stack(key)
+            push_pyval_to_stack(value)
             ls.set_table(-3)
 
     def __getitem__(self, key):
         with self._context:
-            push_key_or_value(key)
+            push_pyval_to_stack(key)
             ls.get_table(-2)
             return LuaObject()
 
     def __call__(self, *args):
         ls.push_ref(self.ref)
         for val in args:
-            push_key_or_value(val)
+            push_pyval_to_stack(val)
         ls.call(len(args), -1)
         returns = []
         while ls.top():
@@ -178,7 +192,7 @@ def table(iterable):
         ls.get_field(-1, 'insert')
         ls.push(1)  # Pushing that new table again
         try:
-            push_key_or_value(v)
+            push_pyval_to_stack(v)
         except TypeError:  # In case of a value that can't be pushed
             ls.clear()
             raise  # Raising TypeError again

@@ -121,6 +121,32 @@ def select_receiver(kwargs):
             raise TypeError('receiver is not specified and default receiver is not set')
 
 
+def realm_decorator(func, target_realm):
+    """Base decorator of :func:`client` and :func:`server`."""
+    net_string = f'gpython_net:{func.__module__}.{func.__qualname__}'
+
+    if realms.SERVER:
+        lua.G['util']['AddNetworkString'](net_string)
+    else:
+        @receive(net_string)
+        def receiver(args, kwargs):
+            func(*args, **kwargs)
+
+    def decorated(*args, **kwargs):
+        if target_realm:
+            # Removing the receiver argument, so we don't get "TypeError: got an unexpected keyword argument 'receiver'"
+            del kwargs['receiver']
+            func(*args, **kwargs)
+        else:
+            if realms.CLIENT:
+                send(net_string, args, kwargs)
+            else:
+                recv = select_receiver(kwargs)
+                send(net_string, args, kwargs, receiver=recv)
+
+    return decorated
+
+
 def client(func):
     """Decorator for *client-side* functions.
 
@@ -146,21 +172,7 @@ def client(func):
 
         This decorator will work properly only when the decorated function is defined in the *shared* realm.
     """
-    net_string = f'gpython_net:{func.__module__}.{func.__qualname__}'
-
-    if realms.SERVER:
-        lua.G['util']['AddNetworkString'](net_string)  # TODO
-
-    def decorated(*args, **kwargs):
-        if realms.CLIENT:
-            # Removing the receiver argument, so we don't get "TypeError: got an unexpected keyword argument 'receiver'"
-            del kwargs['receiver']
-            func(*args, **kwargs)
-        else:  # Server
-            receiver = select_receiver(kwargs)
-            send(net_string, args, kwargs, receiver=receiver)
-
-    return decorated
+    return realm_decorator(func, realms.CLIENT)
 
 
 def server(func):
@@ -188,20 +200,7 @@ def server(func):
 
         This decorator will work properly only when the decorated function is defined in the *shared* realm.
     """
-    net_string = f'gpython_net:{func.__module__}.{func.__qualname__}'
-
-    if realms.SERVER:
-        lua.G['util']['AddNetworkString'](net_string)
-
-    def decorated(*args, **kwargs):
-        if realms.SERVER:
-            # Removing the receiver argument, so we don't get "TypeError: got an unexpected keyword argument 'receiver'"
-            del kwargs['receiver']
-            func(*args, **kwargs)
-        else:  # Client
-            send(net_string, args, kwargs)
-
-    return decorated
+    return realm_decorator(func, realms.SERVER)
 
 
 class default_receiver:

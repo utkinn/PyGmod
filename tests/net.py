@@ -114,3 +114,28 @@ class SendTestCase(TestCase):
         g.net.Start.assert_called_once_with('foo')
         g.net.WriteType.assert_has_calls([call(5), call(6)])
         g.net.SendToServer.assert_called_once()
+
+
+@patch('gmod.lua.G', new_callable=create_g_mock)
+class DefaultReceiverTestCase(TestCase):
+    def test(self, g):
+        from gmod import realms
+
+        realms.CLIENT = False
+        realms.SERVER = True
+
+        from gmod.net import send, default_receiver
+        from gmod import player
+
+        ply = player.get_by_userid(1)
+        pickled1 = pickle.dumps((1,), pickle.HIGHEST_PROTOCOL)
+        pickled2 = pickle.dumps((2,), pickle.HIGHEST_PROTOCOL)
+
+        with default_receiver(ply):
+            send('spam', 1)
+            send('eggs', 2)
+
+        g.net.Start.assert_has_calls([call('spam'), call('eggs')])
+        g.net.WriteUInt.assert_has_calls([call(len(pickled1), 32), call(len(pickled2), 32)])
+        g.net.WriteData.assert_has_calls([call(pickled1, len(pickled1)), call(pickled2, len(pickled2))])
+        g.net.Send.assert_has_calls([call(ply), call(ply)])

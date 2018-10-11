@@ -39,6 +39,9 @@ def send(message_name, *values, receiver=None, handled_in_lua=False):
     if not isinstance(message_name, str):
         raise TypeError(f'message name type must be str, not {type(message_name).__name__}')
 
+    if receiver is None:
+        receiver = default_recv
+
     if realms.SERVER and not (isinstance(receiver, Player) or isinstance(receiver, Iterable)):
         raise ValueError('receiver must be a Player object or an iterable of Player objects '
                          f'when sending messages from server. Got {type(receiver).__name__} instead.')

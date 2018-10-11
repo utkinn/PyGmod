@@ -5,9 +5,8 @@ This module provides tools for communication between *client* and *server*.
 import pickle
 from collections.abc import Iterable
 
-from .lua import G, table
 from .player import Player
-from .realms import CLIENT, SERVER
+from . import realms, lua
 
 __all__ = ['send', 'receive', 'client', 'server', 'default_receiver']
 
@@ -19,8 +18,8 @@ def write_py2py_netmsg_data(values):
     """
     pickled = pickle.dumps(values, pickle.HIGHEST_PROTOCOL)
     length = len(pickled)
-    G['net']['WriteUInt'](length, 32)
-    G['net']['WriteData'](pickled, length)
+    lua.G['net']['WriteUInt'](length, 32)
+    lua.G['net']['WriteData'](pickled, length)
 
 
 def send(message_name, *values, receiver=None, handled_in_lua=False):
@@ -40,26 +39,26 @@ def send(message_name, *values, receiver=None, handled_in_lua=False):
     if not isinstance(message_name, str):
         raise TypeError(f'message name type must be str, not {type(message_name).__name__}')
 
-    if SERVER and not (isinstance(receiver, Player) or isinstance(receiver, Iterable)):
+    if realms.SERVER and not (isinstance(receiver, Player) or isinstance(receiver, Iterable)):
         raise ValueError('receiver must be a Player object or an iterable of Player objects '
                          f'when sending messages from server. Got {type(receiver).__name__} instead.')
 
-    G['net']['Start'](message_name)
+    lua.G['net']['Start'](message_name)
 
     if handled_in_lua:
         # Just writing the values if the message is intended to be received by Lua code
         for v in values:
-            G['net']['WriteType'](v)
+            lua.G['net']['WriteType'](v)
     else:
         write_py2py_netmsg_data(values)
 
-    if CLIENT:
-        G['net']['SendToServer']()
+    if realms.CLIENT:
+        lua.G['net']['SendToServer']()
     else:
         if isinstance(receiver, Player):
-            G['net']['Send'](receiver)
+            lua.G['net']['Send'](receiver)
         elif isinstance(receiver, Iterable):
-            G['net']['Send'](table(receiver))
+            lua.G['net']['Send'](lua.table(receiver))
 
 
 def receive(message):
@@ -146,11 +145,11 @@ def client(func):
     """
     net_string = f'gpython_net:{func.__module__}.{func.__qualname__}'
 
-    if SERVER:
-        G['util']['AddNetworkString'](net_string)  # TODO
+    if realms.SERVER:
+        lua.G['util']['AddNetworkString'](net_string)  # TODO
 
     def decorated(*args, **kwargs):
-        if CLIENT:
+        if realms.CLIENT:
             # Removing the receiver argument, so we don't get "TypeError: got an unexpected keyword argument 'receiver'"
             del kwargs['receiver']
             func(*args, **kwargs)
@@ -188,11 +187,11 @@ def server(func):
     """
     net_string = f'gpython_net:{func.__module__}.{func.__qualname__}'
 
-    if SERVER:
-        G['util']['AddNetworkString'](net_string)
+    if realms.SERVER:
+        lua.G['util']['AddNetworkString'](net_string)
 
     def decorated(*args, **kwargs):
-        if SERVER:
+        if realms.SERVER:
             # Removing the receiver argument, so we don't get "TypeError: got an unexpected keyword argument 'receiver'"
             del kwargs['receiver']
             func(*args, **kwargs)

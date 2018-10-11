@@ -136,6 +136,9 @@ def exec(code):
         code = 'MsgN("test")'
         lua.exec(code)  # 'test' will be printed to the console
     """
+    if not isinstance(code, str):
+        raise TypeError('code must be str, not ' + type(code).__name__)
+
     ls.push_special(Special.GLOBAL)
 
     ls.get_field(-1, 'RunString')
@@ -162,10 +165,13 @@ def eval(expr):
         if single_player:
             ...
     """
+    if not isinstance(expr, str):
+        raise TypeError('expr must be str, not ' + type(expr).__name__)
+
     ls.push_special(Special.GLOBAL)
 
     ls.get_field(-1, 'RunString')
-    ls.push_string(f'_gpy_temp = {expr}'.encode())  # Assign expression to temporary var _gpy_temp
+    ls.push_string(f'_gpy_temp = {expr}'.encode())  # Assign expression to a temporary variable "_gpy_temp"
     ls.push_string('GPython lua.eval')
     ls.push_bool(True)
 

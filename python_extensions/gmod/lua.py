@@ -14,10 +14,10 @@ ls = LuaStack()
 
 class Reference:
     def __init__(self, ref):
-        self._ref = int(ref)
+        self.ref = int(ref)
 
     def __enter__(self):
-        ls.push_ref(self._ref)
+        ls.push_ref(self.ref)
 
     def __exit__(self, exc_type, exc_value, traceback):
         ls.pop(1)
@@ -30,7 +30,7 @@ def push_key_or_value(key_or_value):
     if isinstance(key_or_value, int) or isinstance(key_or_value, float):
         ls.push_number(key_or_value)
     elif isinstance(key_or_value, LuaObject):
-        ls.push_ref(key_or_value._ref)
+        ls.push_ref(key_or_value.ref)
     elif isinstance(key_or_value, str):
         ls.push_string(key_or_value.encode())
     elif isinstance(key_or_value, bytes):
@@ -38,7 +38,7 @@ def push_key_or_value(key_or_value):
     elif isinstance(key_or_value, bool):
         ls.push_bool(key_or_value)
     elif isinstance(key_or_value, LuaObjectWrapper):
-        ls.push_ref(key_or_value.lua_obj._ref)
+        ls.push_ref(key_or_value.lua_obj.ref)
     else:
         raise TypeError(f'unsupported key/value type: {type(key_or_value)}')
 
@@ -46,11 +46,11 @@ def push_key_or_value(key_or_value):
 class LuaObject:
     def __init__(self):
         """Creates a :class:`LuaObject` which points to the topmost stack value and pops it."""
-        self._ref = ls.create_ref()
-        self._context = Reference(self._ref)
+        self.ref = ls.create_ref()
+        self._context = Reference(self.ref)
 
     def __del__(self):
-        ls.free_ref(self._ref)
+        ls.free_ref(self.ref)
 
     @property
     def type(self):
@@ -93,7 +93,7 @@ class LuaObject:
             return LuaObject()
 
     def __call__(self, *args):
-        ls.push_ref(self._ref)
+        ls.push_ref(self.ref)
         for val in args:
             push_key_or_value(val)
         ls.call(len(args), -1)

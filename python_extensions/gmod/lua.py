@@ -6,7 +6,7 @@ and calling functions.
 from abc import ABC, abstractmethod
 from numbers import Number
 
-from luastack import LuaStack, Special
+from luastack import LuaStack, Special, IN_GMOD
 
 __all__ = ['G', 'exec', 'eval', 'table', 'LuaObjectWrapper']
 
@@ -121,7 +121,7 @@ class LuaObject:
 
 
 # Lua global table
-if ls.IN_GMOD:
+if IN_GMOD:
     ls.push_special(Special.GLOBAL)
     G = LuaObject()
 else:

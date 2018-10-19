@@ -3,7 +3,9 @@
 import sys
 from io import StringIO
 
-from luastack import *
+from luastack import LuaStack, Special
+
+_ls = LuaStack()
 
 
 class GmodConsoleOut(StringIO):
@@ -16,11 +18,11 @@ class GmodConsoleOut(StringIO):
 
     def write(self, s):
         """Writes string ``s`` to Garry's Mod console with ``Msg`` Lua function."""
-        push_special(Special.GLOBAL)
-        get_field(-1, b'Msg')
-        push_string(s.encode())
-        call(1, 0)
-        pop(1)
+        _ls.push_special(Special.GLOBAL)
+        _ls.get_field(-1, b'Msg')
+        _ls.push_string(s.encode())
+        _ls.call(1, 0)
+        _ls.pop(1)
 
         return len(s)
 
@@ -33,20 +35,20 @@ class GmodConsoleErr(StringIO):
 
     def write(self, s):
         """Writes string ``s`` to Garry's Mod console with ``MsgC`` Lua function with red color."""
-        push_special(Special.GLOBAL)
+        _ls.push_special(Special.GLOBAL)
 
-        get_field(-1, b'MsgC')
+        _ls.get_field(-1, b'MsgC')
 
         # Creating Color structure
-        get_field(-2, b'Color')
-        push_number(255)
-        push_number(0)
-        push_number(0)
-        call(3, 1)
+        _ls.get_field(-2, b'Color')
+        _ls.push_number(255)
+        _ls.push_number(0)
+        _ls.push_number(0)
+        _ls.call(3, 1)
 
-        push_string(s.encode())
-        call(2, 0)
-        pop(1)
+        _ls.push_string(s.encode())
+        _ls.call(2, 0)
+        _ls.pop(1)
 
         return len(s)
 

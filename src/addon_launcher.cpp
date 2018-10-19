@@ -79,7 +79,6 @@ void importPkg(Console& cons, fs::path &addonDir, string pkgName) {
     if (pkg != nullptr)  // exception not occurred
         Py_DECREF(pkg);  // Freeing reference
     else {
-        cons.warn("package " + pkgName + " at " + addonDir.string() + " not found.");
         PyErr_Clear();
     }
 }

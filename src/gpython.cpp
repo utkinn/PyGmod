@@ -40,22 +40,24 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
 
     if (!client) {
 	    Py_Initialize();
-        PyRun_SimpleString("import sys, os.path; sys.path.append(os.path.abspath('garrysmod\\\\gpython'))");
+        serverInterp = PyThreadState_Get();
     } else {
-        PyThreadState *clientInterp = Py_NewInterpreter();
+        clientInterp = Py_NewInterpreter();
         PyThreadState_Swap(clientInterp);
     }
-    
+
+    PyRun_SimpleString("import sys, os.path; sys.path.append(os.path.abspath('garrysmod\\\\gpython'))");
+
 	cons.log("Python initialized!");
 
     giveILuaBasePtrToLuastack(LUA);
-    
+
     //redirectIO_toLogFile();
     redirectIO_toGmod();
 
     if (PyErr_Occurred()) {
         cons.error("Setup failed");
-        return -1;
+        return 0;
     }
 
     extendLua(LUA);
@@ -65,7 +67,7 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
 
     if (PyErr_Occurred()) {
         cons.error("Something went wrong");
-        return -2;
+        return 0;
     }
 
 	return 0;

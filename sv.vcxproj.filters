@@ -53,4 +53,7 @@
     </ClCompile>
     <ClCompile Include="python_extensions\luastack.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="python_extensions\loader.py" />
+  </ItemGroup>
 </Project>

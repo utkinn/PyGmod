@@ -90,6 +90,9 @@
     <ClCompile Include="src\Console.cpp" />
     <ClCompile Include="src\gpython.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="python_extensions\loader.py" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -53,7 +53,7 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
     giveILuaBasePtrToLuastack(LUA);
 
     //redirectIO_toLogFile();
-    redirectIO_toGmod();
+    //redirectIO_toGmod();
 
     if (PyErr_Occurred()) {
         cons.error("Setup failed");
@@ -63,7 +63,8 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
     extendLua(LUA);
     cons.log("Lua2Python Lua extensions loaded");
 
-	launchAddons(cons, client);
+    PyRun_SimpleString("import loader; loader.main()");
+	//launchAddons(cons, client);
 
     if (PyErr_Occurred()) {
         cons.error("Something went wrong");

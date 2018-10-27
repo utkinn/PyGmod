@@ -30,9 +30,10 @@ def register_callback(event, callback):
     return new_index
 
 
-def event_occurred(event, n_args):
+def event_occurred(event):
     """Runs callbacks for event ``event``. ``n_args`` is the quantity of the hook arguments."""
     args_luaobj = lua.G['py']['_hook_cb_args']
+    n_args = int(lua.G['py']['_hook_cb_nargs'])
     args = [args_luaobj[i] for i in range(1, n_args + 1)]
     for callback in callbacks[event]:
         callback(*args)
@@ -84,17 +85,21 @@ def hook(event: str):
         index = register_callback(event, func)
 
         lua_callback = f'''function(...)
-            py._hook_cb_args = {{}}  -- Curly brackets are escaped in f-strings by repeating them two times
-            for _, v in pairs(...) do
-                table.insert(py._hook_cb_args, v)
+            if CLIENT then
+                py._SwitchToClient()
+            else
+                py._SwitchToServer()
             end
-            py.Exec("import gmod.hooks; gmod.hooks.event_occurred({repr(event)}, "..#py._hook_cb_args..")")
+        
+            py._hook_cb_args = {{...}}  -- Curly brackets are escaped in f-strings by repeating them two times
+            py._hook_cb_nargs = #py._hook_cb_args
+            py.Exec("import gmod.hooks; gmod.hooks.event_occurred({repr(event)})")
         end
         '''
 
         # This hook's ID
         id_ = f'gpy_hook_{event}{index}'
-        lua.G['hook']['add'](event, lua.lua_eval(lua_callback), id_)
+        lua.G['hook']['Add'](event, lua.eval(lua_callback), id_)
 
         def remove(self):
             lua.G['hook']['Remove'](event, id_)

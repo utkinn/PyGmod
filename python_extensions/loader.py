@@ -19,18 +19,38 @@ ADDONS_PATH = 'garrysmod\\addons'
 SHARED_PACKAGE = '__shared_autorun__'
 
 
+def prepare_and_print_tb():
+    # Getting traceback text as a list of strings,
+    # string at index 0 is "Traceback (most recent call last):", next strings are the frames.
+    # The first frame is this loader's frame where it imports an addon.
+    # We don't need this frame because it has no relation to the addon, so we will get rid of it
+    # by deleting the string at index 1 from the text list.
+    traceback_text = traceback.format_exception(*sys.exc_info())
+
+    # Deleting the loader's frame
+    del traceback_text[1]
+
+    # Printing the clean traceback
+    for l in traceback_text:
+        sys.stderr.write(l)
+
+
 def handle_exception_in_addon():
+    # Constructing a bar of 50 underscores to visually separate tracebacks from other output.
     bar = '_' * 50 + '\n'
 
+    def print_bar():
+        print(bar, file=sys.stderr)
+
     print()
-    print(bar)
-    traceback.print_exc()
-    print(bar)
+    print_bar()
+    prepare_and_print_tb()
+    print_bar()
 
 
 def try_import(addon_dir, pkg):
     try:
-        import_module(addon_dir + '.python.' + pkg)
+        __import__(addon_dir + '.python.' + pkg)
     except ImportError:
         log('Invalid GPython addon "' + addon_dir + '"')
     except:

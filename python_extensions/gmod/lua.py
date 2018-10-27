@@ -141,9 +141,9 @@ def exec(code):
 
     ls.push_special(Special.GLOBAL)
 
-    ls.get_field(-1, 'RunString')
+    ls.get_field(-1, b'RunString')
     ls.push_string(code.encode())  # Arg 1: code
-    ls.push_string('GPython lua.exec')  # Arg 2: identifier
+    ls.push_string(b'GPython lua.exec')  # Arg 2: identifier
     ls.push_bool(True)  # Arg 3: throw error if error occurred during code exec
 
     ls.call(3, 0)  # Call RunString and pop it from the stack
@@ -170,20 +170,20 @@ def eval(expr):
 
     ls.push_special(Special.GLOBAL)
 
-    ls.get_field(-1, 'RunString')
+    ls.get_field(-1, b'RunString')
     ls.push_string(f'_gpy_temp = {expr}'.encode())  # Assign expression to a temporary variable "_gpy_temp"
-    ls.push_string('GPython lua.eval')
+    ls.push_string(b'GPython lua.eval')
     ls.push_bool(True)
 
     ls.call(3, 0)
 
     # Grabbing the result from _gpy_temp
-    ls.get_field(-1, '_gpy_temp')
+    ls.get_field(-1, b'_gpy_temp')
     obj = LuaObject()
 
     # Cleaning up: setting _gpy_temp to nil
     ls.push_nil()
-    ls.set_field(-2, '_gpy_temp')
+    ls.set_field(-2, b'_gpy_temp')
 
     ls.pop(1)  # GLOBAL
     return obj

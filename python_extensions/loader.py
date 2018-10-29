@@ -6,7 +6,7 @@ import traceback
 # os.path.append('garrysmod\\gpython')
 
 from gmod.realms import REALM
-from gmod import streams
+from gmod import lua, streams
 
 __all__ = ['main']
 
@@ -62,8 +62,28 @@ def redirect_output():
     # sys.stdin = sys.stderr = open('gpython.log', 'w+')
 
 
+def patch_hook_runner():
+    lua.exec('''
+    py._watched_events = {}
+    
+    hook.SilentCall = hook.Call
+
+    local function newCall(eventName, gamemodeTable, ...)
+        if isstring(eventName) and py and py._watched_events and py._watched_events[eventName] then
+            py.Exec('import gmod.hooks; gmod.hooks.event_occurred("'..eventName..'")')
+        end
+
+        return hook.SilentCall(eventName, gamemodeTable, ...)
+    end
+
+    hook.Call = newCall
+    ''')
+
+
 def main():
     redirect_output()
+
+    patch_hook_runner()
 
     log('Loading addons...')
 

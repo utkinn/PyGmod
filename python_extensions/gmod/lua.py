@@ -134,6 +134,9 @@ class LuaObject:
         elif len(returns) > 1:
             return tuple(returns)
 
+    def __repr__(self):
+        return f'<LuaObject (type={str(self.type_name)!s})>'
+
 
 # Lua global table
 if IN_GMOD:

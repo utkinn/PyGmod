@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, skip
 from unittest.mock import patch, Mock, call
 import pickle
 
@@ -101,6 +101,7 @@ class SendTestCase(TestCase):
         g.net.WriteData.assert_called_once_with(pickled, len(pickled))
         g.net.SendToServer.assert_called_once()
 
+    @skip('Support of cross-language net messages is postponed')
     def test_to_lua(self, g):
         from gmod import realms
 

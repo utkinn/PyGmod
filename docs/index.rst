@@ -16,15 +16,6 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
     lua_reference
 
 .. toctree::
-    :maxdepth: 2
-    :caption: For GPython internal developers:
-
-    for_gpython_developers/building
-    for_gpython_developers/building_docs
-    for_gpython_developers/how_it_works
-    reference/internal
-
-.. toctree::
     :caption: Module Reference:
     :maxdepth: 1
     :glob:
@@ -34,6 +25,15 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
     reference/player
     reference/entity
     reference/realms
+    reference/internal
+
+.. toctree::
+    :maxdepth: 2
+    :caption: For GPython internal developers:
+
+    for_gpython_developers/building
+    for_gpython_developers/building_docs
+    for_gpython_developers/how_it_works
     reference/internal
 
 ===================

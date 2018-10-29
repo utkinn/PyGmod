@@ -12,7 +12,7 @@ class Player(BaseEntity):
 
 
 def get_by_userid(userid: int):
-    """Returns the :class:`Player` instance with the user ID ``userid``.
+    """Returns the :class:`Player` object which refers to the player with the user ID ``userid``.
 
     *Lua similar:* `Player() <http://wiki.garrysmod.com/page/Global/Player>`_
     """

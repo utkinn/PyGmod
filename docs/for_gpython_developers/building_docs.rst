@@ -11,6 +11,7 @@ Instructions
 ------------
 
 1. Make sure that Sphinx is properly installed and built.
-2. Just run ``make html`` in a command prompt in ``docs\`` directory.
+2. Make sure that CorLab theme is installed.
+3. Just run ``make html`` in a command prompt in ``docs\`` directory.
 
 Output is in ``docs\_build\`` directory.

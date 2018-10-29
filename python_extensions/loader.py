@@ -1,3 +1,13 @@
+"""
+``loader.py`` is the second part of the initialization system.
+
+Here is what it does:
+
+#. Redirects I/O to Garry's Mod console with :mod:`gmod.streams` I/O classes.
+#. Patches the ``hook.Call`` Lua function to delegate hook calls to :mod:`gmod.hooks` module.
+#. Scans ``addons\`` directory for GPython addons and initializes them.
+"""
+
 import sys
 import os.path
 from importlib import import_module
@@ -62,7 +72,8 @@ def redirect_output():
     # sys.stdin = sys.stderr = open('gpython.log', 'w+')
 
 
-def patch_hook_runner():
+def patch_hook_call():
+    """Patches the ``hook.Call`` Lua function to delegate hook calls to :mod:`gmod.hooks` module."""
     lua.exec('''
     py._watched_events = {}
     
@@ -88,9 +99,10 @@ def patch_hook_runner():
 
 
 def main():
+    """Finishes the GPython initialization."""
     redirect_output()
 
-    patch_hook_runner()
+    patch_hook_call()
 
     log('Loading addons...')
 

@@ -1,5 +1,5 @@
 """
-This module provides tools for Garry's Mod Lua interoperability, for example getting, setting values, indexing tables
+This module provides the tools for Garry's Mod Lua interoperability such as getting, setting values, indexing tables
 and calling functions.
 """
 

@@ -13,7 +13,7 @@ from collections import defaultdict
 from sys import stderr
 import traceback
 
-from . import lua, realms
+from . import lua
 
 __all__ = ['hook']
 
@@ -23,7 +23,7 @@ callbacks = defaultdict(lambda: [])
 
 
 def event_occurred(event):
-    """Runs callbacks for event ``event``. ``n_args`` is the quantity of the hook arguments."""
+    """Runs callbacks for event ``event``."""
     data = lua.G['_py_hook_data']
     n = int(lua.G['_py_n_data'])
     pydata = [data[i] for i in range(1, n + 1)]
@@ -55,7 +55,7 @@ def hook(event: str):
 
         # Registering the world initialization hook
         # hello_world will be called when the world initializes
-        @hook('Initialize')
+        @hooks.hook('Initialize')
         def hello_world():
             print('Hello world!')
 
@@ -68,7 +68,7 @@ def hook(event: str):
 
     ::
 
-        @hook('PlayerSay')
+        @hooks.hook('PlayerSay')
         def log_chat_to_file(sender, text, team_chat):
             prefix = '(TEAM)' if bool(team_chat) else ''
             file.write(Player(sender).nick + prefix + ': ' + str(text))

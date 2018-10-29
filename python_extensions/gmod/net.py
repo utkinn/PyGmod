@@ -1,5 +1,5 @@
 """
-This module provides tools for communication between *client* and *server*.
+This module provides the tools for communication between *client* and *server* realms.
 """
 
 import pickle
@@ -143,6 +143,8 @@ def receive(message):
 
         return func
 
+    return decorator
+
 
 # Default receiver of functions decorated by "client".
 # Net messages will be sent to this player when receiver is not specified.
@@ -206,11 +208,12 @@ def client(func):
         else:  # Server
             # Receiver has to be specified when calling server-decorated functions.
             # Will print "foo" to the chat of the player with the UserID 1.
-            spam('foo', receiver=get_player_by_userid(1))
+            spam('foo', receiver=player.get_by_userid(1))
 
     .. warning::
 
-        This decorator will work properly only when the decorated function is defined in the *shared* realm.
+        This decorator will work properly only when the decorated function is defined
+        in the *shared* realm (__shared_autorun__ package).
     """
     return realm_decorator(func, realms.CLIENT)
 
@@ -224,21 +227,22 @@ def server(func):
 
     Example of shared code::
 
-        @net.client
-        def spam(message):
-            chat.print(message)
+        @net.server
+        def kill_everyone():
+            for p in player.all():
+                p.kill()
 
 
         if CLIENT:
-            spam('eggs')  # Will print 'eggs' to the client's chat.
+            kill_everyone()  # Will kill every player
         else:  # Server
-            # Receiver has to be specified when calling server-decorated functions.
-            # Will print "foo" to the chat of the player with the UserID 1.
-            spam('foo', receiver=get_player_by_userid(1))
+            # There is no difference between calling server-decorated functions on client and on server.
+            kill_everyone()
 
     .. warning::
 
-        This decorator will work properly only when the decorated function is defined in the *shared* realm.
+        This decorator will work properly only when the decorated function is defined
+        in the *shared* realm (__shared_autorun__ package).
     """
     return realm_decorator(func, realms.SERVER)
 
@@ -248,7 +252,7 @@ class default_receiver:
 
     Instead of specifying the receiver on each call::
 
-        recv = get_player_by_userid(1)
+        recv = player.get_by_userid(1)
 
         chat.print('spam', receiver=recv)
         chat.print('eggs', receiver=recv)
@@ -257,7 +261,7 @@ class default_receiver:
 
     you can use :class:`default_receiver`::
 
-        recv = get_player_by_userid(1)
+        recv = player.get_by_userid(1)
         with net.default_receiver(recv):
             chat.print('spam')
             chat.print('eggs')

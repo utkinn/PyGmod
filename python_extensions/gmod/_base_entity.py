@@ -1,11 +1,12 @@
 """
 This module contains the :class:`BaseEntity` class.
 
-:class:`BaseEntity` is the base class for :class:`~gmod.entity.Entity` and :class:`~gmod.player.Player` classes.
+The :class:`BaseEntity` class is the base class for :class:`~gmod.entity.Entity`
+and :class:`~gmod.player.Player` classes.
 
 .. warning::
 
-    :class:`BaseEntity` is not intended for public use or instantiation.
+    :class:`BaseEntity` is not intended for public use.
 """
 
 from .lua import LuaObjectWrapper

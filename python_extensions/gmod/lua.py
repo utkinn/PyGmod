@@ -204,9 +204,9 @@ def table(iterable):
     """Creates and returns a :class:`LuaObject` of a new Lua table from ``iterable``."""
     ls.create_table()
     ls.push_special(Special.GLOBAL)
-    ls.get_field(-1, 'table')
+    ls.get_field(-1, b'table')
     for v in iterable:
-        ls.get_field(-1, 'insert')
+        ls.get_field(-1, b'insert')
         ls.push(1)  # Pushing that new table again
         try:
             push_pyval_to_stack(v)

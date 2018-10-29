@@ -1,5 +1,5 @@
 ``realms`` - determining the current realm
-=========================================
+==========================================
 
 .. automodule:: gmod.realms
     :members:

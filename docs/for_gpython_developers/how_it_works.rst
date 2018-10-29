@@ -25,7 +25,7 @@ When it's loaded by Garry's Mod's addon system, the launcher activates
 ``gmcl_gpython_win32.dll`` is for the *client* and ``gmsv_gpython_win32.dll`` is for the *server*.
 
 2. Realms' DLLs: ``gmcl_gpython_win32.dll`` and ``gmsv_gpython_win32.dll``
----------------
+--------------------------------------------------------------------------
 
 These two DLLs call ``gpython_run()`` in ``gpython.dll``.
 
@@ -94,7 +94,7 @@ by providing the :class:`~gmod.lua.LuaObject` class and the :data:`~gmod.lua.G` 
 The :class:`~gmod.lua.LuaObject` class internally uses the :doc:`luastack module<../reference/internal/luastack>`.
 
 7. ``luastack`` module
--------------------------
+----------------------
 
 :doc:`luastack module <../reference/internal/luastack>` manipulates the Lua stack directly.
 This is the most low-level way of interacting with Lua.

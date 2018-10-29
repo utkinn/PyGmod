@@ -1,5 +1,5 @@
 ``lua`` - Lua interoperability
-=============================
+==============================
 
 .. automodule:: gmod.lua
     :members:

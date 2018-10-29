@@ -37,7 +37,6 @@ def send(message_name, *values, receiver=None):
     :param receiver: Message receiver(s). Ignored and can be ``None`` when sending **to** server,
                      but required when sending **from** server.
     :type receiver: Player or iterable[Player] or None
-    .. :param bool handled_in_lua: Whether this message is intended to be received by Lua code.
     :raises ValueError: if ``receiver`` is ``None`` when sending **from** server.
     """
     if isinstance(receiver, Iterable):
@@ -133,7 +132,7 @@ def receive(message):
             local _recv_len = net.ReadUInt(32)  -- Pickled object length
             py._recv_obj = net.ReadData(_recv_len)  -- Actual pickled object
             py._recv_ply = ply
-            
+
             -- Notifying GPython that message was received; data is ready
             py.Exec("import gmod.net; gmod.net.received({repr(message)})")
         end

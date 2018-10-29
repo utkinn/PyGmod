@@ -79,10 +79,14 @@ class LuaObject:
             return ls.get_type_name(ls.get_type(-1))
 
     def __str__(self):
+        if self.type == ValueType.NIL:
+            return 'None'
+
         with self._context:
             val = ls.get_string(-1)
             if val is None:
                 raise ValueError("can't convert this value to str")
+            return val
 
     def __int__(self):
         with self._context:

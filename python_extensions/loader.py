@@ -70,6 +70,13 @@ def patch_hook_runner():
 
     local function newCall(eventName, gamemodeTable, ...)
         if isstring(eventName) and py and py._watched_events and py._watched_events[eventName] then
+            _py_hook_data = {...}
+            _py_n_data = #{...}
+            if CLIENT then
+                py._SwitchToClient()
+            else
+                py._SwitchToServer()
+            end
             py.Exec('import gmod.hooks; gmod.hooks.event_occurred("'..eventName..'")')
         end
 

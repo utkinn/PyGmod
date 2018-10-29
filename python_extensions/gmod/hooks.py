@@ -10,8 +10,10 @@ You can register hooks with :func:`hook` decorator.
 """
 
 from collections import defaultdict
+from sys import stderr
+import traceback
 
-from . import lua
+from . import lua, realms
 
 __all__ = ['hook']
 
@@ -22,8 +24,16 @@ callbacks = defaultdict(lambda: [])
 
 def event_occurred(event):
     """Runs callbacks for event ``event``. ``n_args`` is the quantity of the hook arguments."""
+    data = lua.G['_py_hook_data']
+    n = int(lua.G['_py_n_data'])
+    pydata = [data[i] for i in range(1, n + 1)]
+
     for callback in callbacks[event]:
-        callback()
+        try:
+            callback(*pydata)
+        except:
+            print(f'Exception in hook "{callback.__module__}.{callback.__name__}":', file=stderr)
+            traceback.print_exc()
 
 
 def hook(event: str):

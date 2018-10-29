@@ -17,7 +17,6 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Internal modules" href="../reference/internal.html" />
     <link rel="prev" title="Building documentation" href="building_docs.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -29,9 +28,6 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="../reference/internal.html" title="Internal modules"
-             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="building_docs.html" title="Building documentation"
              accesskey="P">previous</a> |</li>
@@ -46,16 +42,16 @@
             
   <div class="section" id="how-gpython-works">
 <h1>How GPython works<a class="headerlink" href="#how-gpython-works" title="Permalink to this headline">¶</a></h1>
-<p>Let’s suppose we have a simpliest “Hello World” GPython addon:</p>
+<p>Let’s suppose we have a simple “Hello World” GPython addon:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>addons\ ─┬─ example\ ─┬─ addon.json
-        ...           ├─ python\ ─── __autorun__\ ─── __init__.py
+        ...           ├─ python\ ─── __shared_autorun__\ ─── __init__.py
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod</span> <span class="k">import</span> <span class="n">player</span>
 
 <span class="c1"># Greeting the first player</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello, &#39;</span> <span class="o">+</span> <span class="n">Player</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">nick</span> <span class="o">+</span> <span class="s1">&#39;!&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello, &#39;</span> <span class="o">+</span> <span class="n">player</span><span class="o">.</span><span class="n">get_by_userid</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">nick</span> <span class="o">+</span> <span class="s1">&#39;!&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="lua-launcher">
@@ -68,8 +64,8 @@ When it’s loaded by Garry’s Mod’s addon system, the launcher activates
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">gmcl_gpython_win32.dll</span></code> is for the <em>client</em> and <code class="docutils literal notranslate"><span class="pre">gmsv_gpython_win32.dll</span></code> is for the <em>server</em>.</p>
 </div>
-<div class="section" id="realms-dlls">
-<h2>2. Realms’ DLLs<a class="headerlink" href="#realms-dlls" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="realms-dlls-gmcl-gpython-win32-dll-and-gmsv-gpython-win32-dll">
+<h2>2. Realms’ DLLs: <code class="docutils literal notranslate"><span class="pre">gmcl_gpython_win32.dll</span></code> and <code class="docutils literal notranslate"><span class="pre">gmsv_gpython_win32.dll</span></code><a class="headerlink" href="#realms-dlls-gmcl-gpython-win32-dll-and-gmsv-gpython-win32-dll" title="Permalink to this headline">¶</a></h2>
 <p>These two DLLs call <code class="docutils literal notranslate"><span class="pre">gpython_run()</span></code> in <code class="docutils literal notranslate"><span class="pre">gpython.dll</span></code>.</p>
 </div>
 <div class="section" id="main-gpython-dll-gpython-dll">
@@ -83,9 +79,9 @@ When it’s loaded by Garry’s Mod’s addon system, the launcher activates
 <li>Appends <code class="docutils literal notranslate"><span class="pre">garrysmod\gpython\</span></code> to <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.path" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.path</span></code></a>.</li>
 <li>Calls <code class="docutils literal notranslate"><span class="pre">setup()</span></code> in <code class="xref py py-mod docutils literal notranslate"><span class="pre">luastack</span></code> thus setting the global lua stack pointer
 and setting <code class="xref py py-data docutils literal notranslate"><span class="pre">luastack.IN_GMOD</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
-<li>Redirects I/O to Garry’s Mod console with <a class="reference internal" href="../reference/internal/streams.html#module-gmod.streams" title="gmod.streams"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.streams</span></code></a>.</li>
 <li>Adds <a class="reference internal" href="../lua_reference.html"><span class="doc">Lua2Python interoperability functions</span></a> (using Python from Lua).</li>
-<li>Scans <code class="docutils literal notranslate"><span class="pre">addons\</span></code> directory for GPython addons and runs their code.</li>
+<li>Runs the addon loader.</li>
+<li>Saves the Lua state, so the realms be swapped during the work time.</li>
 </ol>
 </div>
 <div class="section" id="client">
@@ -94,30 +90,43 @@ and setting <code class="xref py py-data docutils literal notranslate"><span cla
 <p>Instead of initializing Python again, a subinterpreter is created and swapped to.</p>
 </div>
 </div>
-<div class="section" id="gpython-wrappers">
-<h2>4. GPython wrappers<a class="headerlink" href="#gpython-wrappers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="loader-py">
+<h2>4. <code class="docutils literal notranslate"><span class="pre">loader.py</span></code><a class="headerlink" href="#loader-py" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">loader.py</span></code> is the second part of the initialization system.</p>
+<p>Here is what it does:</p>
+<ol class="arabic simple">
+<li>Redirects I/O to Garry’s Mod console with <a class="reference internal" href="../reference/internal/streams.html#module-gmod.streams" title="gmod.streams"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.streams</span></code></a> I/O classes.</li>
+<li>Patches the <code class="docutils literal notranslate"><span class="pre">hook.Call</span></code> Lua function to delegate hook calls to <a class="reference internal" href="../reference/hooks.html#module-gmod.hooks" title="gmod.hooks"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.hooks</span></code></a> module.</li>
+<li>Scans <code class="docutils literal notranslate"><span class="pre">addons\</span></code> directory for GPython addons and initializes them.</li>
+</ol>
+</div>
+<div class="section" id="lua-api-wrappers">
+<h2>5. Lua API wrappers<a class="headerlink" href="#lua-api-wrappers" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="../reference/player.html#gmod.player.Player" title="gmod.player.Player"><code class="xref py py-class docutils literal notranslate"><span class="pre">Player</span></code></a> is just a wrapper over the corresponding Lua functions,
 as much as many other GPython services.</p>
-<p>In this example, <code class="docutils literal notranslate"><span class="pre">Player(1)</span></code> creates an object that wraps <code class="docutils literal notranslate"><span class="pre">Player</span></code> Lua class. <code class="docutils literal notranslate"><span class="pre">nick</span></code> is a property that
-gets players’ nicknames using <a class="reference external" href="http://wiki.garrysmod.com/page/Player/Nick">Player:Nick()</a> function.</p>
+<p>In this example, <code class="docutils literal notranslate"><span class="pre">player.get_by_userid(1)</span></code> creates an object that wraps the <code class="docutils literal notranslate"><span class="pre">Player</span></code> Lua class.
+<code class="docutils literal notranslate"><span class="pre">nick</span></code> is a property that retrieves the player nickname nickname with
+<a class="reference external" href="http://wiki.garrysmod.com/page/Player/Nick">Player:Nick()</a> Lua function.</p>
 <p>This property looks like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">nick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_player_luaobj</span><span class="p">[</span><span class="s1">&#39;Nick&#39;</span><span class="p">]())</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lua_obj</span><span class="p">[</span><span class="s1">&#39;Nick&#39;</span><span class="p">]())</span>
 </pre></div>
 </div>
-<p>The <a class="reference internal" href="../reference/player.html#gmod.player.Player" title="gmod.player.Player"><code class="xref py py-class docutils literal notranslate"><span class="pre">Player</span></code></a> internally uses <a class="reference internal" href="../reference/lua.html#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">gmod.lua.LuaObject</span></code></a> to work with players.</p>
+<p>The <a class="reference internal" href="../reference/player.html#gmod.player.Player" title="gmod.player.Player"><code class="xref py py-class docutils literal notranslate"><span class="pre">Player</span></code></a> Python class internally uses <a class="reference internal" href="../reference/lua.html#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">gmod.lua.LuaObject</span></code></a> class.</p>
 </div>
 <div class="section" id="gmod-lua-module">
-<h2>5. <a class="reference internal" href="../reference/lua.html#module-gmod.lua" title="gmod.lua"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.lua</span></code></a> module<a class="headerlink" href="#gmod-lua-module" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../reference/lua.html#module-gmod.lua" title="gmod.lua"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.lua</span></code></a> module is itself a wrapper over <code class="xref py py-mod docutils literal notranslate"><span class="pre">luastack</span></code> module. <a class="reference internal" href="../reference/lua.html#module-gmod.lua" title="gmod.lua"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.lua</span></code></a> simplifies the interoperability
-with Lua by providing <a class="reference internal" href="../reference/lua.html#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a> class and <a class="reference internal" href="../reference/lua.html#gmod.lua.G" title="gmod.lua.G"><code class="xref py py-data docutils literal notranslate"><span class="pre">G</span></code></a> singleton.</p>
-<p><a class="reference internal" href="../reference/lua.html#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a> internally uses the <a class="reference internal" href="../reference/internal/luastack.html"><span class="doc">luastack module</span></a>.</p>
+<h2>6. <a class="reference internal" href="../reference/lua.html#module-gmod.lua" title="gmod.lua"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.lua</span></code></a> module<a class="headerlink" href="#gmod-lua-module" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="../reference/lua.html#module-gmod.lua" title="gmod.lua"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.lua</span></code></a> module is itself a wrapper over the <code class="xref py py-mod docutils literal notranslate"><span class="pre">luastack</span></code> module.
+<a class="reference internal" href="../reference/lua.html#module-gmod.lua" title="gmod.lua"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.lua</span></code></a> simplifies the interoperability with Lua
+by providing the <a class="reference internal" href="../reference/lua.html#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a> class and the <a class="reference internal" href="../reference/lua.html#gmod.lua.G" title="gmod.lua.G"><code class="xref py py-data docutils literal notranslate"><span class="pre">G</span></code></a> singleton.</p>
+<p>The <a class="reference internal" href="../reference/lua.html#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a> class internally uses the <a class="reference internal" href="../reference/internal/luastack.html"><span class="doc">luastack module</span></a>.</p>
 </div>
 <div class="section" id="luastack-module">
-<h2>6. <code class="docutils literal notranslate"><span class="pre">luastack</span></code> module<a class="headerlink" href="#luastack-module" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../reference/internal/luastack.html"><span class="doc">luastack module</span></a> manipulates the Lua stack. Lua stack pointer is
-<a class="reference external" href="server_cpp_module_routine">previously set by the C++ module</a>.</p>
+<h2>7. <code class="docutils literal notranslate"><span class="pre">luastack</span></code> module<a class="headerlink" href="#luastack-module" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="../reference/internal/luastack.html"><span class="doc">luastack module</span></a> manipulates the Lua stack directly.
+This is the most low-level way of interacting with Lua.
+Lua stack pointer is <a class="reference external" href="server_cpp_module_routine">previously set by the C++ module</a>.</p>
 <hr class="docutils" />
 <p>And that’s it, our GPython addon is initialized. For me, <code class="docutils literal notranslate"><span class="pre">Hello,</span> <span class="pre">Protocs!</span></code> will be printed to console.</p>
 </div>
@@ -136,15 +145,16 @@ with Lua by providing <a class="reference internal" href="../reference/lua.html#
   <ul>
 <li><a class="reference internal" href="#">How GPython works</a><ul>
 <li><a class="reference internal" href="#lua-launcher">1. Lua Launcher</a></li>
-<li><a class="reference internal" href="#realms-dlls">2. Realms’ DLLs</a></li>
+<li><a class="reference internal" href="#realms-dlls-gmcl-gpython-win32-dll-and-gmsv-gpython-win32-dll">2. Realms’ DLLs: <code class="docutils literal notranslate"><span class="pre">gmcl_gpython_win32.dll</span></code> and <code class="docutils literal notranslate"><span class="pre">gmsv_gpython_win32.dll</span></code></a></li>
 <li><a class="reference internal" href="#main-gpython-dll-gpython-dll">3. Main GPython DLL: <code class="docutils literal notranslate"><span class="pre">gpython.dll</span></code></a><ul>
 <li><a class="reference internal" href="#server">Server</a></li>
 <li><a class="reference internal" href="#client">Client</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#gpython-wrappers">4. GPython wrappers</a></li>
-<li><a class="reference internal" href="#gmod-lua-module">5. <code class="docutils literal notranslate"><span class="pre">gmod.lua</span></code> module</a></li>
-<li><a class="reference internal" href="#luastack-module">6. <code class="docutils literal notranslate"><span class="pre">luastack</span></code> module</a></li>
+<li><a class="reference internal" href="#loader-py">4. <code class="docutils literal notranslate"><span class="pre">loader.py</span></code></a></li>
+<li><a class="reference internal" href="#lua-api-wrappers">5. Lua API wrappers</a></li>
+<li><a class="reference internal" href="#gmod-lua-module">6. <code class="docutils literal notranslate"><span class="pre">gmod.lua</span></code> module</a></li>
+<li><a class="reference internal" href="#luastack-module">7. <code class="docutils literal notranslate"><span class="pre">luastack</span></code> module</a></li>
 </ul>
 </li>
 </ul>
@@ -152,9 +162,6 @@ with Lua by providing <a class="reference internal" href="../reference/lua.html#
   <h4>Previous topic</h4>
   <p class="topless"><a href="building_docs.html"
                         title="previous chapter">Building documentation</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="../reference/internal.html"
-                        title="next chapter">Internal modules</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -188,9 +195,6 @@ with Lua by providing <a class="reference internal" href="../reference/lua.html#
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../reference/internal.html" title="Internal modules"
-             >next</a> |</li>
-        <li class="right" >
           <a href="building_docs.html" title="Building documentation"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">GPython 0.8a documentation</a> &#187;</li> 
@@ -198,7 +202,7 @@ with Lua by providing <a class="reference internal" href="../reference/lua.html#
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

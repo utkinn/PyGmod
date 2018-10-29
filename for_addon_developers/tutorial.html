@@ -71,7 +71,7 @@
 <img alt="../_images/garrysmod_addons.png" src="../_images/garrysmod_addons.png" />
 <p>Create a new folder here. Let’s name it <code class="docutils literal notranslate"><span class="pre">hello_world</span></code>.</p>
 <img alt="../_images/hello_world_folder.png" src="../_images/hello_world_folder.png" />
-<p>Open it and create <code class="docutils literal notranslate"><span class="pre">python</span></code> folder. Then, in <code class="docutils literal notranslate"><span class="pre">python</span></code> folder, create <code class="docutils literal notranslate"><span class="pre">__autorun__</span></code> folder.</p>
+<p>Open it and create <code class="docutils literal notranslate"><span class="pre">python</span></code> folder. Then, in <code class="docutils literal notranslate"><span class="pre">python</span></code> folder, create <code class="docutils literal notranslate"><span class="pre">__shared_autorun__</span></code> folder.</p>
 <p>The folder structure should look like:</p>
 <img alt="../_images/addon_folder_structure.png" src="../_images/addon_folder_structure.png" />
 </div>
@@ -79,8 +79,8 @@
 <div class="section" id="create-the-initialization-script">
 <h2>2. Create the initialization script<a class="headerlink" href="#create-the-initialization-script" title="Permalink to this headline">¶</a></h2>
 <p>When GPython sees your addon each time you start a new game in Garry’s Mod, GPython runs
-<code class="docutils literal notranslate"><span class="pre">(your</span> <span class="pre">addon</span> <span class="pre">folder</span> <span class="pre">name,</span> <span class="pre">&quot;hello_world&quot;</span> <span class="pre">in</span> <span class="pre">our</span> <span class="pre">case)\python\__autorun__\__init__.py</span></code>. As you can see,
-we have to create <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> in <code class="docutils literal notranslate"><span class="pre">__autorun__</span></code> folder to do anything useful.</p>
+<code class="docutils literal notranslate"><span class="pre">(your</span> <span class="pre">addon</span> <span class="pre">folder</span> <span class="pre">name,</span> <span class="pre">&quot;hello_world&quot;</span> <span class="pre">in</span> <span class="pre">our</span> <span class="pre">case)\python\__shared_autorun__\__init__.py</span></code>. As you can see,
+we have to create <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> in <code class="docutils literal notranslate"><span class="pre">__shared_autorun__</span></code> folder to do anything useful.</p>
 <hr class="docutils" />
 <ol class="arabic">
 <li><p class="first">Open <strong>Notepad</strong>.</p>
@@ -90,7 +90,7 @@ we have to create <code class="docutils literal notranslate"><span class="pre">_
 </pre></div>
 </div>
 </li>
-<li><p class="first">Go to <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Save</span> <span class="pre">as...</span></code> and find <code class="docutils literal notranslate"><span class="pre">hello_world\python\__autorun__\</span></code> folder.</p>
+<li><p class="first">Go to <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Save</span> <span class="pre">as...</span></code> and find <code class="docutils literal notranslate"><span class="pre">hello_world\python\__shared_autorun__\</span></code> folder.</p>
 </li>
 <li><p class="first">Open <strong>File type</strong> box and select <strong>All files (*.*)</strong> option instead of <strong>Text document (*.txt)</strong>.</p>
 </li>
@@ -196,7 +196,7 @@ You might have to look closely to find them among other console messages.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

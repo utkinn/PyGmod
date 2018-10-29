@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>lua: Lua interoperability &#8212; GPython 0.8a documentation</title>
+    <title>lua - Lua interoperability &#8212; GPython 0.8a documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -17,8 +17,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="net: communication between Client and Server" href="net.html" />
-    <link rel="prev" title="streams: I/O to Garry’s Mod" href="internal/streams.html" /> 
+    <link rel="next" title="net - communication between Client and Server" href="net.html" />
+    <link rel="prev" title="hooks - game event handling" href="hooks.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,10 +30,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="net.html" title="net: communication between Client and Server"
+          <a href="net.html" title="net - communication between Client and Server"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="internal/streams.html" title="streams: I/O to Garry’s Mod"
+          <a href="hooks.html" title="hooks - game event handling"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">GPython 0.8a documentation</a> &#187;</li> 
       </ul>
@@ -45,8 +45,8 @@
           <div class="body" role="main">
             
   <div class="section" id="module-gmod.lua">
-<span id="lua-lua-interoperability"></span><h1><code class="docutils literal notranslate"><span class="pre">lua</span></code>: Lua interoperability<a class="headerlink" href="#module-gmod.lua" title="Permalink to this headline">¶</a></h1>
-<p>This module provides tools for Garry’s Mod Lua interoperability, for example getting, setting values, indexing tables
+<span id="lua-lua-interoperability"></span><h1><code class="docutils literal notranslate"><span class="pre">lua</span></code> - Lua interoperability<a class="headerlink" href="#module-gmod.lua" title="Permalink to this headline">¶</a></h1>
+<p>This module provides the tools for Garry’s Mod Lua interoperability such as getting, setting values, indexing tables
 and calling functions.</p>
 <dl class="class">
 <dt id="gmod.lua.LuaObject">
@@ -90,21 +90,21 @@ the returned values.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="gmod.lua.lua_exec">
-<code class="descclassname">gmod.lua.</code><code class="descname">lua_exec</code><span class="sig-paren">(</span><em>code</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.lua.lua_exec" title="Permalink to this definition">¶</a></dt>
+<dt id="gmod.lua.exec">
+<code class="descclassname">gmod.lua.</code><code class="descname">exec</code><span class="sig-paren">(</span><em>code</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.lua.exec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Executes the given Lua code block. Returns nothing.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;MsgN(&quot;test&quot;)&#39;</span>
-<span class="n">lua_exec</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>  <span class="c1"># &#39;test&#39; will be printed to the console</span>
+<span class="n">lua</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>  <span class="c1"># &#39;test&#39; will be printed to the console</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="function">
-<dt id="gmod.lua.lua_eval">
-<code class="descclassname">gmod.lua.</code><code class="descname">lua_eval</code><span class="sig-paren">(</span><em>expr</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.lua.lua_eval" title="Permalink to this definition">¶</a></dt>
+<dt id="gmod.lua.eval">
+<code class="descclassname">gmod.lua.</code><code class="descname">eval</code><span class="sig-paren">(</span><em>expr</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.lua.eval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluates a single Lua expression. Returns <a class="reference internal" href="#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a> with evaluation result.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;game.SinglePlayer()&#39;</span>  <span class="c1"># Returns &quot;true&quot; if the current session is a single player game</span>
-<span class="n">single_player_luaobj</span> <span class="o">=</span> <span class="n">lua_eval</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
+<span class="n">single_player_luaobj</span> <span class="o">=</span> <span class="n">lua</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 <span class="c1"># Remember that we need to convert the evaluation result to bool explicitly</span>
 <span class="n">single_player</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">single_player_luaobj</span><span class="p">)</span>
 
@@ -140,11 +140,11 @@ the returned values.</p>
               <img class="logo" src="../_static/docs-logo.png" alt="Logo"/>
             </a></p>
   <h4>Previous topic</h4>
-  <p class="topless"><a href="internal/streams.html"
-                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">streams</span></code>: I/O to Garry’s Mod</a></p>
+  <p class="topless"><a href="hooks.html"
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">hooks</span></code> - game event handling</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="net.html"
-                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">net</span></code>: communication between Client and Server</a></p>
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">net</span></code> - communication between Client and Server</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -178,17 +178,17 @@ the returned values.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="net.html" title="net: communication between Client and Server"
+          <a href="net.html" title="net - communication between Client and Server"
              >next</a> |</li>
         <li class="right" >
-          <a href="internal/streams.html" title="streams: I/O to Garry’s Mod"
+          <a href="hooks.html" title="hooks - game event handling"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">GPython 0.8a documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

@@ -35,7 +35,7 @@ Create a new folder here. Let's name it ``hello_world``.
 
 .. image:: addon_tutorial_images/hello_world_folder.png
 
-Open it and create ``python`` folder. Then, in ``python`` folder, create ``__autorun__`` folder.
+Open it and create ``python`` folder. Then, in ``python`` folder, create ``__shared_autorun__`` folder.
 
 The folder structure should look like:
 
@@ -45,8 +45,8 @@ The folder structure should look like:
 -----------------------------------
 
 When GPython sees your addon each time you start a new game in Garry's Mod, GPython runs
-``(your addon folder name, "hello_world" in our case)\python\__autorun__\__init__.py``. As you can see,
-we have to create ``__init__.py`` in ``__autorun__`` folder to do anything useful.
+``(your addon folder name, "hello_world" in our case)\python\__shared_autorun__\__init__.py``. As you can see,
+we have to create ``__init__.py`` in ``__shared_autorun__`` folder to do anything useful.
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -56,7 +56,7 @@ we have to create ``__init__.py`` in ``__autorun__`` folder to do anything usefu
     print('Hello world!')
 
 
-3. Go to ``File -> Save as...`` and find ``hello_world\python\__autorun__\`` folder.
+3. Go to ``File -> Save as...`` and find ``hello_world\python\__shared_autorun__\`` folder.
 4. Open **File type** box and select **All files (\*.\*)** option instead of **Text document (\*.txt)**.
 5. Change **Encoding** to **UTF-8**.
 6. Type ``__init__.py`` to **File name** field and click **Save**.

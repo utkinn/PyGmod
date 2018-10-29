@@ -17,8 +17,8 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Building" href="for_gpython_developers/building.html" />
-    <link rel="prev" title="Welcome to GPython’s documentation!" href="index.html" /> 
+    <link rel="next" title="lua - Lua interoperability" href="reference/lua.html" />
+    <link rel="prev" title="Addon creation tutorial" href="for_addon_developers/tutorial.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,10 +30,10 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="for_gpython_developers/building.html" title="Building"
+          <a href="reference/lua.html" title="lua - Lua interoperability"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to GPython’s documentation!"
+          <a href="for_addon_developers/tutorial.html" title="Addon creation tutorial"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">GPython 0.8a documentation</a> &#187;</li> 
       </ul>
@@ -57,6 +57,19 @@ All interop functions are in the <code class="docutils literal notranslate"><spa
 </div>
 </dd></dl>
 
+<div class="section" id="internal-functions">
+<h2>Internal functions<a class="headerlink" href="#internal-functions" title="Permalink to this headline">¶</a></h2>
+<p>These functions are used by GPython internally and not intended to be used by the regular addon developers.</p>
+<dl class="function">
+<dt id="py._SwitchToClient">
+<code class="descclassname">py.</code><code class="descname">_SwitchToClient</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py._SwitchToClient" title="Permalink to this definition">¶</a></dt>
+<dt id="py._SwitchToServer">
+<code class="descclassname">py.</code><code class="descname">_SwitchToServer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py._SwitchToServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Switches to the GPython sub-interpreter which corresponds to the specified realm.
+Used primarily by the <a class="reference internal" href="reference/hooks.html#module-gmod.hooks" title="gmod.hooks"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.hooks</span></code></a> module.</p>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -68,12 +81,20 @@ All interop functions are in the <code class="docutils literal notranslate"><spa
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/docs-logo.png" alt="Logo"/>
             </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Lua Reference</a><ul>
+<li><a class="reference internal" href="#internal-functions">Internal functions</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to GPython’s documentation!</a></p>
+  <p class="topless"><a href="for_addon_developers/tutorial.html"
+                        title="previous chapter">Addon creation tutorial</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="for_gpython_developers/building.html"
-                        title="next chapter">Building</a></p>
+  <p class="topless"><a href="reference/lua.html"
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">lua</span></code> - Lua interoperability</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -107,17 +128,17 @@ All interop functions are in the <code class="docutils literal notranslate"><spa
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="for_gpython_developers/building.html" title="Building"
+          <a href="reference/lua.html" title="lua - Lua interoperability"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to GPython’s documentation!"
+          <a href="for_addon_developers/tutorial.html" title="Addon creation tutorial"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">GPython 0.8a documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

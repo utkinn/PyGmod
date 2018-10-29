@@ -1,11 +1,9 @@
-``luastack``: Lua Stack manipulation
-====================================
+``luastack`` - Lua Stack manipulation
+=====================================
 
 .. note::
 
-	``luastack`` is not a part of the ``gmod`` package. So, instead of:
-
-    ::
+    ``luastack`` is not a part of the ``gmod`` package. So, instead of::
 
         from gmod.luastack import *
 

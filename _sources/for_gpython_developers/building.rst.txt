@@ -12,7 +12,8 @@ Instructions
 
 #. Copy ``lua_launcher\gpython_launcher`` directory to ``garrysmod\addons`` directory.
 #. Open command prompt, ``cd`` to ``python_extensions`` directory and run ``setup.py build_ext --inplace``.
-#. Move all files with ``.pyd`` extension in ``python_extensions`` directory to ``garrysmod\gpython`` directory.
+#. Move all files with ``.py`` and ``.pyd`` extensions
+   in ``python_extensions`` directory to ``garrysmod\gpython`` directory.
 #. Copy ``python_extensions\gmod`` directory to ``garrysmod\gpython\gmod``
    (so there is a bunch of ``.py`` files in ``garrysmod\gpython\gmod`` directory).
 #. Open ``GPython.sln`` with Visual Studio and build the solution.
@@ -34,6 +35,7 @@ Final directory structure should looks like this:
                               │              └─ lua\ ────── bin\ ──────────────┬─ gmsv_gpython_win32.dll
                               │                                                └─ gmcl_gpython_win32.dll
                               └─ gpython\ ───┬─ luastack.cpXX-win32.pyd
+                                             ├─ loader.py
                                              └─ gmod\ ─────────────────────────┬─ __init__.py
                                                                                ├─ lua.py
                                                                                ├─ ...

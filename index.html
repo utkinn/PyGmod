@@ -54,6 +54,18 @@ the possibility to create addons for Garry’s Mod with Python 3 programming lan
 </ul>
 </div>
 <div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Module Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reference/hooks.html"><code class="docutils literal notranslate"><span class="pre">hooks</span></code> - game event handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/lua.html"><code class="docutils literal notranslate"><span class="pre">lua</span></code> - Lua interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/net.html"><code class="docutils literal notranslate"><span class="pre">net</span></code> - communication between Client and Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/entity.html"><code class="docutils literal notranslate"><span class="pre">entity</span></code> - entity utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/player.html"><code class="docutils literal notranslate"><span class="pre">player</span></code> - player utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/realms.html"><code class="docutils literal notranslate"><span class="pre">realms</span></code> - determining the current realm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/internal.html">Internal modules</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">For GPython internal developers:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="for_gpython_developers/building.html">Building</a><ul>
@@ -68,29 +80,21 @@ the possibility to create addons for Garry’s Mod with Python 3 programming lan
 </li>
 <li class="toctree-l1"><a class="reference internal" href="for_gpython_developers/how_it_works.html">How GPython works</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="for_gpython_developers/how_it_works.html#lua-launcher">1. Lua Launcher</a></li>
-<li class="toctree-l2"><a class="reference internal" href="for_gpython_developers/how_it_works.html#realms-dlls">2. Realms’ DLLs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="for_gpython_developers/how_it_works.html#realms-dlls-gmcl-gpython-win32-dll-and-gmsv-gpython-win32-dll">2. Realms’ DLLs: <code class="docutils literal notranslate"><span class="pre">gmcl_gpython_win32.dll</span></code> and <code class="docutils literal notranslate"><span class="pre">gmsv_gpython_win32.dll</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="for_gpython_developers/how_it_works.html#main-gpython-dll-gpython-dll">3. Main GPython DLL: <code class="docutils literal notranslate"><span class="pre">gpython.dll</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="for_gpython_developers/how_it_works.html#gpython-wrappers">4. GPython wrappers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="for_gpython_developers/how_it_works.html#gmod-lua-module">5. <code class="docutils literal notranslate"><span class="pre">gmod.lua</span></code> module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="for_gpython_developers/how_it_works.html#luastack-module">6. <code class="docutils literal notranslate"><span class="pre">luastack</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="for_gpython_developers/how_it_works.html#loader-py">4. <code class="docutils literal notranslate"><span class="pre">loader.py</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="for_gpython_developers/how_it_works.html#lua-api-wrappers">5. Lua API wrappers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="for_gpython_developers/how_it_works.html#gmod-lua-module">6. <code class="docutils literal notranslate"><span class="pre">gmod.lua</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="for_gpython_developers/how_it_works.html#luastack-module">7. <code class="docutils literal notranslate"><span class="pre">luastack</span></code> module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference/internal.html">Internal modules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/internal/luastack.html"><code class="docutils literal notranslate"><span class="pre">luastack</span></code>: Lua Stack manipulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/internal/streams.html"><code class="docutils literal notranslate"><span class="pre">streams</span></code>: I/O to Garry’s Mod</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/internal/base_entity.html"><code class="docutils literal notranslate"><span class="pre">_base_entity</span></code> - base class of Entity kinds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/internal/loader.html"><code class="docutils literal notranslate"><span class="pre">loader</span></code> - addon loader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/internal/luastack.html"><code class="docutils literal notranslate"><span class="pre">luastack</span></code> - Lua Stack manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/internal/streams.html"><code class="docutils literal notranslate"><span class="pre">streams</span></code> - I/O to Garry’s Mod</a></li>
 </ul>
 </li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Module Reference:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="reference/lua.html"><code class="docutils literal notranslate"><span class="pre">lua</span></code>: Lua interoperability</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/net.html"><code class="docutils literal notranslate"><span class="pre">net</span></code>: communication between Client and Server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/player.html"><code class="docutils literal notranslate"><span class="pre">player</span></code>: player utilities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/entity.html"><code class="docutils literal notranslate"><span class="pre">entity</span></code>: entity utilities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/realms.html"><code class="docutils literal notranslate"><span class="pre">realms</span></code>: determining the current realm</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/internal.html">Internal modules</a></li>
 </ul>
 </div>
 <hr class="docutils" />
@@ -166,7 +170,7 @@ the possibility to create addons for Garry’s Mod with Python 3 programming lan
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

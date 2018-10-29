@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Building documentation" href="building_docs.html" />
-    <link rel="prev" title="Lua Reference" href="../lua_reference.html" /> 
+    <link rel="prev" title="streams - I/O to Garry’s Mod" href="../reference/internal/streams.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -33,7 +33,7 @@
           <a href="building_docs.html" title="Building documentation"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../lua_reference.html" title="Lua Reference"
+          <a href="../reference/internal/streams.html" title="streams - I/O to Garry’s Mod"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">GPython 0.8a documentation</a> &#187;</li> 
       </ul>
@@ -58,7 +58,8 @@
 <ol class="arabic simple">
 <li>Copy <code class="docutils literal notranslate"><span class="pre">lua_launcher\gpython_launcher</span></code> directory to <code class="docutils literal notranslate"><span class="pre">garrysmod\addons</span></code> directory.</li>
 <li>Open command prompt, <code class="docutils literal notranslate"><span class="pre">cd</span></code> to <code class="docutils literal notranslate"><span class="pre">python_extensions</span></code> directory and run <code class="docutils literal notranslate"><span class="pre">setup.py</span> <span class="pre">build_ext</span> <span class="pre">--inplace</span></code>.</li>
-<li>Move all files with <code class="docutils literal notranslate"><span class="pre">.pyd</span></code> extension in <code class="docutils literal notranslate"><span class="pre">python_extensions</span></code> directory to <code class="docutils literal notranslate"><span class="pre">garrysmod\gpython</span></code> directory.</li>
+<li>Move all files with <code class="docutils literal notranslate"><span class="pre">.py</span></code> and <code class="docutils literal notranslate"><span class="pre">.pyd</span></code> extensions
+in <code class="docutils literal notranslate"><span class="pre">python_extensions</span></code> directory to <code class="docutils literal notranslate"><span class="pre">garrysmod\gpython</span></code> directory.</li>
 <li>Copy <code class="docutils literal notranslate"><span class="pre">python_extensions\gmod</span></code> directory to <code class="docutils literal notranslate"><span class="pre">garrysmod\gpython\gmod</span></code>
 (so there is a bunch of <code class="docutils literal notranslate"><span class="pre">.py</span></code> files in <code class="docutils literal notranslate"><span class="pre">garrysmod\gpython\gmod</span></code> directory).</li>
 <li>Open <code class="docutils literal notranslate"><span class="pre">GPython.sln</span></code> with Visual Studio and build the solution.</li>
@@ -76,6 +77,7 @@ from <code class="docutils literal notranslate"><span class="pre">bin_modules\bu
                           │              └─ lua\ ────── bin\ ──────────────┬─ gmsv_gpython_win32.dll
                           │                                                └─ gmcl_gpython_win32.dll
                           └─ gpython\ ───┬─ luastack.cpXX-win32.pyd
+                                         ├─ loader.py
                                          └─ gmod\ ─────────────────────────┬─ __init__.py
                                                                            ├─ lua.py
                                                                            ├─ ...
@@ -108,8 +110,8 @@ from <code class="docutils literal notranslate"><span class="pre">bin_modules\bu
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../lua_reference.html"
-                        title="previous chapter">Lua Reference</a></p>
+  <p class="topless"><a href="../reference/internal/streams.html"
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">streams</span></code> - I/O to Garry’s Mod</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="building_docs.html"
                         title="next chapter">Building documentation</a></p>
@@ -149,14 +151,14 @@ from <code class="docutils literal notranslate"><span class="pre">bin_modules\bu
           <a href="building_docs.html" title="Building documentation"
              >next</a> |</li>
         <li class="right" >
-          <a href="../lua_reference.html" title="Lua Reference"
+          <a href="../reference/internal/streams.html" title="streams - I/O to Garry’s Mod"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">GPython 0.8a documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

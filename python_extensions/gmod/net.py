@@ -49,8 +49,8 @@ def send(message_name, *values, receiver=None):
     if not isinstance(message_name, str):
         raise TypeError(f'message name type must be str, not {type(message_name).__name__}')
 
-    if receiver is None:
-        receiver = default_recv
+    if standardized_receiver is None:
+        standardized_receiver = default_recv
 
     if realms.SERVER and not (isinstance(standardized_receiver, Player) or isinstance(standardized_receiver, Iterable)):
         raise ValueError('receiver must be a Player object or an iterable of Player objects '
@@ -69,7 +69,7 @@ def send(message_name, *values, receiver=None):
         lua.G['net']['SendToServer']()
     else:
         if isinstance(standardized_receiver, Player):
-            lua.G['net']['Send'](receiver)
+            lua.G['net']['Send'](standardized_receiver)
         elif isinstance(standardized_receiver, Iterable):
             lua.G['net']['Send'](lua.table(standardized_receiver))
 

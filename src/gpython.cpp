@@ -36,9 +36,8 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
 
 	cons.log("Binary module loaded");
 
-    addAndInitializeGPythonBuiltins();
-
     if (!client) {
+        addAndInitializeGPythonBuiltins();
 	    Py_Initialize();
         serverInterp = PyThreadState_Get();
     } else {
@@ -63,6 +62,7 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
     extendLua(LUA);
     cons.log("Lua2Python Lua extensions loaded");
 
+    // PyRun_SimpleString("import sys; sys.stdout=sys.stderr=open('gpy.log', 'w')");  // In case of the broken loader
     PyRun_SimpleString("import loader; loader.main()");
 	//launchAddons(cons, client);
 
@@ -70,6 +70,11 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
         cons.error("Something went wrong");
         return 0;
     }
+
+    if (client)
+        clientLua = LUA;
+    else
+        serverLua = LUA;
 
 	return 0;
 }

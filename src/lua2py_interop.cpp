@@ -1,8 +1,10 @@
 #include "lua2py_interop.hpp"
+#include "../../python_extensions/luastack.h"
 
 #define LUA_FUNC(name) int name(lua_State *state)
 
 PyThreadState *clientInterp, *serverInterp;
+ILuaBase *clientLua, *serverLua;
 
 // Eexcutes a string of Python code.
 LUA_FUNC(py_Exec) {
@@ -15,12 +17,14 @@ LUA_FUNC(py_Exec) {
 
 LUA_FUNC(py_SwitchToClient) {
     PyThreadState_Swap(clientInterp);
+    setup(clientLua);
 
     return 0;
 }
 
 LUA_FUNC(py_SwitchToServer) {
     PyThreadState_Swap(serverInterp);
+    setup(serverLua);
 
     return 0;
 }

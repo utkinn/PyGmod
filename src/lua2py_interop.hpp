@@ -6,5 +6,6 @@
 using namespace GarrysMod::Lua;
 
 extern PyThreadState *clientInterp, *serverInterp;
+extern ILuaBase *clientLua, *serverLua;
 
 void extendLua(ILuaBase *lua);

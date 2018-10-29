@@ -3,12 +3,16 @@ This module provides tools for communication between *client* and *server*.
 """
 
 import pickle
+from collections import defaultdict
 from collections.abc import Iterable
 
+from luastack import ValueType
 from .player import Player
 from . import realms, lua
 
 __all__ = ['send', 'receive', 'client', 'server', 'default_receiver']
+
+receivers = defaultdict(lambda: [])
 
 
 def write_py2py_netmsg_data(values):
@@ -22,7 +26,8 @@ def write_py2py_netmsg_data(values):
     lua.G['net']['WriteData'](pickled, length)
 
 
-def send(message_name, *values, receiver=None, handled_in_lua=False):
+# def send(message_name, *values, receiver=None, handled_in_lua=False):
+def send(message_name, *values, receiver=None):
     """Sends a net message to the opposite realm.
 
     :param str message_name: The message name. Has to be registered with
@@ -32,7 +37,7 @@ def send(message_name, *values, receiver=None, handled_in_lua=False):
     :param receiver: Message receiver(s). Ignored and can be ``None`` when sending **to** server,
                      but required when sending **from** server.
     :type receiver: Player or iterable[Player] or None
-    :param bool handled_in_lua: Whether this message is intended to be received by Lua code.
+    .. :param bool handled_in_lua: Whether this message is intended to be received by Lua code.
     :raises ValueError: if ``receiver`` is ``None`` when sending **from** server.
     """
 
@@ -48,12 +53,12 @@ def send(message_name, *values, receiver=None, handled_in_lua=False):
 
     lua.G['net']['Start'](message_name)
 
-    if handled_in_lua:
-        # Just writing the values if the message is intended to be received by Lua code
-        for v in values:
-            lua.G['net']['WriteType'](v)
-    else:
-        write_py2py_netmsg_data(values)
+    # if handled_in_lua:
+    #     # Just writing the values if the message is intended to be received by Lua code
+    #     for v in values:
+    #         lua.G['net']['WriteType'](v)
+    # else:
+    write_py2py_netmsg_data(values)
 
     if realms.CLIENT:
         lua.G['net']['SendToServer']()
@@ -62,6 +67,18 @@ def send(message_name, *values, receiver=None, handled_in_lua=False):
             lua.G['net']['Send'](receiver)
         elif isinstance(receiver, Iterable):
             lua.G['net']['Send'](lua.table(receiver))
+
+
+def received(message):
+    for r in receivers[message]:
+        lua_player = lua.G['py']['_recv_ply']
+        if lua_player.type == ValueType.NIL:
+            player = None
+        else:
+            player = Player(lua_player)
+        data = pickle.loads(bytes(lua.G['py']['_recv_obj']))
+
+        r(*data, player)
 
 
 def receive(message):
@@ -80,28 +97,45 @@ def receive(message):
         if CLIENT:
             net.send('foo', 'message', 'received', receiver=get_player_by_userid(1))
             # 'message received' will be printed in the console of the player with the UserID 1.
-
-    Sending in Lua and receiving in Python::
-
-        --- sv_init.lua ---
-
-        util.AddNetworkString('foo')
-
-        net.Start('foo')
-            net.WriteString('message')
-            net.WriteString('received')
-        net.Send(Player(1))
-
-
-        --- __client_autorun__\\__init__.py ---
-
-        from gmod import net
-
-        @net.receive('foo')
-        def foo_receiver(a, b):
-            print(a, b)
     """
-    ...
+    # Commented part of the documentation:
+
+    # Sending in Lua and receiving in Python::
+    #
+    #     --- sv_init.lua ---
+    #
+    #     util.AddNetworkString('foo')
+    #
+    #     net.Start('foo')
+    #         net.WriteString('message')
+    #         net.WriteString('received')
+    #     net.Send(Player(1))
+    #
+    #
+    #     --- __client_autorun__\\__init__.py ---
+    #
+    #     from gmod import net
+    #
+    #     @net.receive('foo')
+    #     def foo_receiver(a, b):
+    #         print(a, b)
+
+    # End of documentation
+    def decorator(func):
+        lua_receiver = lua.eval(f'''
+        function(_, ply)
+            local _recv_len = net.ReadUInt(32)  -- Pickled object length
+            py._recv_obj = net.ReadData(_recv_len)  -- Actual pickled object
+            py._recv_ply = ply
+            
+            -- Notifying GPython that message was received; data is ready
+            py.Exec("import gmod.net; gmod.net.received({repr(message)})")
+        end
+        ''')
+        lua.G['net']['Receive'](message, lua_receiver)
+        receivers[message].append(func)
+
+        return func
 
 
 # Default receiver of functions decorated by "client".

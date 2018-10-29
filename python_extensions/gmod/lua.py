@@ -127,7 +127,7 @@ class LuaObject:
             push_pyval_to_stack(val)
         ls.call(len(args), -1)
         returns = []
-        while ls.top():
+        while ls.top() > 1:
             returns.insert(0, LuaObject())
         if len(returns) == 1:
             return returns[0]
@@ -209,6 +209,8 @@ def eval(expr):
 
 def table(iterable):
     """Creates and returns a :class:`LuaObject` of a new Lua table from ``iterable``."""
+    ls.clear()  # Everything might go wrong if the stack is not empty
+
     ls.create_table()
     ls.push_special(Special.GLOBAL)
     ls.get_field(-1, b'table')

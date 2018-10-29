@@ -12,6 +12,7 @@ You can register hooks with :func:`hook` decorator.
 from collections import defaultdict
 from sys import stderr
 import traceback
+from types import MethodType
 
 from . import lua
 
@@ -95,7 +96,7 @@ def hook(event: str):
 
             del self.remove
 
-        func.remove = remove
+        func.remove = MethodType(remove, func)
         return func
 
     return decorator

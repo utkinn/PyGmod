@@ -40,6 +40,12 @@ def send(message_name, *values, receiver=None):
     .. :param bool handled_in_lua: Whether this message is intended to be received by Lua code.
     :raises ValueError: if ``receiver`` is ``None`` when sending **from** server.
     """
+    if isinstance(receiver, Iterable):
+        standardized_receiver = tuple(receiver)
+        if any(not isinstance(o, Player) for o in standardized_receiver):
+            raise TypeError('receivers iterable contain non-Player objects')
+    else:
+        standardized_receiver = receiver
 
     if not isinstance(message_name, str):
         raise TypeError(f'message name type must be str, not {type(message_name).__name__}')
@@ -47,7 +53,7 @@ def send(message_name, *values, receiver=None):
     if receiver is None:
         receiver = default_recv
 
-    if realms.SERVER and not (isinstance(receiver, Player) or isinstance(receiver, Iterable)):
+    if realms.SERVER and not (isinstance(standardized_receiver, Player) or isinstance(standardized_receiver, Iterable)):
         raise ValueError('receiver must be a Player object or an iterable of Player objects '
                          f'when sending messages from server. Got {type(receiver).__name__} instead.')
 
@@ -63,10 +69,10 @@ def send(message_name, *values, receiver=None):
     if realms.CLIENT:
         lua.G['net']['SendToServer']()
     else:
-        if isinstance(receiver, Player):
+        if isinstance(standardized_receiver, Player):
             lua.G['net']['Send'](receiver)
-        elif isinstance(receiver, Iterable):
-            lua.G['net']['Send'](lua.table(receiver))
+        elif isinstance(standardized_receiver, Iterable):
+            lua.G['net']['Send'](lua.table(standardized_receiver))
 
 
 def received(message):

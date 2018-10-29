@@ -76,7 +76,6 @@
   <ItemGroup>
     <ClInclude Include="python_extensions\luastack.h" />
     <ClInclude Include="src\lua2py_interop.hpp" />
-    <ClInclude Include="src\addon_launcher.hpp" />
     <ClInclude Include="src\Console.hpp" />
     <ClInclude Include="src\include\GarrysMod\Lua\Interface.h" />
     <ClInclude Include="src\include\GarrysMod\Lua\LuaBase.h" />
@@ -86,7 +85,6 @@
   <ItemGroup>
     <ClCompile Include="python_extensions\luastack.cpp" />
     <ClCompile Include="src\lua2py_interop.cpp" />
-    <ClCompile Include="src\addon_launcher.cpp" />
     <ClCompile Include="src\Console.cpp" />
     <ClCompile Include="src\gpython.cpp" />
   </ItemGroup>

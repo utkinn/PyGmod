@@ -2,7 +2,6 @@
 #include "GarrysMod/Lua/Interface.h"
 
 #include "Console.hpp"
-#include "addon_launcher.hpp"
 #include "../../python_extensions/luastack.h"
 #include "lua2py_interop.hpp"
 
@@ -19,11 +18,6 @@ void giveILuaBasePtrToLuastack(ILuaBase* ptr) {
     PyImport_ImportModule("luastack");
     setup(ptr);  // Declaration and definition of this function is in "luastack.pyx"
     PyRun_SimpleString("import luastack; luastack.IN_GMOD = True");
-}
-
-// Redirects the Python stdout and stderr to Garry's Mod console.
-void redirectIO_toGmod() {
-    PyRun_SimpleString("import gmod.streams, sys; sys.stdout = gmod.streams.GmodConsoleOut(); sys.stderr = gmod.streams.GmodConsoleErr()");
 }
 
 // Redirects the Python stdout and stderr to "gpy.log" for debugging errors which prevent Garry's Mod IO from working.
@@ -51,9 +45,6 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
 
     giveILuaBasePtrToLuastack(LUA);
 
-    //redirectIO_toLogFile();
-    //redirectIO_toGmod();
-
     if (PyErr_Occurred()) {
         cons.error("Setup failed");
         return 0;
@@ -62,9 +53,8 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
     extendLua(LUA);
     cons.log("Lua2Python Lua extensions loaded");
 
-    // PyRun_SimpleString("import sys; sys.stdout=sys.stderr=open('gpy.log', 'w')");  // In case of the broken loader
+    // redirectIO_toLogFile();  // In case of the broken loader
     PyRun_SimpleString("import loader; loader.main()");
-	//launchAddons(cons, client);
 
     if (PyErr_Occurred()) {
         cons.error("Something went wrong");

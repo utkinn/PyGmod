@@ -9,34 +9,21 @@ In this case, the arguments are passed to callbacks.
 You can register hooks with :func:`hook` decorator.
 """
 
+from collections import defaultdict
+
 from . import lua
 
 __all__ = ['hook']
 
 # Callback registry.
 # Keys are the event names, values are the lists of callbacks.
-callbacks = {}
-
-
-def register_callback(event, callback):
-    """
-    Adds a callback to the callback registry.
-    Returns index of the callback.
-    """
-    callback_list = callbacks.get(event, [])
-    new_index = len(callbacks)
-    callback_list.append(callback)
-    callbacks[event] = callback_list
-    return new_index
+callbacks = defaultdict(lambda: [])
 
 
 def event_occurred(event):
     """Runs callbacks for event ``event``. ``n_args`` is the quantity of the hook arguments."""
-    args_luaobj = lua.G['py']['_hook_cb_args']
-    n_args = int(lua.G['py']['_hook_cb_nargs'])
-    args = [args_luaobj[i] for i in range(1, n_args + 1)]
     for callback in callbacks[event]:
-        callback(*args)
+        callback()
 
 
 def hook(event: str):
@@ -80,29 +67,22 @@ def hook(event: str):
 
         Arguments are actually :class:`gmod.lua.LuaObject`\\ s, so you have to explicitly convert them to right types.
     """
+    if not isinstance(event, str):
+        raise TypeError('event must be str')
 
     def decorator(func):
-        index = register_callback(event, func)
+        if lua.G['py']['_watched_events'].type_name == b'nil':
+            lua.G['py']['_watched_events'] = lua.table(())
 
-        lua_callback = f'''function(...)
-            if CLIENT then
-                py._SwitchToClient()
-            else
-                py._SwitchToServer()
-            end
-        
-            py._hook_cb_args = {{...}}  -- Curly brackets are escaped in f-strings by repeating them two times
-            py._hook_cb_nargs = #py._hook_cb_args
-            py.Exec("import gmod.hooks; gmod.hooks.event_occurred({repr(event)})")
-        end
-        '''
-
-        # This hook's ID
-        id_ = f'gpy_hook_{event}{index}'
-        lua.G['hook']['Add'](event, lua.eval(lua_callback), id_)
+        lua.G['py']['_watched_events'][event] = True
+        callbacks[event].append(func)
 
         def remove(self):
-            lua.G['hook']['Remove'](event, id_)
+            callbacks[event].remove(func)
+
+            if not callbacks[event]:
+                lua.G['py']['_watched_events'][event] = False
+
             del self.remove
 
         func.remove = remove

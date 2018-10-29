@@ -3,7 +3,6 @@ from unittest.mock import patch, Mock, call
 import pickle
 
 from .table_mock import TableMock
-import luastack
 
 
 def create_g_mock():
@@ -30,7 +29,6 @@ class SendTestCase(TestCase):
         realms.SERVER = True
 
         from gmod.net import send
-        from gmod import player
 
         with self.assertRaises(TypeError):
             send(123, 1)

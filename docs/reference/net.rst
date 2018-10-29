@@ -1,4 +1,4 @@
-``net``: communication between Client and Server
+``net`` - communication between Client and Server
 ================================================
 
 .. automodule:: gmod.net

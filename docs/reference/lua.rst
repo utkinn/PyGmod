@@ -1,4 +1,4 @@
-``lua``: Lua interoperability
+``lua`` - Lua interoperability
 =============================
 
 .. automodule:: gmod.lua

@@ -1,4 +1,4 @@
-``realms``: determining the current realm
+``realms`` - determining the current realm
 =========================================
 
 .. automodule:: gmod.realms

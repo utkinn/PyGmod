@@ -1,4 +1,4 @@
-``hooks``: game event handling
+``hooks`` - game event handling
 ==============================
 
 .. automodule:: gmod.hooks

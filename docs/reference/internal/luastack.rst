@@ -1,4 +1,4 @@
-``luastack``: Lua Stack manipulation
+``luastack`` - Lua Stack manipulation
 ====================================
 
 .. note::

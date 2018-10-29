@@ -1,4 +1,4 @@
-``_base_entity``: base class of Entity kinds
+``_base_entity`` - base class of Entity kinds
 ============================================
 
 .. automodule:: gmod._base_entity

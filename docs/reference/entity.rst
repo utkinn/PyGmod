@@ -1,4 +1,4 @@
-``entity``: entity utilities
+``entity`` - entity utilities
 ============================
 
 .. automodule:: gmod.entity

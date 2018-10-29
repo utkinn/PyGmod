@@ -1,4 +1,4 @@
-``player``: player utilities
+``player`` - player utilities
 ============================
 
 .. automodule:: gmod.player

@@ -6,7 +6,7 @@ and calling functions.
 from abc import ABC, abstractmethod
 from numbers import Number
 
-from luastack import LuaStack, Special, IN_GMOD
+from luastack import LuaStack, Special, IN_GMOD, ValueType
 
 __all__ = ['G', 'exec', 'eval', 'table', 'LuaObjectWrapper']
 
@@ -80,7 +80,9 @@ class LuaObject:
 
     def __str__(self):
         with self._context:
-            return ls.get_string(-1)
+            val = ls.get_string(-1)
+            if val is None:
+                raise ValueError("can't convert this value to str")
 
     def __int__(self):
         with self._context:
@@ -95,18 +97,27 @@ class LuaObject:
             return ls.get_bool(-1)
 
     def __setitem__(self, key, value):
+        if self.type == ValueType.NIL:
+            raise ValueError("can't index nil")
+
         with self._context:
             push_pyval_to_stack(key)
             push_pyval_to_stack(value)
             ls.set_table(-3)
 
     def __getitem__(self, key):
+        if self.type == ValueType.NIL:
+            raise ValueError("can't index nil")
+
         with self._context:
             push_pyval_to_stack(key)
             ls.get_table(-2)
             return LuaObject()
 
     def __call__(self, *args):
+        if self.type == ValueType.NIL:
+            raise ValueError("can't call nil")
+
         ls.push_ref(self.ref)
         for val in args:
             push_pyval_to_stack(val)

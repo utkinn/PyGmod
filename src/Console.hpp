@@ -13,59 +13,59 @@ struct Color {
 // Provides printing and logging functionality to Garry's Mod console.
 class Console {
 public:
-	Console(ILuaBase *lua) : lua(lua) {};
+    Console(ILuaBase *lua) : lua(lua) {};
 
-	// string overloads
+    // string overloads
 
-	// Prints message to the console.
-	void println(string message);
-    
+    // Prints message to the console.
+    void println(string message);
+
     // Prints message to the console with a color.
-	void println(string message, Color& color);
+    void println(string message, Color& color);
 
-	// Prints "[GPython] " + message to the console.
-	void log(string message);
+    // Prints "[GPython] " + message to the console.
+    void log(string message);
 
-	// Prints "[GPython] ERROR: " + message to the console.
-	void error(string message);
+    // Prints "[GPython] ERROR: " + message to the console.
+    void error(string message);
 
-	// Prints "[GPython] WARN: " + message to the console.
-	void warn(string message);
+    // Prints "[GPython] WARN: " + message to the console.
+    void warn(string message);
 
-	// const char* overloads
+    // const char* overloads
 
-	// Prints message to the console.
-	void println(const char* message);
+    // Prints message to the console.
+    void println(const char* message);
 
     // Prints message to the console with a color.
     void println(const char* message, Color& color);
 
-	// Prints "[GPython] " + message to the console.
-	void log(const char* message);
+    // Prints "[GPython] " + message to the console.
+    void log(const char* message);
 
-	// Prints "[GPython] ERROR: " + message to the console.
-	void error(const char* message);
+    // Prints "[GPython] ERROR: " + message to the console.
+    void error(const char* message);
 
-	// Prints "[GPython] WARNING: " + message to the console.
-	void warn(const char* message);
+    // Prints "[GPython] WARNING: " + message to the console.
+    void warn(const char* message);
 
-	// int overloads
+    // int overloads
 
-	// Prints message to the console.
-	void println(int message);
+    // Prints message to the console.
+    void println(int message);
 
     // Prints message to the console with a color.
     void println(int message, Color& color);
 
-	// Prints "[GPython] " + message to the console.
-	void log(int message);
+    // Prints "[GPython] " + message to the console.
+    void log(int message);
 
-	// Prints "[GPython] ERROR: " + message to the console.
-	void error(int message);
+    // Prints "[GPython] ERROR: " + message to the console.
+    void error(int message);
 
-	// Prints "[GPython] WARNING: " + message to the console.
-	void warn(int message);
+    // Prints "[GPython] WARNING: " + message to the console.
+    void warn(int message);
 
 private:
-	ILuaBase *lua;
+    ILuaBase *lua;
 };

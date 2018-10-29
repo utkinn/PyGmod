@@ -26,13 +26,13 @@ void redirectIO_toLogFile() {
 }
 
 DLL_EXPORT int gpython_run(lua_State *state, bool client) {
-	Console cons(LUA);
+    Console cons(LUA);
 
-	cons.log("Binary module loaded");
+    cons.log("Binary module loaded");
 
     if (!client) {
         addAndInitializeGPythonBuiltins();
-	    Py_Initialize();
+        Py_Initialize();
         serverInterp = PyThreadState_Get();
     } else {
         clientInterp = Py_NewInterpreter();
@@ -41,7 +41,7 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
 
     PyRun_SimpleString("import sys, os.path; sys.path.append(os.path.abspath('garrysmod\\\\gpython'))");
 
-	cons.log("Python initialized!");
+    cons.log("Python initialized!");
 
     giveILuaBasePtrToLuastack(LUA);
 
@@ -66,16 +66,16 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
     else
         serverLua = LUA;
 
-	return 0;
+    return 0;
 }
 
 DLL_EXPORT int gpython_finalize(lua_State *state) {
-	Console cons(LUA);
+    Console cons(LUA);
 
-	cons.log("Binary module shutting down.");
+    cons.log("Binary module shutting down.");
 
-	Py_FinalizeEx();
-	cons.log("Python finalized!");
+    Py_FinalizeEx();
+    cons.log("Python finalized!");
 
-	return 0;
+    return 0;
 }

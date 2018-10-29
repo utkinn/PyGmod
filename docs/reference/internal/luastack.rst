@@ -3,9 +3,7 @@
 
 .. note::
 
-	``luastack`` is not a part of the ``gmod`` package. So, instead of:
-
-    ::
+    ``luastack`` is not a part of the ``gmod`` package. So, instead of::
 
         from gmod.luastack import *
 

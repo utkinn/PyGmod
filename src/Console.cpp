@@ -3,13 +3,13 @@
 using std::to_string;
 
 void Console::println(const char* message) {
-	lua->PushSpecial(SPECIAL_GLOB);  // Pushing global table to stack
+    lua->PushSpecial(SPECIAL_GLOB);  // Pushing global table to stack
 
-	lua->GetField(-1, "print");  // Getting "print" field of the global table
-	lua->PushString(message);  // Pushing the message
-	lua->Call(1, 0);  // Calling "print" with 1 argument and 0 return values and popping the function and the arguments from the stack
+    lua->GetField(-1, "print");  // Getting "print" field of the global table
+    lua->PushString(message);  // Pushing the message
+    lua->Call(1, 0);  // Calling "print" with 1 argument and 0 return values and popping the function and the arguments from the stack
 
-	lua->Pop();  // Popping the global table from the stack
+    lua->Pop();  // Popping the global table from the stack
 }
 
 void Console::println(const char* message, Color& color) {
@@ -35,19 +35,19 @@ void Console::println(const char* message, Color& color) {
 }
 
 void Console::log(const char* message) {
-	println(("[GPython] " + string(message)).c_str());
+    println(("[GPython] " + string(message)).c_str());
 }
 
 void Console::error(const char* message) {
-	println(("[GPython] ERROR: " + string(message)).c_str(), Color{ 255, 0, 0 });
+    println(("[GPython] ERROR: " + string(message)).c_str(), Color{ 255, 0, 0 });
 }
 
 void Console::warn(const char* message) {
-	println(("[GPython] WARNING: " + string(message)).c_str(), Color{ 255, 255, 0 });
+    println(("[GPython] WARNING: " + string(message)).c_str(), Color{ 255, 255, 0 });
 }
 
 void Console::println(string message) {
-	println(message.c_str());
+    println(message.c_str());
 }
 
 void Console::println(string message, Color& color) {
@@ -55,19 +55,19 @@ void Console::println(string message, Color& color) {
 }
 
 void Console::log(string message) {
-	log(message.c_str());
+    log(message.c_str());
 }
 
 void Console::error(string message) {
-	error(message.c_str());
+    error(message.c_str());
 }
 
 void Console::warn(string message) {
-	warn(message.c_str());
+    warn(message.c_str());
 }
 
 void Console::println(int message) {
-	println(to_string(message));
+    println(to_string(message));
 }
 
 void Console::println(int message, Color& color) {
@@ -75,13 +75,13 @@ void Console::println(int message, Color& color) {
 }
 
 void Console::log(int message) {
-	log(to_string(message));
+    log(to_string(message));
 }
 
 void Console::error(int message) {
-	error(to_string(message));
+    error(to_string(message));
 }
 
 void Console::warn(int message) {
-	warn(to_string(message));
+    warn(to_string(message));
 }

@@ -29,6 +29,10 @@ else:
     CLIENT, SERVER, REALM = None, None, None
 
 
+class RealmError(Exception):
+    """Indicates that some functionality is not available in the current realm."""
+
+
 # class RealmError(Exception):
 #     """Indicates that something was done in the wrong realm."""
 

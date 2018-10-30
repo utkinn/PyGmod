@@ -170,14 +170,14 @@ def realm_decorator(func, target_realm):
         lua.G['util']['AddNetworkString'](net_string)
     else:
         @receive(net_string)
-        def receiver(args, kwargs):
+        def _(args, kwargs):
             func(*args, **kwargs)
 
     def decorated(*args, **kwargs):
         if target_realm:
             # Removing the receiver argument, so we don't get "TypeError: got an unexpected keyword argument 'receiver'"
-            del kwargs['receiver']
-            func(*args, **kwargs)
+            # del kwargs['receiver']
+            return func(*args, **kwargs)
         else:
             if realms.CLIENT:
                 send(net_string, args, kwargs)

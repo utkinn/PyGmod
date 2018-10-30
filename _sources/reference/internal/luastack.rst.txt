@@ -41,8 +41,8 @@ We say that an index is valid if it lies between **1** and the stack top (that i
 
 .. data:: IN_GMOD
 
-    Boolean constant which is ``True`` if GPython system is running during a Garry's Mod session.
-    This constant is used in GPython libraries for preventing some code from executing when generating documentation.
+    Boolean constant which is ``True`` if PyGmod system is running during a Garry's Mod session.
+    This constant is used in PyGmod libraries for preventing some code from executing when generating documentation.
 
 .. cpp:var:: ILuaBase *lua
 
@@ -172,7 +172,7 @@ Stack manipulation
 
         a = f("how", t.x, 14)
 
-    Here it is with GPython's luastack::
+    Here it is with PyGmod's luastack::
 
         push_special(Special.GLOBAL)
         get_field(1, "f")  # function to be called

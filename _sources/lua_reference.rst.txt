@@ -15,10 +15,10 @@ All interop functions are in the ``py`` global table.
 Internal functions
 ------------------
 
-These functions are used by GPython internally and not intended to be used by the regular addon developers.
+These functions are used by PyGmod internally and not intended to be used by the regular addon developers.
 
 .. function:: py._SwitchToClient()
               py._SwitchToServer()
 
-    Switches to the GPython sub-interpreter which corresponds to the specified realm.
+    Switches to the PyGmod sub-interpreter which corresponds to the specified realm.
     Used primarily by the :mod:`gmod.hooks` module.

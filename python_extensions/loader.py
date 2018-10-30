@@ -14,6 +14,7 @@ import traceback
 
 from gmod.realms import REALM
 from gmod import lua, streams
+from gmod import repl
 
 __all__ = ['main']
 
@@ -111,6 +112,8 @@ def main():
     realm_pkg = f'__{REALM}_autorun__'
 
     sys.path.append(os.path.abspath(ADDONS_PATH))
+
+    repl.setup()
 
     for addon_dir in (d for d in os.listdir(ADDONS_PATH) if os.path.isdir(os.path.join(ADDONS_PATH, d))):
         sys.path.append(os.path.join(ADDONS_PATH, addon_dir, 'python'))

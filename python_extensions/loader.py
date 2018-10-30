@@ -61,8 +61,9 @@ def handle_exception_in_addon():
 def try_import(addon_dir, pkg):
     try:
         __import__(addon_dir + '.python.' + pkg)
+        return True
     except ImportError:
-        log('Invalid GPython addon "' + addon_dir + '"')
+        pass
     except:
         handle_exception_in_addon()
 
@@ -111,15 +112,15 @@ def main():
     sys.path.append(os.path.abspath(ADDONS_PATH))
 
     for addon_dir in (d for d in os.listdir(ADDONS_PATH) if os.path.isdir(os.path.join(ADDONS_PATH, d))):
-        log('Loading addon "' + addon_dir + '"... ', end='')
+        # log('Loading addon "' + addon_dir + '"... ', end='')
 
         sys.path.append(os.path.join(ADDONS_PATH, addon_dir, 'python'))
 
-        try_import(addon_dir, SHARED_PACKAGE)
-        try_import(addon_dir, realm_pkg)
+        success = (try_import(addon_dir, SHARED_PACKAGE), try_import(addon_dir, realm_pkg))
 
         del sys.path[-1]
 
-        log('"' + addon_dir + '" successfully loaded.')
+        if any(success):
+            log('"' + addon_dir + '" successfully loaded.')
 
     log('Loading finished')

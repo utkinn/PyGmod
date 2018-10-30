@@ -8,7 +8,7 @@ if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
 )
 set SOURCEDIR=.
-set BUILDDIR=..\..\gpython-doc-build
+set BUILDDIR=..\..\pygmod-doc-build
 
 if "%1" == "" goto help
 

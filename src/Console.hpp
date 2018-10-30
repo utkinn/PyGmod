@@ -23,13 +23,13 @@ public:
     // Prints message to the console with a color.
     void println(string message, Color& color);
 
-    // Prints "[GPython] " + message to the console.
+    // Prints "[PyGmod] " + message to the console.
     void log(string message);
 
-    // Prints "[GPython] ERROR: " + message to the console.
+    // Prints "[PyGmod] ERROR: " + message to the console.
     void error(string message);
 
-    // Prints "[GPython] WARN: " + message to the console.
+    // Prints "[PyGmod] WARN: " + message to the console.
     void warn(string message);
 
     // const char* overloads
@@ -40,13 +40,13 @@ public:
     // Prints message to the console with a color.
     void println(const char* message, Color& color);
 
-    // Prints "[GPython] " + message to the console.
+    // Prints "[PyGmod] " + message to the console.
     void log(const char* message);
 
-    // Prints "[GPython] ERROR: " + message to the console.
+    // Prints "[PyGmod] ERROR: " + message to the console.
     void error(const char* message);
 
-    // Prints "[GPython] WARNING: " + message to the console.
+    // Prints "[PyGmod] WARNING: " + message to the console.
     void warn(const char* message);
 
     // int overloads
@@ -57,13 +57,13 @@ public:
     // Prints message to the console with a color.
     void println(int message, Color& color);
 
-    // Prints "[GPython] " + message to the console.
+    // Prints "[PyGmod] " + message to the console.
     void log(int message);
 
-    // Prints "[GPython] ERROR: " + message to the console.
+    // Prints "[PyGmod] ERROR: " + message to the console.
     void error(int message);
 
-    // Prints "[GPython] WARNING: " + message to the console.
+    // Prints "[PyGmod] WARNING: " + message to the console.
     void warn(int message);
 
 private:

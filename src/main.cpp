@@ -9,7 +9,7 @@ using namespace GarrysMod::Lua;
 using std::to_string;
 
 // Adds "luastack" and "streams" modules to builtins and initializes them.
-void addAndInitializeGPythonBuiltins() {
+void addAndInitializePyGmodBuiltins() {
     PyImport_AppendInittab("luastack", PyInit_luastack);
 }
 
@@ -20,18 +20,18 @@ void giveILuaBasePtrToLuastack(ILuaBase* ptr) {
     PyRun_SimpleString("import luastack; luastack.IN_GMOD = True");
 }
 
-// Redirects the Python stdout and stderr to "gpy.log" for debugging errors which prevent Garry's Mod IO from working.
+// Redirects the Python stdout and stderr to "pygmod.log" for debugging errors which prevent Garry's Mod IO from working.
 void redirectIO_toLogFile() {
-    PyRun_SimpleString("import sys; sys.stdout = sys.stderr = open('gpy.log', 'w+')");
+    PyRun_SimpleString("import sys; sys.stdout = sys.stderr = open('pygmod.log', 'w+')");
 }
 
-DLL_EXPORT int gpython_run(lua_State *state, bool client) {
+DLL_EXPORT int pygmod_run(lua_State *state, bool client) {
     Console cons(LUA);
 
     cons.log("Binary module loaded");
 
     if (!client) {
-        addAndInitializeGPythonBuiltins();
+        addAndInitializePyGmodBuiltins();
         Py_Initialize();
         serverInterp = PyThreadState_Get();
     } else {
@@ -39,7 +39,7 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
         PyThreadState_Swap(clientInterp);
     }
 
-    PyRun_SimpleString("import sys, os.path; sys.path.append(os.path.abspath('garrysmod\\\\gpython'))");
+    PyRun_SimpleString("import sys, os.path; sys.path.append(os.path.abspath('garrysmod\\\\pygmod'))");
 
     cons.log("Python initialized!");
 
@@ -69,7 +69,7 @@ DLL_EXPORT int gpython_run(lua_State *state, bool client) {
     return 0;
 }
 
-DLL_EXPORT int gpython_finalize(lua_State *state) {
+DLL_EXPORT int pygmod_finalize(lua_State *state) {
     Console cons(LUA);
 
     cons.log("Binary module shutting down.");

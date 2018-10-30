@@ -1,4 +1,4 @@
-Welcome to GPython's documentation!
+Welcome to PyGmod's documentation!
 ===================================
 
 Experimental project which strives to provide
@@ -30,11 +30,11 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
 
 .. toctree::
     :maxdepth: 2
-    :caption: For GPython internal developers:
+    :caption: For PyGmod internal developers:
 
-    for_gpython_developers/building
-    for_gpython_developers/building_docs
-    for_gpython_developers/how_it_works
+    for_pygmod_developers/building
+    for_pygmod_developers/building_docs
+    for_pygmod_developers/how_it_works
     reference/internal
 
 ===================
@@ -45,4 +45,4 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
 Useful links
 ------------
 
-* `Contribute on GitHub <https://github.com/javabird25/GPython>`_
+* `Contribute on GitHub <https://github.com/javabird25/PyGmod>`_

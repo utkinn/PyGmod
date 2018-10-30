@@ -1,7 +1,7 @@
-How GPython works
+How PyGmod works
 =================
 
-Let's suppose we have a simple "Hello World" GPython addon::
+Let's suppose we have a simple "Hello World" PyGmod addon::
 
     addons\ ─┬─ example\ ─┬─ addon.json
             ...           ├─ python\ ─── __shared_autorun__\ ─── __init__.py
@@ -16,23 +16,23 @@ Let's suppose we have a simple "Hello World" GPython addon::
 1. Lua Launcher
 ---------------
 
-GPython's Lua launcher is a regular Lua addon.
+PyGmod's Lua launcher is a regular Lua addon.
 When it's loaded by Garry's Mod's addon system, the launcher activates
-``gmcl_gpython_win32.dll`` and ``gmsv_gpython_win32.dll``::
+``gmcl_pygmod_win32.dll`` and ``gmsv_pygmod_win32.dll``::
 
-    require 'gpython'
+    require 'pygmod'
 
-``gmcl_gpython_win32.dll`` is for the *client* and ``gmsv_gpython_win32.dll`` is for the *server*.
+``gmcl_pygmod_win32.dll`` is for the *client* and ``gmsv_pygmod_win32.dll`` is for the *server*.
 
-2. Realms' DLLs: ``gmcl_gpython_win32.dll`` and ``gmsv_gpython_win32.dll``
+2. Realms' DLLs: ``gmcl_pygmod_win32.dll`` and ``gmsv_pygmod_win32.dll``
 --------------------------------------------------------------------------
 
-These two DLLs call ``gpython_run()`` in ``gpython.dll``.
+These two DLLs call ``pygmod_run()`` in ``pygmod.dll``.
 
-3. Main GPython DLL: ``gpython.dll``
+3. Main PyGmod DLL: ``pygmod.dll``
 ------------------------------------
 
-``gpython_run()`` does these preparation operations:
+``pygmod_run()`` does these preparation operations:
 
 Server
 ^^^^^^
@@ -41,7 +41,7 @@ Server
 
 #. Adds :mod:`luastack` module to the builtin initialization table.
 #. Initializes Python interpreter.
-#. Appends ``garrysmod\gpython\`` to :data:`sys.path`.
+#. Appends ``garrysmod\pygmod\`` to :data:`sys.path`.
 #. Calls ``setup()`` in :mod:`luastack` thus setting the global lua stack pointer
    and setting :data:`luastack.IN_GMOD` to ``True``.
 #. Adds :doc:`Lua2Python interoperability functions <../lua_reference>` (using Python from Lua).
@@ -64,13 +64,13 @@ Here is what it does:
 
 #. Redirects I/O to Garry's Mod console with :mod:`gmod.streams` I/O classes.
 #. Patches the ``hook.Call`` Lua function to delegate hook calls to :mod:`gmod.hooks` module.
-#. Scans ``addons\`` directory for GPython addons and initializes them.
+#. Scans ``addons\`` directory for PyGmod addons and initializes them.
 
 5. Lua API wrappers
 -------------------
 
 :class:`~gmod.player.Player` is just a wrapper over the corresponding Lua functions,
-as much as many other GPython services.
+as much as many other PyGmod services.
 
 In this example, ``player.get_by_userid(1)`` creates an object that wraps the ``Player`` Lua class.
 ``nick`` is a property that retrieves the player nickname nickname with
@@ -102,4 +102,4 @@ Lua stack pointer is `previously set by the C++ module <server_cpp_module_routin
 
 ======
 
-And that's it, our GPython addon is initialized. For me, ``Hello, Protocs!`` will be printed to console.
+And that's it, our PyGmod addon is initialized. For me, ``Hello, Protocs!`` will be printed to console.

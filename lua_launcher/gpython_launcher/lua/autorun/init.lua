@@ -1,4 +1,4 @@
-local success, errorMessage = pcall(require, 'gpython')
+local success, errorMessage = pcall(require, 'pygmod')
 if not success then
-    error('[GPython] ERROR: GPython binary module is not installed or installed incorrectly. ('..errorMessage..')')
+    error('[PyGmod] ERROR: PyGmod binary module is not installed or installed incorrectly. ('..errorMessage..')')
 end

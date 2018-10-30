@@ -298,7 +298,7 @@ class LuaStack:
 
           a = f("how", t.x, 14)
 
-        Here it is in GPython::
+        Here it is in PyGmod::
 
           push_special(Special.GLOBAL)
           get_field(1, "f")  # function to be called

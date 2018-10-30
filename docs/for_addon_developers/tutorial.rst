@@ -1,7 +1,7 @@
 Addon creation tutorial
 =======================
 
-In this tutorial you will learn how to create a simple "Hello world" addon with GPython.
+In this tutorial you will learn how to create a simple "Hello world" addon with PyGmod.
 
 1. Create addon folders
 -----------------------
@@ -44,7 +44,7 @@ The folder structure should look like:
 2. Create the initialization script
 -----------------------------------
 
-When GPython sees your addon each time you start a new game in Garry's Mod, GPython runs
+When PyGmod sees your addon each time you start a new game in Garry's Mod, PyGmod runs
 ``(your addon folder name, "hello_world" in our case)\python\__shared_autorun__\__init__.py``. As you can see,
 we have to create ``__init__.py`` in ``__shared_autorun__`` folder to do anything useful.
 
@@ -85,4 +85,4 @@ we have to create ``__init__.py`` in ``__shared_autorun__`` folder to do anythin
 
 =============
 
-Congratulations! You just made your first GPython addon.
+Congratulations! You just made your first PyGmod addon.

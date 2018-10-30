@@ -5,7 +5,7 @@ Here is what it does:
 
 #. Redirects I/O to Garry's Mod console with :mod:`gmod.streams` I/O classes.
 #. Patches the ``hook.Call`` Lua function to delegate hook calls to :mod:`gmod.hooks` module.
-#. Scans ``addons\`` directory for GPython addons and initializes them.
+#. Scans ``addons\`` directory for PyGmod addons and initializes them.
 """
 
 import sys
@@ -69,7 +69,7 @@ def try_import(addon_dir, pkg):
 
 def redirect_output():
     streams.setup()
-    # sys.stdin = sys.stderr = open('gpython.log', 'w+')
+    # sys.stdin = sys.stderr = open('pygmod.log', 'w+')
 
 
 def patch_hook_call():
@@ -99,7 +99,7 @@ def patch_hook_call():
 
 
 def main():
-    """Finishes the GPython initialization."""
+    """Finishes the PyGmod initialization."""
     redirect_output()
 
     patch_hook_call()

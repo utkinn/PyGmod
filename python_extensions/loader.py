@@ -98,6 +98,12 @@ def main():
     """Finishes the PyGmod initialization."""
     redirect_output()
 
+    lua.exec('''
+    hook.Add('ShutDown', 'PyGmod: safe shutdown', function()
+        py._SwitchToClient()
+    end)
+    ''')
+
     patch_hook_call()
 
     log('Loading addons...')

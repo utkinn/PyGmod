@@ -10,10 +10,7 @@ Here is what it does:
 
 import sys
 import os.path
-from importlib import import_module
 import traceback
-
-# os.path.append('garrysmod\\gpython')
 
 from gmod.realms import REALM
 from gmod import lua, streams
@@ -70,8 +67,6 @@ def try_import(addon_dir, pkg):
 
 def redirect_output():
     streams.setup()
-    # sys.stdin = sys.stderr = open('pygmod.log', 'w+')
-
 
 def patch_hook_call():
     """Patches the ``hook.Call`` Lua function to delegate hook calls to :mod:`gmod.hooks` module."""
@@ -112,8 +107,6 @@ def main():
     sys.path.append(os.path.abspath(ADDONS_PATH))
 
     for addon_dir in (d for d in os.listdir(ADDONS_PATH) if os.path.isdir(os.path.join(ADDONS_PATH, d))):
-        # log('Loading addon "' + addon_dir + '"... ', end='')
-
         sys.path.append(os.path.join(ADDONS_PATH, addon_dir, 'python'))
 
         success = (try_import(addon_dir, SHARED_PACKAGE), try_import(addon_dir, realm_pkg))

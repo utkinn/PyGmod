@@ -22,7 +22,7 @@ __all__ = ['main']
 
 
 def log(msg, end='\n'):
-    print('[GPython]', msg, end=end)
+    print('[PyGmod]', msg, end=end)
 
 
 ADDONS_PATH = 'garrysmod\\addons'

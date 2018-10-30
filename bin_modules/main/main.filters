@@ -15,39 +15,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Console.hpp">
+    <ClInclude Include="Console.hpp">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="src\include\GarrysMod\Lua\Interface.h">
+    <ClInclude Include="include\GarrysMod\Lua\Interface.h">
       <Filter>Include\GarrysMod\Lua</Filter>
     </ClInclude>
-    <ClInclude Include="src\include\GarrysMod\Lua\LuaBase.h">
+    <ClInclude Include="include\GarrysMod\Lua\LuaBase.h">
       <Filter>Include\GarrysMod\Lua</Filter>
     </ClInclude>
-    <ClInclude Include="src\include\GarrysMod\Lua\Types.h">
+    <ClInclude Include="include\GarrysMod\Lua\Types.h">
       <Filter>Include\GarrysMod\Lua</Filter>
     </ClInclude>
-    <ClInclude Include="src\include\GarrysMod\Lua\UserData.h">
+    <ClInclude Include="include\GarrysMod\Lua\UserData.h">
       <Filter>Include\GarrysMod\Lua</Filter>
     </ClInclude>
-    <ClInclude Include="src\lua2py_interop.hpp">
+    <ClInclude Include="lua2py_interop.hpp">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="python_extensions\luastack.h" />
+    <ClInclude Include="..\..\python_extensions\luastack.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Console.cpp">
+    <ClCompile Include="Console.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="src\gpython.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="src\lua2py_interop.cpp">
+    <ClCompile Include="lua2py_interop.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="python_extensions\luastack.cpp" />
+    <ClCompile Include="..\..\python_extensions\luastack.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="python_extensions\loader.py" />
+    <None Include="..\..\python_extensions\loader.py" />
   </ItemGroup>
 </Project>

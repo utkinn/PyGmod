@@ -1,10 +1,8 @@
-# distutils: language = c++
-
 # ctypedef int (*CFunc) (lua_State *L)
 
 from libcpp cimport bool
 
-cdef extern from "../src/include/GarrysMod/Lua/LuaBase.h" namespace "GarrysMod::Lua":
+cdef extern from "../bin_modules/main/include/GarrysMod/Lua/LuaBase.h" namespace "GarrysMod::Lua":
     cdef cppclass ILuaBase:
         # Some methods are left commented because they are currently unused.
 

@@ -2,7 +2,7 @@ import sys
 from shutil import copyfile
 from os import remove
 
-LUASTACK_PATH = 'python_extensions\\luastack.py'
+LUASTACK_PATH = '..\\python_extensions\\luastack.py'
 
 sys.path.insert(0, 'python_extensions')
 

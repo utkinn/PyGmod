@@ -8,10 +8,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3DFB7CE3-FA65-5E43-B09E-F520DFEB934E}</ProjectGuid>
-    <RootNamespace>sv</RootNamespace>
+    <RootNamespace>main</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
-    <ProjectName>sv</ProjectName>
+    <ProjectName>main</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -29,8 +29,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)build\</OutDir>
-    <IntDir>shared\</IntDir>
-    <TargetName>gpython</TargetName>
+    <IntDir>main\</IntDir>
+    <TargetName>pygmod</TargetName>
     <TargetExt>.dll</TargetExt>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
@@ -40,7 +40,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>Full</Optimization>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(ProjectDir)\src\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(ProjectDir)\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;GMMODULE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
@@ -57,7 +57,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;GMMODULE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -74,22 +74,19 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="python_extensions\luastack.h" />
-    <ClInclude Include="src\lua2py_interop.hpp" />
-    <ClInclude Include="src\Console.hpp" />
-    <ClInclude Include="src\include\GarrysMod\Lua\Interface.h" />
-    <ClInclude Include="src\include\GarrysMod\Lua\LuaBase.h" />
-    <ClInclude Include="src\include\GarrysMod\Lua\Types.h" />
-    <ClInclude Include="src\include\GarrysMod\Lua\UserData.h" />
+    <ClInclude Include="..\..\python_extensions\luastack.h" />
+    <ClInclude Include="lua2py_interop.hpp" />
+    <ClInclude Include="Console.hpp" />
+    <ClInclude Include="include\GarrysMod\Lua\Interface.h" />
+    <ClInclude Include="include\GarrysMod\Lua\LuaBase.h" />
+    <ClInclude Include="include\GarrysMod\Lua\Types.h" />
+    <ClInclude Include="include\GarrysMod\Lua\UserData.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="python_extensions\luastack.cpp" />
-    <ClCompile Include="src\lua2py_interop.cpp" />
-    <ClCompile Include="src\Console.cpp" />
-    <ClCompile Include="src\gpython.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="python_extensions\loader.py" />
+    <ClCompile Include="..\..\python_extensions\luastack.cpp" />
+    <ClCompile Include="lua2py_interop.cpp" />
+    <ClCompile Include="Console.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

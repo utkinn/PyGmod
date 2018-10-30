@@ -1,6 +1,4 @@
-# distutils: language = c++
-
-"""Functions for manipulating the Lua stack. The lowest level of Garry's Mod Lua interoperability.
+﻿"""Functions for manipulating the Lua stack. The lowest level of Garry's Mod Lua interoperability.
 
 Lua uses a virtual stack to pass values to and from C.
 Each element in this stack represents a Lua value (``nil``, number, string, etc.).

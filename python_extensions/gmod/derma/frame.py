@@ -1,3 +1,4 @@
+from .. import draw
 from .panel import Panel
 
 
@@ -17,3 +18,6 @@ class Frame(Panel):
 
     def popup(self):
         self._lua['MakePopup'](self._lua)
+
+    def paint(self):
+        draw.rounded_box(0, 0, self.w, self.h, (0, 0, 0, 230), 8)

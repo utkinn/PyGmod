@@ -1,4 +1,6 @@
-from .. import lua, realms
+from .. import lua, realms, draw
+
+panels = {}
 
 
 class Panel:
@@ -8,6 +10,19 @@ class Panel:
         if realms.SERVER:
             raise realms.RealmError('derma is available on client only')
         self._lua = lua.G['vgui']['Create'](self._lua_class)
+        self._register_paint_callback()
+
+    def _register_paint_callback(self):
+        panels[id(self)] = self
+        self._lua['Paint'] = lua.eval(f'''
+        function(w, h)
+            py.Exec('from gmod.derma import panel; panel.panels[{id(self)}].paint()')
+        end
+        ''')
+
+    def __del__(self):
+        del panels[id(self)]
+        self._lua['Remove'](self._lua)
 
     @property
     def w(self):
@@ -81,3 +96,6 @@ class Panel:
         if any(not isinstance(o, int) for o in (x, y, w, h)):
             raise TypeError('bounds iterable members must be int')
         self._lua['SetBounds'](self._lua, x, y, w, h)
+
+    def paint(self):
+        draw.rounded_box(0, 0, self.w, self.h, (0, 0, 0, 250), 8)

@@ -5,6 +5,9 @@ Experimental project which strives to provide
 the possibility to create addons for Garry's Mod with Python 3 programming language.
 
 .. toctree::
+    getting_started
+
+.. toctree::
     :maxdepth: 2
     :caption: For Users:
 
@@ -12,26 +15,16 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
     :maxdepth: 1
     :caption: For Addon developers:
 
+    for_addon_developers/getting_started
     for_addon_developers/tutorial
+    reference
     lua_reference
-
-.. toctree::
-    :caption: Module Reference:
-    :maxdepth: 1
-    :glob:
-
-    reference/hooks
-    reference/lua
-    reference/net
-    reference/entity
-    reference/player
-    reference/realms
-    reference/internal
 
 .. toctree::
     :maxdepth: 2
     :caption: For PyGmod internal developers:
 
+    for_pygmod_developers/getting_started
     for_pygmod_developers/building
     for_pygmod_developers/building_docs
     for_pygmod_developers/how_it_works

@@ -10,15 +10,20 @@ class Panel:
         if realms.SERVER:
             raise realms.RealmError('derma is available on client only')
         self._lua = lua.G['vgui']['Create'](self._lua_class)
-        self._register_paint_callback()
 
-    def _register_paint_callback(self):
+        self._register_callbacks()
+    def _register_callbacks(self):
         panels[id(self)] = self
-        self._lua['Paint'] = lua.eval(f'''
-        function(w, h)
-            py.Exec('from gmod.derma import panel; panel.panels[{id(self)}].paint()')
-        end
-        ''')
+
+        def reg_cb(lua_func_name, py_meth_name, receive_args, pass_args):
+            self._lua[lua_func_name] = lua.eval(f'''
+            function({receive_args})
+                py.Exec('from gmod.derma import panel; panel.panels[{id(self)}].{py_meth_name}({pass_args})')
+            end
+            ''')
+
+        reg_cb('Paint', 'paint', 'w, h', '')
+        reg_cb('Think', 'tick', '', '')
 
     def __del__(self):
         del panels[id(self)]
@@ -99,3 +104,6 @@ class Panel:
 
     def paint(self):
         draw.rounded_box(0, 0, self.w, self.h, (0, 0, 0, 250), 8)
+
+    def tick(self):
+        pass

@@ -41,7 +41,7 @@ def push_pyval_to_stack(val):
     """
     if val is None:
         ls.push_nil()
-    if isinstance(val, Number):
+    elif isinstance(val, Number):
         ls.push_number(val)
     elif isinstance(val, LuaObject):
         ls.push_ref(val.ref)

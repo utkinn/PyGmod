@@ -1,13 +1,9 @@
-from .. import lua, realms
 from .panel import Panel
 
 
 # noinspection PyMissingConstructor
 class Frame(Panel):
-    def __init__(self):
-        if realms.SERVER:
-            raise realms.RealmError('derma is available on client only')
-        self._lua = lua.G['vgui']['Create']('DFrame')
+    _lua_class = 'DFrame'
 
     @property
     def title(self):

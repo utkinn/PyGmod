@@ -2,10 +2,12 @@ from .. import lua, realms
 
 
 class Panel:
+    _lua_class = 'DPanel'
+
     def __init__(self):
         if realms.SERVER:
             raise realms.RealmError('derma is available on client only')
-        self._lua = lua.G['vgui']['Create']('DPanel')
+        self._lua = lua.G['vgui']['Create'](self._lua_class)
 
     @property
     def w(self):

@@ -3,15 +3,22 @@ from .. import lua, realms, draw
 panels = {}
 
 
-class Panel:
+class Panel(lua.LuaObjectWrapper):
     _lua_class = 'DPanel'
 
-    def __init__(self):
+    def __init__(self, parent):
         if realms.SERVER:
             raise realms.RealmError('derma is available on client only')
-        self._lua = lua.G['vgui']['Create'](self._lua_class)
+        if parent is not None and not isinstance(parent, Panel):
+            raise TypeError("parent must be None, Panel object or Panel's subclass object")
 
+        self._lua = lua.G['vgui']['Create'](self._lua_class, parent)
         self._register_callbacks()
+
+    @property
+    def lua_obj(self):
+        return self._lua
+
     def _register_callbacks(self):
         panels[id(self)] = self
 

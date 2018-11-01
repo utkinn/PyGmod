@@ -26,7 +26,7 @@ class Panel:
 
     @property
     def w(self):
-        return int(self._lua['GetSize'](self._lua)[1])
+        return int(self._lua['GetSize'](self._lua)[0])
 
     @w.setter
     def w(self, val):
@@ -36,7 +36,7 @@ class Panel:
 
     @property
     def h(self):
-        return int(self._lua['GetSize'](self._lua)[2])
+        return int(self._lua['GetSize'](self._lua)[1])
 
     @h.setter
     def h(self, val):
@@ -57,7 +57,7 @@ class Panel:
 
     @property
     def x(self):
-        return int(self._lua['GetPos'](self._lua)[1])
+        return int(self._lua['GetPos'](self._lua)[0])
 
     @x.setter
     def x(self, val):
@@ -67,7 +67,7 @@ class Panel:
 
     @property
     def y(self):
-        return int(self._lua['GetPos'](self._lua)[2])
+        return int(self._lua['GetPos'](self._lua)[1])
 
     @y.setter
     def y(self, val):

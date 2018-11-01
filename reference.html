@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Lua Reference &#8212; PyGmod 0.9-alpha documentation</title>
+    <title>Module Reference &#8212; PyGmod 0.9-alpha documentation</title>
     <link rel="stylesheet" href="_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -17,8 +17,8 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Building" href="for_pygmod_developers/building.html" />
-    <link rel="prev" title="streams - I/O to Garry’s Mod" href="reference/internal/streams.html" /> 
+    <link rel="next" title="hooks - game event handling" href="reference/hooks.html" />
+    <link rel="prev" title="Addon creation tutorial" href="for_addon_developers/tutorial.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,10 +30,10 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="for_pygmod_developers/building.html" title="Building"
+          <a href="reference/hooks.html" title="hooks - game event handling"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="reference/internal/streams.html" title="streams - I/O to Garry’s Mod"
+          <a href="for_addon_developers/tutorial.html" title="Addon creation tutorial"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">PyGmod 0.9-alpha documentation</a> &#187;</li> 
       </ul>
@@ -44,31 +44,20 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="lua-reference">
-<h1>Lua Reference<a class="headerlink" href="#lua-reference" title="Permalink to this headline">¶</a></h1>
-<p>You can interoperate with Python from Lua, for example, run arbitrary Python code.
-All interop functions are in the <code class="docutils literal notranslate"><span class="pre">py</span></code> global table.</p>
-<dl class="function">
-<dt id="py.Exec">
-<code class="descclassname">py.</code><code class="descname">Exec</code><span class="sig-paren">(</span><em>code</em><span class="sig-paren">)</span><a class="headerlink" href="#py.Exec" title="Permalink to this definition">¶</a></dt>
-<dd><p>Executes a string of Python code.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="o">.</span><span class="n">Exec</span><span class="p">(</span><span class="s1">&#39;print(&quot;HELLO&quot;.capitalize())&#39;</span><span class="p">)</span>  <span class="o">--</span> <span class="n">Will</span> <span class="nb">print</span> <span class="s2">&quot;Hello&quot;</span> <span class="n">to</span> <span class="n">the</span> <span class="n">console</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<div class="section" id="internal-functions">
-<h2>Internal functions<a class="headerlink" href="#internal-functions" title="Permalink to this headline">¶</a></h2>
-<p>These functions are used by PyGmod internally and not intended to be used by the regular addon developers.</p>
-<dl class="function">
-<dt id="py._SwitchToClient">
-<code class="descclassname">py.</code><code class="descname">_SwitchToClient</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py._SwitchToClient" title="Permalink to this definition">¶</a></dt>
-<dt id="py._SwitchToServer">
-<code class="descclassname">py.</code><code class="descname">_SwitchToServer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py._SwitchToServer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switches to the PyGmod sub-interpreter which corresponds to the specified realm.
-Used primarily by the <a class="reference internal" href="reference/hooks.html#module-gmod.hooks" title="gmod.hooks"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.hooks</span></code></a> module.</p>
-</dd></dl>
-
+  <div class="section" id="module-reference">
+<h1>Module Reference<a class="headerlink" href="#module-reference" title="Permalink to this headline">¶</a></h1>
+<p>This is the reference of the PyGmod libraries.</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Module Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reference/hooks.html"><code class="docutils literal notranslate"><span class="pre">hooks</span></code> - game event handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/lua.html"><code class="docutils literal notranslate"><span class="pre">lua</span></code> - Lua interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/net.html"><code class="docutils literal notranslate"><span class="pre">net</span></code> - communication between Client and Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/entity.html"><code class="docutils literal notranslate"><span class="pre">entity</span></code> - entity utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/player.html"><code class="docutils literal notranslate"><span class="pre">player</span></code> - player utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/realms.html"><code class="docutils literal notranslate"><span class="pre">realms</span></code> - determining the current realm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/internal.html">Internal modules</a></li>
+</ul>
 </div>
 </div>
 
@@ -81,24 +70,16 @@ Used primarily by the <a class="reference internal" href="reference/hooks.html#m
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/docs-logo.png" alt="Logo"/>
             </a></p>
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Lua Reference</a><ul>
-<li><a class="reference internal" href="#internal-functions">Internal functions</a></li>
-</ul>
-</li>
-</ul>
-
   <h4>Previous topic</h4>
-  <p class="topless"><a href="reference/internal/streams.html"
-                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">streams</span></code> - I/O to Garry’s Mod</a></p>
+  <p class="topless"><a href="for_addon_developers/tutorial.html"
+                        title="previous chapter">Addon creation tutorial</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="for_pygmod_developers/building.html"
-                        title="next chapter">Building</a></p>
+  <p class="topless"><a href="reference/hooks.html"
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">hooks</span></code> - game event handling</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/lua_reference.rst.txt"
+      <li><a href="_sources/reference.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -128,10 +109,10 @@ Used primarily by the <a class="reference internal" href="reference/hooks.html#m
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="for_pygmod_developers/building.html" title="Building"
+          <a href="reference/hooks.html" title="hooks - game event handling"
              >next</a> |</li>
         <li class="right" >
-          <a href="reference/internal/streams.html" title="streams - I/O to Garry’s Mod"
+          <a href="for_addon_developers/tutorial.html" title="Addon creation tutorial"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">PyGmod 0.9-alpha documentation</a> &#187;</li> 
       </ul>

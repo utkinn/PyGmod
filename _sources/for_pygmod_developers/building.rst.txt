@@ -12,11 +12,11 @@ Instructions
 
 #. Copy ``lua_launcher\pygmod_launcher`` directory to ``garrysmod\addons`` directory.
 #. Open command prompt, ``cd`` to ``python_extensions`` directory and run ``setup.py build_ext --inplace``.
-#. Move all files with ``.py`` and ``.pyd`` extensions
+#. Move all files with ``.py`` and ``.pyd`` extensions except ``setup.py``
    in ``python_extensions`` directory to ``garrysmod\pygmod`` directory.
 #. Copy ``python_extensions\gmod`` directory to ``garrysmod\pygmod\gmod``
    (so there is a bunch of ``.py`` files in ``garrysmod\pygmod\gmod`` directory).
-#. Open ``GPython.sln`` with Visual Studio and build the solution.
+#. Open ``PyGmod.sln`` with Visual Studio and build the solution.
 #. Move ``gmsv_pygmod_win32.dll`` and ``gmcl_pygmod_win32.dll``
    from ``bin_modules\build`` directory to ``garrysmod\lua\bin`` directory.
 #. Move ``pygmod.dll`` to Garry's Mod's root directory (where ``hl2.exe`` resides).

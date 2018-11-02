@@ -12,8 +12,7 @@ import sys
 import os.path
 import traceback
 
-from gmod.realms import REALM
-from gmod import lua, streams
+from gmod import lua, streams, realms
 
 __all__ = ['main']
 
@@ -108,7 +107,7 @@ def main():
 
     log('Loading addons...')
 
-    realm_pkg = f'__{REALM}_autorun__'
+    realm_pkg = f'__{realms.REALM}_autorun__'
 
     sys.path.append(os.path.abspath(ADDONS_PATH))
 

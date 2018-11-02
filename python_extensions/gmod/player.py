@@ -2,7 +2,16 @@
 This module contains the :class:`Player` class which wraps the Lua ``Player`` class.
 """
 from . import _base_entity, lua, realms, hooks
+from .exceptions import RealmError, NotReadyError
 
+if realms.CLIENT:
+    _initpostentity_occurred = False
+
+
+    @hooks.hook('InitPostEntity')
+    def _allow_getlocal():
+        global _initpostentity_occurred
+        _initpostentity_occurred = True
 
 
 class Player(_base_entity.BaseEntity):
@@ -19,3 +28,17 @@ def get_by_userid(userid: int):
     *Lua similar:* `Player() <http://wiki.garrysmod.com/page/Global/Player>`_
     """
     return Player(lua.G['Player'](userid))
+
+
+def getlocal():
+    """Returns the player object of the current client.
+
+    .. note::
+        ``getlocal()`` will raise
+    """
+    if realms.SERVER:
+        raise RealmError('player.getlocal() is useless in the server realm')
+    if not _initpostentity_occurred:
+        raise NotReadyError('player.getlocal() is available only after the InitPostEntity event')
+
+    return Player(lua.G['LocalPlayer']())

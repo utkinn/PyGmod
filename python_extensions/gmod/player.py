@@ -1,12 +1,11 @@
 """
 This module contains the :class:`Player` class which wraps the Lua ``Player`` class.
 """
-
-from ._base_entity import BaseEntity
-from .lua import G
+from . import _base_entity, lua, realms, hooks
 
 
-class Player(BaseEntity):
+
+class Player(_base_entity.BaseEntity):
     """Class that wraps the ``Player`` Lua class."""
 
     @property
@@ -19,4 +18,4 @@ def get_by_userid(userid: int):
 
     *Lua similar:* `Player() <http://wiki.garrysmod.com/page/Global/Player>`_
     """
-    return Player(G['Player'](userid))
+    return Player(lua.G['Player'](userid))

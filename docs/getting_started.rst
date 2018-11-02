@@ -34,7 +34,8 @@ How to use it?
 --------------
 
 If you are a regular Garry's Mod player or addon developer, you have to
-`download <https://github.com/javabird25/PyGmod/releases>`_ and install PyGmod first.
+`install the latest Python version <https://www.python.org/downloads/>`_, then
+`download <https://github.com/javabird25/PyGmod/releases>`_ and install PyGmod.
 
 *(Full Installation tutorial will be available later.)*
 

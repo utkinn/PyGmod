@@ -8,7 +8,10 @@ from .lua import G
 
 class Player(BaseEntity):
     """Class that wraps the ``Player`` Lua class."""
-    ...
+
+    @property
+    def nick(self):
+        return str(self.lua_obj['Nick'](self.lua_obj))
 
 
 def get_by_userid(userid: int):

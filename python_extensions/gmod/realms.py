@@ -28,11 +28,6 @@ else:
     # Dummy definitions to keep imports working
     CLIENT, SERVER, REALM = None, None, None
 
-
-# class RealmError(Exception):
-#     """Indicates that something was done in the wrong realm."""
-
-
 # def _realm_call_restriction_decorator(func, realm):
 #     """Abstract realm function usage restriction decorator.
 #

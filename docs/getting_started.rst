@@ -33,8 +33,11 @@ code, or you can code them with both Python and Lua.
 How to use it?
 --------------
 
-If you are a regular Garry's Mod player or addon developer, you have to install PyGmod first.
+If you are a regular Garry's Mod player or addon developer, you have to
+`download <https://github.com/javabird25/PyGmod/releases>`_ and install PyGmod first.
+
 *(Full Installation tutorial will be available later.)*
+
 Then take a look :doc:`Getting Started for Addon Developers <for_addon_developers/getting_started>`.
 
 If you are a PyGmod internal developer, you should check out

@@ -27,24 +27,24 @@ def write_py2py_netmsg_data(values):
 
 
 # def send(message_name, *values, receiver=None, handled_in_lua=False):
-def send(message_name, *values, receiver=None):
+def send(message_name, *values, _receiver_=None):
     """Sends a net message to the opposite realm.
 
     :param str message_name: The message name. Has to be registered with
                              `util.AddNetworkString() <http://wiki.garrysmod.com/page/util/AddNetworkString>`_
                              GLua function.
     :param iterable values: Iterable of values to append to this message.
-    :param receiver: Message receiver(s). Ignored and can be ``None`` when sending **to** server,
+    :param _receiver_: Message receiver(s). Ignored and can be ``None`` when sending **to** server,
                      but required when sending **from** server.
-    :type receiver: Player or iterable[Player] or None
+    :type _receiver_: Player or iterable[Player] or None
     :raises ValueError: if ``receiver`` is ``None`` when sending **from** server.
     """
-    if isinstance(receiver, Iterable):
-        standardized_receiver = tuple(receiver)
+    if isinstance(_receiver_, Iterable):
+        standardized_receiver = tuple(_receiver_)
         if any(not isinstance(o, Player) for o in standardized_receiver):
             raise TypeError('receivers iterable contain non-Player objects')
     else:
-        standardized_receiver = receiver
+        standardized_receiver = _receiver_
 
     if not isinstance(message_name, str):
         raise TypeError(f'message name type must be str, not {type(message_name).__name__}')
@@ -53,8 +53,8 @@ def send(message_name, *values, receiver=None):
         standardized_receiver = default_recv
 
     if realms.SERVER and not (isinstance(standardized_receiver, Player) or isinstance(standardized_receiver, Iterable)):
-        raise ValueError('receiver must be a Player object or an iterable of Player objects '
-                         f'when sending messages from server. Got {type(receiver).__name__} instead.')
+        raise ValueError('_receiver_ must be a Player object or an iterable of Player objects '
+                         f'when sending messages from server. Got {type(_receiver_).__name__} instead.')
 
     lua.G['net']['Start'](message_name)
 
@@ -75,34 +75,50 @@ def send(message_name, *values, receiver=None):
 
 
 def received(message):
+    print('received!')
     for r in receivers[message]:
         lua_player = lua.G['py']['_recv_ply']
+
+        data = pickle.loads(bytes(lua.G['py']['_recv_obj']))
+        print('data', data)
         if lua_player.type == ValueType.NIL:
-            player = None
+            r(*data)
         else:
             player = Player(lua_player)
-        data = pickle.loads(bytes(lua.G['py']['_recv_obj']))
-
-        r(*data, player)
+            r(*data, player)
 
 
 def receive(message):
     """Decorator for net message receivers.
 
-    Example of sending in Python and receiving in Python::
+    Decorated function is the message receiving callback.
+    If data was attached to the message, that data is passed to the callback.
+    Message sender as :class:`gmod.player.Player` object is passed after the data,
+    if the message was sent from the client.
+
+    Example of sending in the client and receiving in the server::
 
         if SERVER:
-            G['util']['AddNetworkString']('foo')
-
             @net.receive('foo')
-            def foo_receiver(a, b):
-                print(a, b)
-
+            def foo_receiver(a, b, sender):
+                print(sender.nick, 'sent:', a, b)
 
         if CLIENT:
-            net.send('foo', 'message', 'received', receiver=get_player_by_userid(1))
-            # 'message received' will be printed in the console of the player with the UserID 1.
+            net.send('foo', 'message', 'received')
+            # prints "(nick) sent: message received"
+
+    Server to Client::
+
+        if CLIENT:
+            @net.receive('spam')
+            def spam_receiver(a):  # <-- No sender argument
+                print(a)
+
+        if SERVER:
+            net.send('spam', 'eggs', _receiver_=player.get_by_userid(1))
+
     """
+
     # Commented part of the documentation:
 
     # Sending in Lua and receiving in Python::
@@ -126,12 +142,19 @@ def receive(message):
     #         print(a, b)
 
     # End of documentation
+
     def decorator(func):
         lua_receiver = lua.eval(f'''
         function(_, ply)
             local _recv_len = net.ReadUInt(32)  -- Pickled object length
             py._recv_obj = net.ReadData(_recv_len)  -- Actual pickled object
             py._recv_ply = ply
+
+            if CLIENT then
+                py._SwitchToClient()
+            else
+                py._SwitchToServer()
+            end
 
             -- Notifying GPython that message was received; data is ready
             py.Exec("import gmod.net; gmod.net.received({repr(message)})")
@@ -152,44 +175,113 @@ default_recv = None
 
 
 def select_receiver(kwargs):
+    """
+    Tries to get the receiver from keyword args dict. If there are no receiver in kwargs, checks the ``default_recv``
+    variable. If it is ``None``, raises :class:`TypeError`, otherwise returns the ``default_recv``.
+    """
     try:
-        return kwargs['receiver']
+        return kwargs['_receiver_']
     except KeyError:  # Receiver is not specified in kwargs
         if default_recv is not None:
-            # Using the default receiver, if it is set
+            # Using the default receiver if it is set
             return default_recv
         else:
             raise TypeError('receiver is not specified and default receiver is not set')
 
 
+# TODO: return func results if send was used
 def realm_decorator(func, target_realm):
     """Base decorator of :func:`client` and :func:`server`."""
-    net_string = f'gpython_net:{func.__module__}.{func.__qualname__}'
 
-    if realms.SERVER:
-        lua.G['util']['AddNetworkString'](net_string)
+    # Net string for calling the function from a different realm
+    net_string_call = f'pygmod_net:{func.__module__}.{func.__qualname__} (call)'
+    # Net string for returning the results back
+    net_string_return = f'pygmod_net:{func.__module__}.{func.__qualname__} (return)'
+
+    add_net_strings_for_decorated_func(net_string_call, net_string_return)
+
+    if target_realm:
+        register_call_receiver(func, net_string_call, net_string_return)
     else:
-        @receive(net_string)
-        def receiver(args, kwargs):
-            func(*args, **kwargs)
+        register_return_receiver(net_string_return)
 
     def decorated(*args, **kwargs):
+        # Just call the function if it is in the same realm
         if target_realm:
-            # Removing the receiver argument, so we don't get "TypeError: got an unexpected keyword argument 'receiver'"
-            del kwargs['receiver']
-            func(*args, **kwargs)
+            # Removing the receiver argument, so we don't get
+            # "TypeError: got an unexpected keyword argument '_receiver_'"
+            if '_receiver_' in kwargs:
+                del kwargs['_receiver_']
+
+            return func(*args, **kwargs)
+
+        # Sending a net message with the arguments, if the actual function is in a different realm.
         else:
+            print('else: diff. realm')
+            print('sending net_string_call', realms.REALM)
             if realms.CLIENT:
-                send(net_string, args, kwargs)
+                send(net_string_call, args, kwargs)
+                return _net_decorator_call_returns
             else:
                 recv = select_receiver(kwargs)
-                send(net_string, args, kwargs, receiver=recv)
+                send(net_string_call, args, kwargs, _receiver_=recv)
+                return _net_decorator_call_returns
 
+    print('reg')
     return decorated
+
+
+def register_return_receiver(net_string_return):
+    """Registers the return receiver.
+
+    It receives ``pygmod_net:(``\ *function full name*\ ``) (return)`` net messages which contain the results
+    of the function decorated by :func:`realm_decorator`.
+    """
+    @receive(net_string_return)
+    def returner(*args):
+        global _net_decorator_call_returns
+        print(args)
+        _net_decorator_call_returns = args[0]
+
+
+def register_call_receiver(func, net_string_call, net_string_return):
+    """Registers the call receiver.
+
+    The call receiver is the net receiver of the net string ``pygmod_net:(``\ *function full name*\ ``) (call)``.
+    It calls the underlying function and sends back a ``pygmod_net:(``\ *function full name*\ ``) (return)``
+    net message with the function results attached.
+    """
+    if realms.CLIENT:
+        @receive(net_string_call)
+        def receiver(args, kwargs):
+            print('recv nsc')
+            returns = func(*args, **kwargs)
+            print('send net_string_return')
+            send(net_string_return, returns)
+    else:
+        @receive(net_string_call)
+        def receiver(args, kwargs, sender):
+            print('recv nsc')
+            returns = func(*args, **kwargs)
+            print('sendn et_string_return')
+            send(net_string_return, returns, _receiver_=sender)
+
+
+def add_net_strings_for_decorated_func(net_string_call, net_string_return):
+    """
+    Calls ``util.AddNetworkString``
+    for handling calls of function decorated by :func:`realm_decorator` between realms.
+    """
+    if realms.SERVER:
+        lua.G['util']['AddNetworkString'](net_string_call)
+        lua.G['util']['AddNetworkString'](net_string_return)
 
 
 def client(func):
     """Decorator for *client-side* functions.
+
+    .. warning::
+        This decorator is currently broken.
 
     Functions decorated by :func:`client` act like regular functions when called in the *client* realm.
     When they are called in the *server* realm, a net message is sent from the *server* to the *client*.
@@ -200,14 +292,16 @@ def client(func):
         @net.client
         def spam(message):
             chat.print(message)
-
+            return 'done'
 
         if CLIENT:
-            spam('eggs')  # Will print 'eggs' to the client's chat.
+            # Will print 'eggs' to the client's chat, then will print 'done' to the client's console.
+            print(spam('eggs'))
         else:  # Server
             # Receiver has to be specified when calling server-decorated functions.
-            # Will print "foo" to the chat of the player with the UserID 1.
-            spam('foo', receiver=player.get_by_userid(1))
+            # Will print "foo" to the chat of the player with the UserID 1,
+            # then will print 'done' to the server console.
+            print(spam('foo', receiver=player.get_by_userid(1)))
 
     .. warning::
 
@@ -218,10 +312,13 @@ def client(func):
 
 
 def server(func):
-    """Decorator for *client-side* functions.
+    """Decorator for *server-side* functions.
 
-    Functions decorated by :func:`client` act like regular functions when called in the *client* realm.
-    When they are called in the *server* realm, a net message is sent from the *server* to the *client*.
+    .. warning::
+        This decorator is currently broken.
+
+    Functions decorated by :func:`server` act like regular functions when called in the *server* realm.
+    When they are called in the *client* realm, a net message is sent from the *client* to the *server*.
     Arguments which were passed to a function are attached to this message.
 
     Example of shared code::
@@ -230,13 +327,13 @@ def server(func):
         def kill_everyone():
             for p in player.all():
                 p.kill()
-
+            return 'everyone was killed!'
 
         if CLIENT:
-            kill_everyone()  # Will kill every player
+            print(kill_everyone())  # Will kill every player and print 'everyone was killed!' to the client's console.
         else:  # Server
             # There is no difference between calling server-decorated functions on client and on server.
-            kill_everyone()
+            print(kill_everyone())
 
     .. warning::
 
@@ -247,16 +344,16 @@ def server(func):
 
 
 class default_receiver:
-    """Context manager which sets the default receiver.
+    """Context manager which sets the default receiver, so you don't have to use the ``_receiver_`` argument every time.
 
     Instead of specifying the receiver on each call::
 
         recv = player.get_by_userid(1)
 
-        chat.print('spam', receiver=recv)
-        chat.print('eggs', receiver=recv)
-        chat.print('foo', receiver=recv)
-        chat.print('bar', receiver=recv)
+        chat.print('spam', _receiver_=recv)
+        chat.print('eggs', _receiver_=recv)
+        chat.print('foo', _receiver_=recv)
+        chat.print('bar', _receiver_=recv)
 
     you can use :class:`default_receiver`::
 
@@ -266,6 +363,7 @@ class default_receiver:
             chat.print('eggs')
             chat.print('foo')
             chat.print('bar')
+            # All goes to recv
     """
 
     def __init__(self, receiver):

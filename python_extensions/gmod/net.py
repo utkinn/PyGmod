@@ -38,6 +38,12 @@ def send(message_name, *values, _receiver_=None):
                      but required when sending **from** server.
     :type _receiver_: Player or iterable[Player] or None
     :raises ValueError: if ``receiver`` is ``None`` when sending **from** server.
+
+    *Lua similar:* `net.Start() <http://wiki.garrysmod.com/page/net/Start>`_,
+    net.Write...(),
+    `net.Send() <http://wiki.garrysmod.com/page/net/Send>`_,
+    `net.SendToServer() <http://wiki.garrysmod.com/page/net/SendToServer>`_,
+    `net.Broadcast() <http://wiki.garrysmod.com/page/net/Broadcast>`_
     """
     if isinstance(_receiver_, Iterable):
         standardized_receiver = tuple(_receiver_)
@@ -117,6 +123,8 @@ def receive(message):
         if SERVER:
             net.send('spam', 'eggs', _receiver_=player.get_by_userid(1))
 
+    *Lua similar:* `net.Receive() <http://wiki.garrysmod.com/page/net/Receive>`_,
+    net.Read...()
     """
 
     # Commented part of the documentation:

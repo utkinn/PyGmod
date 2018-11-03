@@ -34,7 +34,10 @@ def getlocal():
     """Returns the player object of the current client.
 
     .. note::
-        ``getlocal()`` will raise
+        ``getlocal()`` will raise :class:`NotReadyError` if called before the
+        `InitPostEntity <http://wiki.garrysmod.com/page/GM/InitPostEntity>`_ event.
+
+    *Lua similar:* `LocalPlayer() <http://wiki.garrysmod.com/page/Global/LocalPlayer>`_
     """
     if realms.SERVER:
         raise RealmError('player.getlocal() is useless in the server realm')

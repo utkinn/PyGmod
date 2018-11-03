@@ -77,6 +77,8 @@ def hook(event: str):
     .. note::
 
         Arguments are actually :class:`gmod.lua.LuaObject`\\ s, so you have to explicitly convert them to right types.
+
+    *Lua similar:* `hook.Add() <http://wiki.garrysmod.com/page/hook/Add>`_
     """
     if not isinstance(event, str):
         raise TypeError('event must be str')

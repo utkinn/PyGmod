@@ -36,7 +36,7 @@
           <a href="lua.html" title="lua - Lua interoperability"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../reference.html" accesskey="U">&lt;no title&gt;</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../reference.html" accesskey="U">Module Reference</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -50,7 +50,7 @@
 <p>This module provides the tools for communication between <em>client</em> and <em>server</em> realms.</p>
 <dl class="function">
 <dt id="gmod.net.send">
-<code class="descclassname">gmod.net.</code><code class="descname">send</code><span class="sig-paren">(</span><em>message_name</em>, <em>*values</em>, <em>receiver=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.net.send" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">gmod.net.</code><code class="descname">send</code><span class="sig-paren">(</span><em>message_name</em>, <em>*values</em>, <em>_receiver_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.net.send" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends a net message to the opposite realm.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -61,7 +61,7 @@
 <a class="reference external" href="http://wiki.garrysmod.com/page/util/AddNetworkString">util.AddNetworkString()</a>
 GLua function.</li>
 <li><strong>values</strong> (<em>iterable</em>) – Iterable of values to append to this message.</li>
-<li><strong>receiver</strong> (<a class="reference internal" href="player.html#gmod.player.Player" title="gmod.player.Player"><em>Player</em></a><em> or </em><em>iterable</em><em>[</em><a class="reference internal" href="player.html#gmod.player.Player" title="gmod.player.Player"><em>Player</em></a><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)"><em>None</em></a>) – Message receiver(s). Ignored and can be <code class="docutils literal notranslate"><span class="pre">None</span></code> when sending <strong>to</strong> server,
+<li><strong>_receiver_</strong> (<a class="reference internal" href="player.html#gmod.player.Player" title="gmod.player.Player"><em>Player</em></a><em> or </em><em>iterable</em><em>[</em><a class="reference internal" href="player.html#gmod.player.Player" title="gmod.player.Player"><em>Player</em></a><em>] or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)"><em>None</em></a>) – Message receiver(s). Ignored and can be <code class="docutils literal notranslate"><span class="pre">None</span></code> when sending <strong>to</strong> server,
 but required when sending <strong>from</strong> server.</li>
 </ul>
 </td>
@@ -71,32 +71,54 @@ but required when sending <strong>from</strong> server.</li>
 </tr>
 </tbody>
 </table>
+<p><em>Lua similar:</em> <a class="reference external" href="http://wiki.garrysmod.com/page/net/Start">net.Start()</a>,
+net.Write…(),
+<a class="reference external" href="http://wiki.garrysmod.com/page/net/Send">net.Send()</a>,
+<a class="reference external" href="http://wiki.garrysmod.com/page/net/SendToServer">net.SendToServer()</a>,
+<a class="reference external" href="http://wiki.garrysmod.com/page/net/Broadcast">net.Broadcast()</a></p>
 </dd></dl>
 
 <dl class="function">
 <dt id="gmod.net.receive">
 <code class="descclassname">gmod.net.</code><code class="descname">receive</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.net.receive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decorator for net message receivers.</p>
-<p>Example of sending in Python and receiving in Python:</p>
+<p>Decorated function is the message receiving callback.
+If data was attached to the message, that data is passed to the callback.
+Message sender as <a class="reference internal" href="player.html#gmod.player.Player" title="gmod.player.Player"><code class="xref py py-class docutils literal notranslate"><span class="pre">gmod.player.Player</span></code></a> object is passed after the data,
+if the message was sent from the client.</p>
+<p>Example of sending in the client and receiving in the server:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">SERVER</span><span class="p">:</span>
-    <span class="n">G</span><span class="p">[</span><span class="s1">&#39;util&#39;</span><span class="p">][</span><span class="s1">&#39;AddNetworkString&#39;</span><span class="p">](</span><span class="s1">&#39;foo&#39;</span><span class="p">)</span>
-
     <span class="nd">@net</span><span class="o">.</span><span class="n">receive</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">foo_receiver</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-
+    <span class="k">def</span> <span class="nf">foo_receiver</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">sender</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">nick</span><span class="p">,</span> <span class="s1">&#39;sent:&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">CLIENT</span><span class="p">:</span>
-    <span class="n">net</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="s1">&#39;received&#39;</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">get_player_by_userid</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-    <span class="c1"># &#39;message received&#39; will be printed in the console of the player with the UserID 1.</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="s1">&#39;received&#39;</span><span class="p">)</span>
+    <span class="c1"># prints &quot;(nick) sent: message received&quot;</span>
 </pre></div>
 </div>
+<p>Server to Client:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">CLIENT</span><span class="p">:</span>
+    <span class="nd">@net</span><span class="o">.</span><span class="n">receive</span><span class="p">(</span><span class="s1">&#39;spam&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">spam_receiver</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>  <span class="c1"># &lt;-- No sender argument</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">SERVER</span><span class="p">:</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;spam&#39;</span><span class="p">,</span> <span class="s1">&#39;eggs&#39;</span><span class="p">,</span> <span class="n">_receiver_</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">get_by_userid</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><em>Lua similar:</em> <a class="reference external" href="http://wiki.garrysmod.com/page/net/Receive">net.Receive()</a>,
+net.Read…()</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="gmod.net.client">
 <code class="descclassname">gmod.net.</code><code class="descname">client</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.net.client" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decorator for <em>client-side</em> functions.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This decorator is currently broken.</p>
+</div>
 <p>Functions decorated by <a class="reference internal" href="#gmod.net.client" title="gmod.net.client"><code class="xref py py-func docutils literal notranslate"><span class="pre">client()</span></code></a> act like regular functions when called in the <em>client</em> realm.
 When they are called in the <em>server</em> realm, a net message is sent from the <em>server</em> to the <em>client</em>.
 Arguments which were passed to a function are attached to this message.</p>
@@ -104,14 +126,16 @@ Arguments which were passed to a function are attached to this message.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@net</span><span class="o">.</span><span class="n">client</span>
 <span class="k">def</span> <span class="nf">spam</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
     <span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-
+    <span class="k">return</span> <span class="s1">&#39;done&#39;</span>
 
 <span class="k">if</span> <span class="n">CLIENT</span><span class="p">:</span>
-    <span class="n">spam</span><span class="p">(</span><span class="s1">&#39;eggs&#39;</span><span class="p">)</span>  <span class="c1"># Will print &#39;eggs&#39; to the client&#39;s chat.</span>
+    <span class="c1"># Will print &#39;eggs&#39; to the client&#39;s chat, then will print &#39;done&#39; to the client&#39;s console.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">spam</span><span class="p">(</span><span class="s1">&#39;eggs&#39;</span><span class="p">))</span>
 <span class="k">else</span><span class="p">:</span>  <span class="c1"># Server</span>
     <span class="c1"># Receiver has to be specified when calling server-decorated functions.</span>
-    <span class="c1"># Will print &quot;foo&quot; to the chat of the player with the UserID 1.</span>
-    <span class="n">spam</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">get_by_userid</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="c1"># Will print &quot;foo&quot; to the chat of the player with the UserID 1,</span>
+    <span class="c1"># then will print &#39;done&#39; to the server console.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">spam</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">get_by_userid</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
 </pre></div>
 </div>
 <div class="admonition warning">
@@ -124,22 +148,26 @@ in the <em>shared</em> realm (__shared_autorun__ package).</p>
 <dl class="function">
 <dt id="gmod.net.server">
 <code class="descclassname">gmod.net.</code><code class="descname">server</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.net.server" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decorator for <em>client-side</em> functions.</p>
-<p>Functions decorated by <a class="reference internal" href="#gmod.net.client" title="gmod.net.client"><code class="xref py py-func docutils literal notranslate"><span class="pre">client()</span></code></a> act like regular functions when called in the <em>client</em> realm.
-When they are called in the <em>server</em> realm, a net message is sent from the <em>server</em> to the <em>client</em>.
+<dd><p>Decorator for <em>server-side</em> functions.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This decorator is currently broken.</p>
+</div>
+<p>Functions decorated by <a class="reference internal" href="#gmod.net.server" title="gmod.net.server"><code class="xref py py-func docutils literal notranslate"><span class="pre">server()</span></code></a> act like regular functions when called in the <em>server</em> realm.
+When they are called in the <em>client</em> realm, a net message is sent from the <em>client</em> to the <em>server</em>.
 Arguments which were passed to a function are attached to this message.</p>
 <p>Example of shared code:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@net</span><span class="o">.</span><span class="n">server</span>
 <span class="k">def</span> <span class="nf">kill_everyone</span><span class="p">():</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">player</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
         <span class="n">p</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
-
+    <span class="k">return</span> <span class="s1">&#39;everyone was killed!&#39;</span>
 
 <span class="k">if</span> <span class="n">CLIENT</span><span class="p">:</span>
-    <span class="n">kill_everyone</span><span class="p">()</span>  <span class="c1"># Will kill every player</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">kill_everyone</span><span class="p">())</span>  <span class="c1"># Will kill every player and print &#39;everyone was killed!&#39; to the client&#39;s console.</span>
 <span class="k">else</span><span class="p">:</span>  <span class="c1"># Server</span>
     <span class="c1"># There is no difference between calling server-decorated functions on client and on server.</span>
-    <span class="n">kill_everyone</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">kill_everyone</span><span class="p">())</span>
 </pre></div>
 </div>
 <div class="admonition warning">
@@ -152,14 +180,14 @@ in the <em>shared</em> realm (__shared_autorun__ package).</p>
 <dl class="class">
 <dt id="gmod.net.default_receiver">
 <em class="property">class </em><code class="descclassname">gmod.net.</code><code class="descname">default_receiver</code><span class="sig-paren">(</span><em>receiver</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.net.default_receiver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Context manager which sets the default receiver.</p>
+<dd><p>Context manager which sets the default receiver, so you don’t have to use the <code class="docutils literal notranslate"><span class="pre">_receiver_</span></code> argument every time.</p>
 <p>Instead of specifying the receiver on each call:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">recv</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">get_by_userid</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;spam&#39;</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">recv</span><span class="p">)</span>
-<span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;eggs&#39;</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">recv</span><span class="p">)</span>
-<span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">recv</span><span class="p">)</span>
-<span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">recv</span><span class="p">)</span>
+<span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;spam&#39;</span><span class="p">,</span> <span class="n">_receiver_</span><span class="o">=</span><span class="n">recv</span><span class="p">)</span>
+<span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;eggs&#39;</span><span class="p">,</span> <span class="n">_receiver_</span><span class="o">=</span><span class="n">recv</span><span class="p">)</span>
+<span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="n">_receiver_</span><span class="o">=</span><span class="n">recv</span><span class="p">)</span>
+<span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">_receiver_</span><span class="o">=</span><span class="n">recv</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>you can use <a class="reference internal" href="#gmod.net.default_receiver" title="gmod.net.default_receiver"><code class="xref py py-class docutils literal notranslate"><span class="pre">default_receiver</span></code></a>:</p>
@@ -169,6 +197,7 @@ in the <em>shared</em> realm (__shared_autorun__ package).</p>
     <span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;eggs&#39;</span><span class="p">)</span>
     <span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">)</span>
     <span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+    <span class="c1"># All goes to recv</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -229,7 +258,7 @@ in the <em>shared</em> realm (__shared_autorun__ package).</p>
           <a href="lua.html" title="lua - Lua interoperability"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../reference.html" >&lt;no title&gt;</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../reference.html" >Module Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

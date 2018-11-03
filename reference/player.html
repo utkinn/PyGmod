@@ -35,7 +35,8 @@
         <li class="right" >
           <a href="entity.html" title="entity - entity utilities"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../reference.html" accesskey="U">Module Reference</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -58,6 +59,18 @@
 <code class="descclassname">gmod.player.</code><code class="descname">get_by_userid</code><span class="sig-paren">(</span><em>userid: int</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.player.get_by_userid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a class="reference internal" href="#gmod.player.Player" title="gmod.player.Player"><code class="xref py py-class docutils literal notranslate"><span class="pre">Player</span></code></a> object which refers to the player with the user ID <code class="docutils literal notranslate"><span class="pre">userid</span></code>.</p>
 <p><em>Lua similar:</em> <a class="reference external" href="http://wiki.garrysmod.com/page/Global/Player">Player()</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gmod.player.getlocal">
+<code class="descclassname">gmod.player.</code><code class="descname">getlocal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gmod.player.getlocal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the player object of the current client.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal notranslate"><span class="pre">getlocal()</span></code> will raise <code class="xref py py-class docutils literal notranslate"><span class="pre">NotReadyError</span></code> if called before the
+<a class="reference external" href="http://wiki.garrysmod.com/page/GM/InitPostEntity">InitPostEntity</a> event.</p>
+</div>
+<p><em>Lua similar:</em> <a class="reference external" href="http://wiki.garrysmod.com/page/Global/LocalPlayer">LocalPlayer()</a></p>
 </dd></dl>
 
 </div>
@@ -115,7 +128,8 @@
         <li class="right" >
           <a href="entity.html" title="entity - entity utilities"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../reference.html" >Module Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

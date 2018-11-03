@@ -1,0 +1,131 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Addon creation tutorial: part 2 &#8212; PyGmod 0.9-alpha documentation</title>
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="addon-creation-tutorial-part-2">
+<h1>Addon creation tutorial: part 2<a class="headerlink" href="#addon-creation-tutorial-part-2" title="Permalink to this headline">¶</a></h1>
+<p><em>See the</em> <a class="reference internal" href="tutorial1.html"><span class="doc">Part 1</span></a> <em>if you haven’t seen it yet.</em></p>
+<p>In this tutorial we will improve our “Hello, World” addon a bit.</p>
+<p>We will print the “Hello, X!” text to the player’s chat instead of the game console, and there will be the player’s
+nickname in place of “X”.</p>
+<p>First, rename the <code class="docutils literal notranslate"><span class="pre">__shared_autorun__</span></code> folder to <code class="docutils literal notranslate"><span class="pre">__client_autorun__</span></code>, because we don’t need the server to
+participate in the “Hello world” printing process.</p>
+<img alt="../_images/rename_shared_to_client.png" src="../_images/rename_shared_to_client.png" />
+<p>Then, open the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> script again.</p>
+<p>We have to make two changes here: first, we need to print the text to the chat instead of the game console.
+There is the <code class="xref py py-func docutils literal notranslate"><span class="pre">gmod.chat.print()</span></code> function which prints text to the chat.</p>
+<p>To use it, we have to import <code class="docutils literal notranslate"><span class="pre">chat</span> <span class="pre">module</span></code> from <code class="docutils literal notranslate"><span class="pre">gmod</span></code> package. Add this code to the top of the file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod</span> <span class="k">import</span> <span class="n">chat</span>
+</pre></div>
+</div>
+<p>Then, replace the <code class="docutils literal notranslate"><span class="pre">print</span></code> function call with the <code class="docutils literal notranslate"><span class="pre">chat.print</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod</span> <span class="k">import</span> <span class="n">chat</span>
+
+<span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">world!</span></code> will be printed to the chat. Let’s make this greeting personal now: we will greet the player
+instead of the world.</p>
+<p>We can get the client’s player by calling the function <a class="reference internal" href="../reference/player.html#gmod.player.getlocal" title="gmod.player.getlocal"><code class="xref py py-func docutils literal notranslate"><span class="pre">gmod.player.getlocal()</span></code></a>. Let’s import the
+<a class="reference internal" href="../reference/player.html#module-gmod.player" title="gmod.player"><code class="xref py py-mod docutils literal notranslate"><span class="pre">player</span></code></a> module and create a variable <code class="docutils literal notranslate"><span class="pre">ply</span></code> and store the local player here:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod</span> <span class="k">import</span> <span class="n">chat</span><span class="p">,</span> <span class="n">player</span>
+
+<span class="n">ply</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">getlocal</span><span class="p">()</span>
+<span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="../reference/player.html#gmod.player.Player" title="gmod.player.Player"><code class="xref py py-class docutils literal notranslate"><span class="pre">Player</span></code></a> has the <code class="docutils literal notranslate"><span class="pre">nick</span></code> property which can be used to get the player’s nick. So we replace “world”
+with the player’s nick in out greeting:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod</span> <span class="k">import</span> <span class="n">chat</span><span class="p">,</span> <span class="n">player</span>
+
+<span class="n">ply</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">getlocal</span><span class="p">()</span>
+<span class="n">chat</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;Hello&#39;</span><span class="p">,</span> <span class="n">ply</span><span class="o">.</span><span class="n">nick</span><span class="p">,</span> <span class="s1">&#39;!&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We’re done. Save and close the script, launch</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/docs-logo.png" alt="Logo"/>
+            </a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/for_addon_developers/_tutorial2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, javabird25 (Protocs).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+    </div>
+  </body>
+</html>

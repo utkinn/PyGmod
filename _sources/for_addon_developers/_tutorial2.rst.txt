@@ -1,0 +1,50 @@
+Addon creation tutorial: part 2
+===============================
+
+*See the* :doc:`Part 1 <tutorial1>` *if you haven't seen it yet.*
+
+In this tutorial we will improve our "Hello, World" addon a bit.
+
+We will print the "Hello, X!" text to the player's chat instead of the game console, and there will be the player's
+nickname in place of "X".
+
+First, rename the ``__shared_autorun__`` folder to ``__client_autorun__``, because we don't need the server to
+participate in the "Hello world" printing process.
+
+.. image:: addon_tutorial_images/rename_shared_to_client.png
+
+Then, open the ``__init__.py`` script again.
+
+We have to make two changes here: first, we need to print the text to the chat instead of the game console.
+There is the :func:`gmod.chat.print` function which prints text to the chat.
+
+To use it, we have to import ``chat module`` from ``gmod`` package. Add this code to the top of the file::
+
+    from gmod import chat
+
+Then, replace the ``print`` function call with the ``chat.print``::
+
+    from gmod import chat
+
+    chat.print('Hello world!')
+
+Now ``Hello world!`` will be printed to the chat. Let's make this greeting personal now: we will greet the player
+instead of the world.
+
+We can get the client's player by calling the function :func:`gmod.player.getlocal`. Let's import the
+:mod:`~gmod.player` module and create a variable ``ply`` and store the local player here::
+
+    from gmod import chat, player
+
+    ply = player.getlocal()
+    chat.print('Hello world!')
+
+:class:`~gmod.player.Player` has the ``nick`` property which can be used to get the player's nick. So we replace "world"
+with the player's nick in out greeting::
+
+    from gmod import chat, player
+
+    ply = player.getlocal()
+    chat.print('Hello', ply.nick, '!')
+
+We're done. Save and close the script, launch

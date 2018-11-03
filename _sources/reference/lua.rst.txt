@@ -37,9 +37,13 @@
 
     .. data:: G
 
-        Lua Global table. Can be indexed to get :class:`LuaObject` instances.
+        Lua Global table. Can be indexed to get and set :class:`LuaObject` instances.
 
         For example::
 
             MsgN = G['MsgN']
             MsgN('Hi there!')
+
+            # Fooling everyone that we are in neither server nor client realm >:-D
+            G['CLIENT'] = False
+            G['SERVER'] = False

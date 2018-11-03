@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Addon creation tutorial &#8212; PyGmod 0.9-alpha documentation</title>
+    <title>Addon creation tutorial: part 1 &#8212; PyGmod 0.9-alpha documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="../reference.html" />
+    <link rel="next" title="Module Reference" href="../reference.html" />
     <link rel="prev" title="Getting Started for Addon Developers" href="getting_started.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -30,7 +30,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../reference.html" title="&lt;no title&gt;"
+          <a href="../reference.html" title="Module Reference"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="getting_started.html" title="Getting Started for Addon Developers"
@@ -44,8 +44,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="addon-creation-tutorial">
-<h1>Addon creation tutorial<a class="headerlink" href="#addon-creation-tutorial" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="addon-creation-tutorial-part-1">
+<h1>Addon creation tutorial: part 1<a class="headerlink" href="#addon-creation-tutorial-part-1" title="Permalink to this headline">¶</a></h1>
 <p>In this tutorial you will learn how to create a simple “Hello world” addon with PyGmod.</p>
 <div class="section" id="create-addon-folders">
 <h2>1. Create addon folders<a class="headerlink" href="#create-addon-folders" title="Permalink to this headline">¶</a></h2>
@@ -81,6 +81,21 @@
 <p>When PyGmod sees your addon each time you start a new game in Garry’s Mod, PyGmod runs
 <code class="docutils literal notranslate"><span class="pre">(your</span> <span class="pre">addon</span> <span class="pre">folder</span> <span class="pre">name,</span> <span class="pre">&quot;hello_world&quot;</span> <span class="pre">in</span> <span class="pre">our</span> <span class="pre">case)\python\__shared_autorun__\__init__.py</span></code>. As you can see,
 we have to create <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> in <code class="docutils literal notranslate"><span class="pre">__shared_autorun__</span></code> folder to do anything useful.</p>
+<div class="section" id="a-note-about-the-game-states">
+<h3>A note about the game states<a class="headerlink" href="#a-note-about-the-game-states" title="Permalink to this headline">¶</a></h3>
+<p>PyGmod runs initialization scripts for each <strong>game realm</strong>.</p>
+<p>Garry’s Mod game session consists of two realms: the <strong>client</strong> realm and the <strong>server</strong> realm.</p>
+<p>The <strong>client</strong> state is basically your game client. It handles things such as visual rendering.
+It can communicate with <strong>server</strong> state via the net library as an example.</p>
+<p>The <strong>server</strong> state handles things on the server; it’s the only state used on Dedicated Servers.
+This handles things like telling entities what to do, controlling weapons/players and all game logic
+(what happens when and how in game modes).</p>
+<p>First, PyGmod runs <code class="docutils literal notranslate"><span class="pre">__shared_autorun__.__init__</span></code> and <code class="docutils literal notranslate"><span class="pre">__server_autorun__.__init__</span></code> for <strong>server</strong>, then it runs
+<code class="docutils literal notranslate"><span class="pre">__shared_autorun__.__init__</span></code> and <code class="docutils literal notranslate"><span class="pre">__client_autorun__.__init__</span></code> for <strong>client</strong>. As you can see,
+<code class="docutils literal notranslate"><span class="pre">__shared_autorun__.__init__</span></code> is ran two times: in <strong>server</strong> and in <strong>client</strong>.</p>
+<p>Realms are independent, so, for example, if you create a global variable in the client realm, you won’t be available
+to immediately access it from the server realm. You can use <a class="reference internal" href="../reference/net.html#module-gmod.net" title="gmod.net"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.net</span></code></a> module
+to connect the realms and use <a class="reference internal" href="../reference/realms.html#module-gmod.realms" title="gmod.realms"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.realms</span></code></a> to determine the current realm.</p>
 <hr class="docutils" />
 <ol class="arabic">
 <li><p class="first">Open <strong>Notepad</strong>.</p>
@@ -101,8 +116,9 @@ we have to create <code class="docutils literal notranslate"><span class="pre">_
 </ol>
 <img alt="../_images/init_script.png" src="../_images/init_script.png" />
 </div>
-<div class="section" id="seeing-it-running">
-<h2>3. Seeing it running<a class="headerlink" href="#seeing-it-running" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="see-it-works">
+<h2>3. See it works<a class="headerlink" href="#see-it-works" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li>Launch <strong>Garry’s Mod</strong>.</li>
 <li>Go to <strong>Settings</strong>, <strong>Keyboard</strong> tab. Click <strong>Advanced…</strong></li>
@@ -121,7 +137,8 @@ first time with the blue color, second time with the yellow color.</li>
 You might have to look closely to find them among other console messages.</p>
 </div>
 <hr class="docutils" />
-<p>Congratulations! You just made your first PyGmod addon.</p>
+<p>Congratulations! You just made your first PyGmod addon.
+Proceed to the <span class="xref std std-doc">Part 2 of the tutorial</span>.</p>
 </div>
 </div>
 
@@ -136,13 +153,16 @@ You might have to look closely to find them among other console messages.</p>
             </a></p>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Addon creation tutorial</a><ul>
+<li><a class="reference internal" href="#">Addon creation tutorial: part 1</a><ul>
 <li><a class="reference internal" href="#create-addon-folders">1. Create addon folders</a><ul>
 <li><a class="reference internal" href="#if-you-don-t-know-where-your-garry-s-mod-copy-is-installed">If you don’t know where your Garry’s Mod copy is installed</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#create-the-initialization-script">2. Create the initialization script</a></li>
-<li><a class="reference internal" href="#seeing-it-running">3. Seeing it running</a></li>
+<li><a class="reference internal" href="#create-the-initialization-script">2. Create the initialization script</a><ul>
+<li><a class="reference internal" href="#a-note-about-the-game-states">A note about the game states</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#see-it-works">3. See it works</a></li>
 </ul>
 </li>
 </ul>
@@ -152,11 +172,11 @@ You might have to look closely to find them among other console messages.</p>
                         title="previous chapter">Getting Started for Addon Developers</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../reference.html"
-                        title="next chapter">&lt;no title&gt;</a></p>
+                        title="next chapter">Module Reference</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/for_addon_developers/tutorial.rst.txt"
+      <li><a href="../_sources/for_addon_developers/tutorial1.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -186,7 +206,7 @@ You might have to look closely to find them among other console messages.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../reference.html" title="&lt;no title&gt;"
+          <a href="../reference.html" title="Module Reference"
              >next</a> |</li>
         <li class="right" >
           <a href="getting_started.html" title="Getting Started for Addon Developers"

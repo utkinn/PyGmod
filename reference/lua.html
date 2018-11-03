@@ -36,7 +36,7 @@
           <a href="hooks.html" title="hooks - game event handling"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../reference.html" accesskey="U">&lt;no title&gt;</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../reference.html" accesskey="U">Module Reference</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -82,10 +82,14 @@ the returned values.</p>
 <dl class="data">
 <dt id="gmod.lua.G">
 <code class="descclassname">gmod.lua.</code><code class="descname">G</code><a class="headerlink" href="#gmod.lua.G" title="Permalink to this definition">¶</a></dt>
-<dd><p>Lua Global table. Can be indexed to get <a class="reference internal" href="#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a> instances.</p>
+<dd><p>Lua Global table. Can be indexed to get and set <a class="reference internal" href="#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a> instances.</p>
 <p>For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MsgN</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="s1">&#39;MsgN&#39;</span><span class="p">]</span>
 <span class="n">MsgN</span><span class="p">(</span><span class="s1">&#39;Hi there!&#39;</span><span class="p">)</span>
+
+<span class="c1"># Fooling everyone that we are in neither server nor client realm &gt;:-D</span>
+<span class="n">G</span><span class="p">[</span><span class="s1">&#39;CLIENT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">G</span><span class="p">[</span><span class="s1">&#39;SERVER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -103,7 +107,7 @@ the returned values.</p>
 <dl class="function">
 <dt id="gmod.lua.eval">
 <code class="descclassname">gmod.lua.</code><code class="descname">eval</code><span class="sig-paren">(</span><em>expr</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.lua.eval" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluates a single Lua expression. Returns <a class="reference internal" href="#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a> with evaluation result.</p>
+<dd><p>Evaluates a single Lua expression. Returns a <a class="reference internal" href="#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a> with an evaluation result.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">expr</span> <span class="o">=</span> <span class="s1">&#39;game.SinglePlayer()&#39;</span>  <span class="c1"># Returns &quot;true&quot; if the current session is a single player game</span>
 <span class="n">single_player_luaobj</span> <span class="o">=</span> <span class="n">lua</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 <span class="c1"># Remember that we need to convert the evaluation result to bool explicitly</span>
@@ -120,12 +124,17 @@ the returned values.</p>
 <dt id="gmod.lua.table">
 <code class="descclassname">gmod.lua.</code><code class="descname">table</code><span class="sig-paren">(</span><em>iterable</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.lua.table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates and returns a <a class="reference internal" href="#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a> of a new Lua table from <code class="docutils literal notranslate"><span class="pre">iterable</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tbl</span> <span class="o">=</span> <span class="n">lua</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">lua</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;PrintTable&#39;</span><span class="p">](</span><span class="n">tbl</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="class">
 <dt id="gmod.lua.LuaObjectWrapper">
 <em class="property">class </em><code class="descclassname">gmod.lua.</code><code class="descname">LuaObjectWrapper</code><a class="headerlink" href="#gmod.lua.LuaObjectWrapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract class for Lua class wrappers, such as <a class="reference internal" href="entity.html#gmod.entity.Entity" title="gmod.entity.Entity"><code class="xref py py-class docutils literal notranslate"><span class="pre">gmod.entity.Entity</span></code></a>.</p>
+<dd><p>Abstract class for Lua class wrappers, such as <a class="reference internal" href="entity.html#gmod.entity.Entity" title="gmod.entity.Entity"><code class="xref py py-class docutils literal notranslate"><span class="pre">gmod.entity.Entity</span></code></a>.
+Subclasses of <code class="docutils literal notranslate"><span class="pre">LuaObjectWrapper</span></code> can be used in <a class="reference internal" href="#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a> calls and <a class="reference internal" href="#gmod.lua.G" title="gmod.lua.G"><code class="xref py py-const docutils literal notranslate"><span class="pre">G</span></code></a> indexing operations.</p>
 <p>Subclasses must implement a <code class="docutils literal notranslate"><span class="pre">lua_obj</span></code> property that should return the wrapped <a class="reference internal" href="#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a>.</p>
 </dd></dl>
 
@@ -185,7 +194,7 @@ the returned values.</p>
           <a href="hooks.html" title="hooks - game event handling"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../reference.html" >&lt;no title&gt;</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../reference.html" >Module Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

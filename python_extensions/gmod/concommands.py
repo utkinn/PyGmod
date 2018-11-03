@@ -50,19 +50,18 @@ def exists(name):
 
 
 class ConCmd:
-    """The console command class."""
+    """The console command class.
 
-    def __init__(self, name: str, callback):
-        """Creates a console command.
-
-        :arg name: the command name that will be used to execute it.
-        :arg callback: the command callback: a function which will be called when the console command will be executed.
-
-        The callback must receive 2 arguments:
+    The callback is a function which will be called when the console command will be executed.
+    It must receive 2 arguments:
 
         - :class:`Player` who executed this command
         - :class:`str` of arguments separated by spaces.
-        """
+
+    *Lua similar:* `concommand.Add() <http://wiki.garrysmod.com/page/concommand/Add>`_
+    """
+
+    def __init__(self, name: str, callback):
         if not isinstance(name, str):
             raise TypeError('name must be str')
 
@@ -105,7 +104,10 @@ class ConCmd:
         callbacks[self.name] = val
 
     def remove(self):
-        """Removes the console command, so it will be not available for executing."""
+        """Removes the console command, so it will be not available for executing.
+
+        *Lua similar:* `concommand.Remove() <http://wiki.garrysmod.com/page/concommand/Remove>`_
+        """
         del callbacks[self.name]
         lua.G['concommand']['Remove'](self.name)
         self.removed = True
@@ -120,6 +122,8 @@ def run(cmd: Union[str, ConCmd], args: Union[str, Iterable[str]] = '') -> None:
     """Runs the console command.
 
     :param args: space-separated args or iterable of args :class:`str`\ s.
+
+    *Lua similar:* `RunConsoleCommand() <http://wiki.garrysmod.com/page/Global/RunConsoleCommand>`_
     """
     run_func = lua.G['RunConsoleCommand']
 

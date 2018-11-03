@@ -6,7 +6,7 @@ import pickle
 from collections import defaultdict
 from collections.abc import Iterable
 
-from luastack import ValueType
+from luastack import ValueType, IN_GMOD
 from .player import Player
 from . import realms, lua
 
@@ -192,6 +192,10 @@ def select_receiver(kwargs):
 # TODO: return func results if send was used
 def realm_decorator(func, target_realm):
     """Base decorator of :func:`client` and :func:`server`."""
+
+    # Do nothing if we just generate documentation
+    if not IN_GMOD:
+        return func
 
     # Net string for calling the function from a different realm
     net_string_call = f'pygmod_net:{func.__module__}.{func.__qualname__} (call)'

@@ -11,6 +11,8 @@ def print(*values, sep=' '):
     color multiple times.
 
     Newline is added after the message, and there is no way to change that.
+
+    *Lua similar:* `chat.AddText() <http://wiki.garrysmod.com/page/chat/AddText>`_
     """
     args_no_sep = [v if isinstance(v, color.Color) else str(v) for v in values]
 

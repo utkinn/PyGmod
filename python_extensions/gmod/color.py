@@ -9,6 +9,14 @@ def _check_component_type(*comps):
 
 
 class Color:
+    """
+    The color class which is used in various client functions, such as functions in modules :mod:`gmod.chat`
+    and :mod:`gmod.draw`.
+
+    ``Color`` constructor requires four color components: *red*, *green*, *blue* and *alpha* (transparency).
+
+    *Lua similar:* `Color() <http://wiki.garrysmod.com/page/Global/Color>`_
+    """
     def __init__(self, r, g, b, a):
         _check_component_type(r, g, b, a)
         self.r = r

@@ -173,7 +173,7 @@ def exec(code):
 
 
 def eval(expr):
-    """Evaluates a single Lua expression. Returns :class:`LuaObject` with evaluation result.
+    """Evaluates a single Lua expression. Returns a :class:`LuaObject` with an evaluation result.
 
     ::
 
@@ -211,7 +211,13 @@ def eval(expr):
 
 
 def table(iterable):
-    """Creates and returns a :class:`LuaObject` of a new Lua table from ``iterable``."""
+    """Creates and returns a :class:`LuaObject` of a new Lua table from ``iterable``.
+
+    ::
+
+        tbl = lua.table(1, 2, 3)
+        lua.G['PrintTable'](tbl)
+    """
     ls.clear()  # Everything might go wrong if the stack is not empty
 
     ls.create_table()
@@ -233,6 +239,7 @@ def table(iterable):
 
 class LuaObjectWrapper(ABC):
     """Abstract class for Lua class wrappers, such as :class:`gmod.entity.Entity`.
+    Subclasses of ``LuaObjectWrapper`` can be used in :class:`LuaObject` calls and :const:`G` indexing operations.
 
     Subclasses must implement a ``lua_obj`` property that should return the wrapped :class:`LuaObject`.
     """

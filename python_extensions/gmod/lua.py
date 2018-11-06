@@ -78,7 +78,7 @@ class LuaObject:
         with self._context_:
             return ls.get_type_name(ls.get_type(-1))
 
-    def __str__(self):
+    def _convert_to_byte_or_str(self):
         if self.type == ValueType.NIL:
             return 'None'
 
@@ -86,10 +86,21 @@ class LuaObject:
             val = ls.get_string(-1)
             if val is None:
                 raise ValueError("can't convert this value to str/bytes")
-            if isinstance(val, bytes):
-                return val.decode()
-            else:
-                return val
+            return val
+
+    def __str__(self):
+        val = self._convert_to_byte_or_str()
+        if isinstance(val, str):
+            return val
+        else:  # val is bytes object
+            return val.decode()
+
+    def __bytes__(self):
+        val = self._convert_to_byte_or_str()
+        if isinstance(val, bytes):
+            return val
+        else:  # val is str object
+            return val.encode()
 
     def __int__(self):
         with self._context_:

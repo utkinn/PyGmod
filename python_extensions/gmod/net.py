@@ -3,8 +3,8 @@ This module provides the tools for communication between *client* and *server* r
 """
 
 import pickle
-from collections import defaultdict
 from collections.abc import Iterable
+import base64
 
 from luastack import ValueType, IN_GMOD
 from .player import Player
@@ -12,21 +12,21 @@ from . import realms, lua
 
 __all__ = ['send', 'receive', 'client', 'server', 'default_receiver']
 
-receivers = defaultdict(lambda: [])
+receivers = {}
 
 
 def write_py2py_netmsg_data(values):
     """Appends the message data for sending from Python and receiving in Python.
 
-    Pickles the ``values`` tuple to :class:`bytes` object, then writes its length and himself.
+    1. Pickles the ``values`` tuple to :class:`bytes` object.
+    2. Encodes the pickle to a Base85 string.
+    3. Attaches the Base85 string to the message.
     """
     pickled = pickle.dumps(values, pickle.HIGHEST_PROTOCOL)
-    length = len(pickled)
-    lua.G['net']['WriteUInt'](length, 32)
-    lua.G['net']['WriteData'](pickled, length)
+    b85encoded = base64.b85encode(pickled)
+    lua.G['net']['WriteString'](b85encoded)
 
 
-# def send(message_name, *values, receiver=None, handled_in_lua=False):
 def send(message_name, *values, _receiver_=None):
     """Sends a net message to the opposite realm.
 
@@ -81,17 +81,19 @@ def send(message_name, *values, _receiver_=None):
 
 
 def received(message):
-    print('received!')
-    for r in receivers[message]:
-        lua_player = lua.G['py']['_recv_ply']
+    receiver = receivers[message]
 
-        data = pickle.loads(bytes(lua.G['py']['_recv_obj']))
-        print('data', data)
-        if lua_player.type == ValueType.NIL:
-            r(*data)
-        else:
-            player = Player(lua_player)
-            r(*data, player)
+    # Restoring the object
+    lua_player = lua.G['py']['_recv_ply']
+    b85encoded = bytes(lua.G['py']['_recv_obj'])
+    pickled = base64.b85decode(b85encoded)
+    data = pickle.loads(pickled)
+
+    if realms.CLIENT:
+        receiver(*data)
+    else:
+        player = Player(lua_player)
+        receiver(*data, player)
 
 
 def receive(message):
@@ -127,35 +129,13 @@ def receive(message):
     net.Read...()
     """
 
-    # Commented part of the documentation:
-
-    # Sending in Lua and receiving in Python::
-    #
-    #     --- sv_init.lua ---
-    #
-    #     util.AddNetworkString('foo')
-    #
-    #     net.Start('foo')
-    #         net.WriteString('message')
-    #         net.WriteString('received')
-    #     net.Send(Player(1))
-    #
-    #
-    #     --- __client_autorun__\\__init__.py ---
-    #
-    #     from gmod import net
-    #
-    #     @net.receive('foo')
-    #     def foo_receiver(a, b):
-    #         print(a, b)
-
-    # End of documentation
-
     def decorator(func):
+        if message in receivers:
+            raise ValueError(f'message {message!r} handler is already registered')
+
         lua_receiver = lua.eval(f'''
-        function(_, ply)
-            local _recv_len = net.ReadUInt(32)  -- Pickled object length
-            py._recv_obj = net.ReadData(_recv_len)  -- Actual pickled object
+        function(len, ply)
+            py._recv_obj = net.ReadString()  -- Actual pickled object
             py._recv_ply = ply
 
             if CLIENT then
@@ -169,7 +149,7 @@ def receive(message):
         end
         ''')
         lua.G['net']['Receive'](message, lua_receiver)
-        receivers[message].append(func)
+        receivers[message] = func
 
         return func
 
@@ -244,7 +224,7 @@ def realm_decorator(func, target_realm):
 
 
 def register_return_receiver(net_string_return):
-    """Registers the return receiver.
+    r"""Registers the return receiver.
 
     It receives ``pygmod_net:(``\ *function full name*\ ``) (return)`` net messages which contain the results
     of the function decorated by :func:`realm_decorator`.
@@ -257,7 +237,7 @@ def register_return_receiver(net_string_return):
 
 
 def register_call_receiver(func, net_string_call, net_string_return):
-    """Registers the call receiver.
+    r"""Registers the call receiver.
 
     The call receiver is the net receiver of the net string ``pygmod_net:(``\ *function full name*\ ``) (call)``.
     It calls the underlying function and sends back a ``pygmod_net:(``\ *function full name*\ ``) (return)``

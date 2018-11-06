@@ -75,7 +75,7 @@ class SendTestCase(TestCase):
         pickled = pickle.dumps(data, pickle.HIGHEST_PROTOCOL)
         ply = player.get_by_userid(1)
 
-        send('eggs', *data, receiver=ply)
+        send('eggs', *data, _receiver_=ply)
 
         g.net.Start.assert_called_once_with('eggs')
         g.net.WriteUInt.assert_called_once_with(len(pickled), 32)

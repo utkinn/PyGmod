@@ -164,7 +164,7 @@ class LuaObject:
             return tuple(returns)
 
     def __repr__(self):
-        return f'<LuaObject (type={str(self.type_name)!s})>'
+        return f'<LuaObject (type={self.type_name.decode()!s})>'
 
 
 # Lua global table

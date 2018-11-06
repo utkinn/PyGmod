@@ -34,17 +34,17 @@ def push_pyval_to_stack(val):
     ==============================  ========================================================
     ``None``                        ``nil``
     Any number                      number
-    :class:`LuaObject`              Whatever ``LuaObject.ref`` is pointing to
+    :class:`LuaObject`              Whatever ``LuaObject._ref_`` is pointing to
     :class:`str`, :class:`bytes`    string
     :class:`bool`                   bool
-    :class:`LuaObjectWrapper`       Whatever ``LuaObjectWrapper.lua_obj.ref is pointing to
+    :class:`LuaObjectWrapper`       Whatever ``LuaObjectWrapper.lua_obj._ref_ is pointing to
     """
     if val is None:
         ls.push_nil()
     if isinstance(val, Number):
         ls.push_number(val)
     elif isinstance(val, LuaObject):
-        ls.push_ref(val.ref)
+        ls.push_ref(val._ref_)
     elif isinstance(val, str):
         ls.push_string(val.encode())
     elif isinstance(val, bytes):
@@ -52,7 +52,7 @@ def push_pyval_to_stack(val):
     elif isinstance(val, bool):
         ls.push_bool(val)
     elif isinstance(val, LuaObjectWrapper):
-        ls.push_ref(val.lua_obj.ref)
+        ls.push_ref(val.lua_obj._ref_)
     else:
         raise TypeError(f'unsupported value type: {type(val)}')
 
@@ -60,29 +60,29 @@ def push_pyval_to_stack(val):
 class LuaObject:
     def __init__(self):
         """Creates a :class:`LuaObject` which points to the topmost stack value and pops it."""
-        self.ref = ls.create_ref()
-        self._context = Reference(self.ref)
+        self._ref_ = ls.create_ref()
+        self._context_ = Reference(self._ref_)
 
     def __del__(self):
-        ls.free_ref(self.ref)
+        ls.free_ref(self._ref_)
 
     @property
     def type(self):
         """Returns the :class:`luastack.ValueType` of the held value."""
-        with self._context:
+        with self._context_:
             return ls.get_type(-1)
 
     @property
     def type_name(self):
         """Returns the :class:`str` type representation of the held value."""
-        with self._context:
+        with self._context_:
             return ls.get_type_name(ls.get_type(-1))
 
     def __str__(self):
         if self.type == ValueType.NIL:
             return 'None'
 
-        with self._context:
+        with self._context_:
             val = ls.get_string(-1)
             if val is None:
                 raise ValueError("can't convert this value to str/bytes")
@@ -92,40 +92,55 @@ class LuaObject:
                 return val
 
     def __int__(self):
-        with self._context:
+        with self._context_:
             return int(ls.get_number(-1))
 
     def __float__(self):
-        with self._context:
+        with self._context_:
             return float(ls.get_number(-1))
 
     def __bool__(self):
-        with self._context:
+        with self._context_:
             return ls.get_bool(-1)
 
-    def __setitem__(self, key, value):
+    def _get(self, key):
         if self.type == ValueType.NIL:
             raise ValueError("can't index nil")
 
-        with self._context:
+        with self._context_:
+            push_pyval_to_stack(key)
+            ls.get_table(-2)
+            return LuaObject()
+
+    def __getitem__(self, key):
+        return self._get(key)
+
+    def __getattr__(self, item):
+        return self._get(item)
+
+    def _set(self, key, value):
+        if self.type == ValueType.NIL:
+            raise ValueError("can't index nil")
+
+        with self._context_:
             push_pyval_to_stack(key)
             push_pyval_to_stack(value)
             ls.set_table(-3)
 
-    def __getitem__(self, key):
-        if self.type == ValueType.NIL:
-            raise ValueError("can't index nil")
+    def __setitem__(self, key, value):
+        self._set(key, value)
 
-        with self._context:
-            push_pyval_to_stack(key)
-            ls.get_table(-2)
-            return LuaObject()
+    def __setattr__(self, key, value):
+        if key.startswith('_') and key.endswith('_'):
+            super().__setattr__(key, value)
+        else:
+            self._set(key, value)
 
     def __call__(self, *args):
         if self.type == ValueType.NIL:
             raise ValueError("can't call nil")
 
-        ls.push_ref(self.ref)
+        ls.push_ref(self._ref_)
         for val in args:
             push_pyval_to_stack(val)
         ls.call(len(args), -1)
@@ -216,7 +231,7 @@ def table(iterable):
     ::
 
         tbl = lua.table(1, 2, 3)
-        lua.G['PrintTable'](tbl)
+        lua.G.PrintTable(tbl)
     """
     ls.clear()  # Everything might go wrong if the stack is not empty
 

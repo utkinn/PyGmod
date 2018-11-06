@@ -29,11 +29,17 @@
 
         Example of using ``LuaObject``\ s::
 
-            chat = G['chat']  # Getting 'chat' namespace
-            add_text = chat['AddText']  # Getting 'chat.AddText' function
-            white_color = G['Color'](255, 255, 255, 255)
+            chat = G.chat  # Getting 'chat' namespace
+            add_text = chat.AddText  # Getting 'chat.AddText' function
+            white_color = G.Color(255, 255, 255, 255)
 
-            add_text(white_color, 'Hi there!')
+            first_player = G.player.GetAll()[1]
+
+            add_text(white_color, "First player's nick is " + str(first_player.Nick(first_player)))
+            # Since Player:Nick() is an equivalent of Player.Nick(Player) (pay attention to the dot instead of the colon),
+            # you have to pass the first_player again, otherwise there will be an error.
+
+            # Also, you have to explicitly convert LuaObjects to Python objects.
 
     .. data:: G
 
@@ -41,9 +47,9 @@
 
         For example::
 
-            MsgN = G['MsgN']
+            MsgN = G.MsgN
             MsgN('Hi there!')
 
             # Fooling everyone that we are in neither server nor client realm >:-D
-            G['CLIENT'] = False
-            G['SERVER'] = False
+            G.CLIENT = False
+            G.SERVER = False

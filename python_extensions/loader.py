@@ -60,12 +60,13 @@ def try_import(addon_dir, pkg):
         return True
     except ImportError:
         pass
-    except:
+    except BaseException:
         handle_exception_in_addon()
 
 
 def redirect_output():
     streams.setup()
+
 
 def patch_hook_call():
     """Patches the ``hook.Call`` Lua function to delegate hook calls to :mod:`gmod.hooks` module."""

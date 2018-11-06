@@ -70,11 +70,17 @@ the returned values.</p>
 <p class="last">Do not create <code class="docutils literal notranslate"><span class="pre">LuaObject</span></code> instances by yourself. Use the <a class="reference internal" href="#gmod.lua.G" title="gmod.lua.G"><code class="xref py py-data docutils literal notranslate"><span class="pre">G</span></code></a> indexation instead.</p>
 </div>
 <p>Example of using <code class="docutils literal notranslate"><span class="pre">LuaObject</span></code>s:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chat</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="s1">&#39;chat&#39;</span><span class="p">]</span>  <span class="c1"># Getting &#39;chat&#39; namespace</span>
-<span class="n">add_text</span> <span class="o">=</span> <span class="n">chat</span><span class="p">[</span><span class="s1">&#39;AddText&#39;</span><span class="p">]</span>  <span class="c1"># Getting &#39;chat.AddText&#39; function</span>
-<span class="n">white_color</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="s1">&#39;Color&#39;</span><span class="p">](</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chat</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">chat</span>  <span class="c1"># Getting &#39;chat&#39; namespace</span>
+<span class="n">add_text</span> <span class="o">=</span> <span class="n">chat</span><span class="o">.</span><span class="n">AddText</span>  <span class="c1"># Getting &#39;chat.AddText&#39; function</span>
+<span class="n">white_color</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
 
-<span class="n">add_text</span><span class="p">(</span><span class="n">white_color</span><span class="p">,</span> <span class="s1">&#39;Hi there!&#39;</span><span class="p">)</span>
+<span class="n">first_player</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">GetAll</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">add_text</span><span class="p">(</span><span class="n">white_color</span><span class="p">,</span> <span class="s2">&quot;First player&#39;s nick is &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">first_player</span><span class="o">.</span><span class="n">Nick</span><span class="p">(</span><span class="n">first_player</span><span class="p">)))</span>
+<span class="c1"># Since Player:Nick() is an equivalent of Player.Nick(Player) (pay attention to the dot instead of the colon),</span>
+<span class="c1"># you have to pass the first_player again, otherwise there will be an error.</span>
+
+<span class="c1"># Also, you have to explicitly convert LuaObjects to Python objects.</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -84,12 +90,12 @@ the returned values.</p>
 <code class="descclassname">gmod.lua.</code><code class="descname">G</code><a class="headerlink" href="#gmod.lua.G" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lua Global table. Can be indexed to get and set <a class="reference internal" href="#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a> instances.</p>
 <p>For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MsgN</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="s1">&#39;MsgN&#39;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MsgN</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">MsgN</span>
 <span class="n">MsgN</span><span class="p">(</span><span class="s1">&#39;Hi there!&#39;</span><span class="p">)</span>
 
 <span class="c1"># Fooling everyone that we are in neither server nor client realm &gt;:-D</span>
-<span class="n">G</span><span class="p">[</span><span class="s1">&#39;CLIENT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">G</span><span class="p">[</span><span class="s1">&#39;SERVER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">G</span><span class="o">.</span><span class="n">CLIENT</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">G</span><span class="o">.</span><span class="n">SERVER</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -125,7 +131,7 @@ the returned values.</p>
 <code class="descclassname">gmod.lua.</code><code class="descname">table</code><span class="sig-paren">(</span><em>iterable</em><span class="sig-paren">)</span><a class="headerlink" href="#gmod.lua.table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates and returns a <a class="reference internal" href="#gmod.lua.LuaObject" title="gmod.lua.LuaObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuaObject</span></code></a> of a new Lua table from <code class="docutils literal notranslate"><span class="pre">iterable</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tbl</span> <span class="o">=</span> <span class="n">lua</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="n">lua</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;PrintTable&#39;</span><span class="p">](</span><span class="n">tbl</span><span class="p">)</span>
+<span class="n">lua</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">PrintTable</span><span class="p">(</span><span class="n">tbl</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>

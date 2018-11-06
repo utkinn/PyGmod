@@ -12,7 +12,7 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
     :caption: For Users:
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2
     :caption: For Addon developers:
 
     for_addon_developers/getting_started

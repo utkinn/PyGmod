@@ -5,6 +5,7 @@ and calling functions.
 
 from abc import ABC, abstractmethod
 from numbers import Number
+from collections.abc import Iterable
 
 from luastack import LuaStack, Special, IN_GMOD, ValueType
 
@@ -348,31 +349,47 @@ def eval(expr, autoconvert=True):
         return obj
 
 
-def table(iterable):
-    """Creates and returns a :class:`LuaObject` of a new Lua table from ``iterable``.
+def iter_to_dict(iterable):
+    if isinstance(iterable, dict):
+        return iterable
+    else:
+        as_tuple = tuple(iterable)
+        return {i + 1: as_tuple[i] for i in range(0, len(as_tuple))}
+
+
+def table(iterable=None):
+    """Creates and returns a :class:`LuaObject` of a new Lua table from ``iterable`` (empty by default).
 
     ::
 
-        tbl = lua.table(1, 2, 3)
+        tbl = lua.table((1, 2, 3))
         lua.G.PrintTable(tbl)
+        # 1 = 1
+        # 2 = 2
+        # 3 = 3
+
+        tbl = lua.table({'a': 1, 2: 'b', 1: {1, 2, 3}})
+        lua.G.PrintTable(tbl)
+        # 1:
+        #   1 = 1
+        #   2 = 2
+        #   3 = 3
+        # 2 = b
+        # a = 1
     """
-    ls.clear()  # Everything might go wrong if the stack is not empty
 
-    ls.create_table()
-    ls.push_special(Special.GLOBAL)
-    ls.get_field(-1, b'table')
-    for v in iterable:
-        ls.get_field(-1, b'insert')
-        ls.push(1)  # Pushing that new table again
-        try:
-            push_pyval_to_stack(v)
-        except TypeError:  # In case of a value that can't be pushed
-            ls.clear()
-            raise  # Raising TypeError again
-        ls.call(2, 0)
-    ls.pop(2)  # Pop the 'table' namespace and the global table
+    if not isinstance(iterable, Iterable):
+        raise TypeError(f'iterable must be actually iterable, not {type(iterable).__name__!r}')
 
-    return LuaObject()  # The new table is grabbed and popped by the LuaObject's constructor
+    if iterable is None:
+        iterable = {}
+    else:
+        iterable = iter_to_dict(iterable)
+
+    tbl = eval('{}')
+    for k, v in iterable.items():
+        tbl[k] = v
+    return tbl
 
 
 class LuaObjectWrapper(ABC):

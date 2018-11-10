@@ -8,7 +8,7 @@ from numbers import Number
 
 from luastack import LuaStack, Special, IN_GMOD, ValueType
 
-__all__ = ['G', 'exec', 'eval', 'table', 'LuaObjectWrapper']
+__all__ = ['G', 'exec', 'eval', 'table', 'LuaObject', 'LuaObjectWrapper']
 
 ls = LuaStack()
 

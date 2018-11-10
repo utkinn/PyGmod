@@ -180,12 +180,17 @@ class LuaObject:
     def _convert_to_byte_or_str(self):
         if self._type_ == ValueType.NIL:
             return 'None'
-
-        with self._context_:
-            val = ls.get_string(-1)
-            if val is None:
-                raise ValueError("can't convert this value to str/bytes")
-            return val
+        elif self._type_ == ValueType.STRING:
+            with self._context_:
+                val = ls.get_string(-1)
+                if val is None:
+                    raise ValueError("can't convert this value to str/bytes")
+                return val
+        elif self._type_ == ValueType.TABLE:
+            return self._table_to_str()
+        else:
+            with self._context_:
+                return G.tostring(self)[1]
 
     def __str__(self):
         val = self._convert_to_byte_or_str()
@@ -274,7 +279,7 @@ class LuaObject:
                 return tuple(returns)
 
     def __repr__(self):
-        return f'<LuaObject (type={self._type_name_!s})>'
+        return f'<LuaObject: {self!s}>'
 
 
 # Lua global table

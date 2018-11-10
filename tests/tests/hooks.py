@@ -11,7 +11,7 @@ def create_g_mock_empty_args():
         '_py_n_data': 0,
         'py': TableMock({
             '_watched_events': TableMock({
-                'type_name': b'table'  # TODO
+                '_type_name_': b'table'  # TODO
             })
         })
     })
@@ -26,7 +26,7 @@ def create_g_mock_with_args():
         '_py_n_data': 3,
         'py': TableMock({
             '_watched_events': TableMock({
-                'type_name': b'table'  # TODO
+                '_type_name_': b'table'  # TODO
             })
         })
     })

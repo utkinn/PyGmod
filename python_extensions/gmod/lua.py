@@ -67,19 +67,19 @@ class LuaObject:
         ls.free_ref(self._ref_)
 
     @property
-    def type(self):
+    def _type_(self):
         """Returns the :class:`luastack.ValueType` of the held value."""
         with self._context_:
             return ls.get_type(-1)
 
     @property
-    def type_name(self):
+    def _type_name_(self):
         """Returns the :class:`str` type representation of the held value."""
         with self._context_:
             return ls.get_type_name(ls.get_type(-1))
 
     def _convert_to_byte_or_str(self):
-        if self.type == ValueType.NIL:
+        if self._type_ == ValueType.NIL:
             return 'None'
 
         with self._context_:
@@ -115,7 +115,7 @@ class LuaObject:
             return ls.get_bool(-1)
 
     def _get(self, key):
-        if self.type == ValueType.NIL:
+        if self._type_ == ValueType.NIL:
             raise ValueError("can't index nil")
 
         with self._context_:
@@ -130,7 +130,7 @@ class LuaObject:
         return self._get(item)
 
     def _set(self, key, value):
-        if self.type == ValueType.NIL:
+        if self._type_ == ValueType.NIL:
             raise ValueError("can't index nil")
 
         with self._context_:
@@ -148,7 +148,7 @@ class LuaObject:
             self._set(key, value)
 
     def __call__(self, *args):
-        if self.type == ValueType.NIL:
+        if self._type_ == ValueType.NIL:
             raise ValueError("can't call nil")
 
         ls.push_ref(self._ref_)
@@ -164,7 +164,7 @@ class LuaObject:
             return tuple(returns)
 
     def __repr__(self):
-        return f'<LuaObject (type={self.type_name.decode()!s})>'
+        return f'<LuaObject (type={self._type_name_.decode()!s})>'
 
 
 # Lua global table

@@ -35,9 +35,8 @@
 
             first_player = G.player.GetAll()[1]
 
-            add_text(white_color, "First player's nick is " + str(first_player.Nick(first_player)))
-            # Since Player:Nick() is an equivalent of Player.Nick(Player) (pay attention to the dot instead of the colon),
-            # you have to pass the first_player again, otherwise there will be an error.
+            add_text(white_color, "First player's nick is " + str(first_player._.Nick(first_player)))
+            # "._." is a PyGmod idiom which is an equivalent of a colon call (Player:Nick()).
 
             # Also, you have to explicitly convert LuaObjects to Python objects.
 

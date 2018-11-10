@@ -57,6 +57,51 @@ def push_pyval_to_stack(val):
         raise TypeError(f'unsupported value type: {type(val)}')
 
 
+class SelfCallingNamespace:
+    """Namespace which gives :class:`SelfCallingFunction`\\ s when indexed.
+
+    >>> ply = Player(1)
+    >>> ply._
+    <SelfCallingNamespace (target=<LuaObject (type=entity)>)>
+    >>> ply._.Nick
+    <SelfCallingFunction 'Nick' (target=<LuaObject (type=entity)>)>
+    """
+
+    def __init__(self, lo):
+        self._luaobj = lo
+
+    def _get(self, item):
+        return SelfCallingFunction(self._luaobj, self._luaobj._get(item), item)
+
+    def __getitem__(self, item):
+        return self._get(item)
+
+    def __getattr__(self, item):
+        return self._get(item)
+
+    def __repr__(self):
+        return f'<SelfCallingNamespace (target={self._luaobj!r})>'
+
+
+class SelfCallingFunction:
+    """Wrapper of Lua function which calls it with self (same purpose as colon in Lua has).
+
+    >>> ply = Player(1)
+    >>> ply._.Nick()  # Same as "ply:Nick()" in Lua
+    """
+
+    def __init__(self, obj, func, funcname):
+        self._obj = obj
+        self._func = func
+        self._funcname = funcname
+
+    def __call__(self, *args, **kwargs):
+        self._func(self._obj, *args)
+
+    def __repr__(self):
+        return f'<SelfCallingFunction {self._funcname!r} (target={self._obj!r}, func={self._func!r})>'
+
+
 class LuaObject:
     def __init__(self):
         """Creates a :class:`LuaObject` which points to the topmost stack value and pops it."""
@@ -77,6 +122,10 @@ class LuaObject:
         """Returns the :class:`str` type representation of the held value."""
         with self._context_:
             return ls.get_type_name(ls.get_type(-1)).decode()
+
+    @property
+    def _(self):
+        return SelfCallingNamespace(self)
 
     def _convert_to_byte_or_str(self):
         if self._type_ == ValueType.NIL:
@@ -164,7 +213,7 @@ class LuaObject:
             return tuple(returns)
 
     def __repr__(self):
-        return f'<LuaObject (type={self._type_name_.decode()!s})>'
+        return f'<LuaObject (type={self._type_name_!s})>'
 
 
 # Lua global table

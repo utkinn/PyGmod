@@ -7,6 +7,7 @@ from abc import ABC, abstractmethod
 from numbers import Number
 from collections.abc import Iterable
 
+# noinspection PyUnresolvedReferences
 from luastack import LuaStack, Special, IN_GMOD, ValueType
 
 __all__ = ['G', 'exec', 'eval', 'table', 'LuaObject', 'LuaObjectWrapper']
@@ -68,6 +69,7 @@ def push_pyval_to_stack(val):
     elif isinstance(val, LuaObjectWrapper):
         ls.push_ref(val.lua_obj._ref_)
     elif isinstance(val, Iterable):
+        # noinspection PyTypeChecker
         push_pyval_to_stack(table(val))
 
 
@@ -158,6 +160,7 @@ class LuaObject:
         else:
             return self
 
+    # noinspection PyUnusedLocal
     def _table_to_str(self):
         keys_and_vals = {}
 

@@ -402,6 +402,32 @@ def table(iterable=None):
     return tbl
 
 
+def pairs(tbl):
+    """Works the same as ``pairs()`` in Lua."""
+    if isinstance(tbl, LuaObject):
+        if tbl._type_ != ValueType.TABLE:
+            raise ValueError(f'this LuaObject is not a table, but {tbl._type_name_}, repr: {tbl!r}')
+
+        def pairs_generator():
+            next_ = G.pairs(tbl)[0]  # Retrieving the pairs iterator function
+
+            t = tbl  # Table that we iterate
+            k = None  # Current key
+
+            pair = next_(t, None)  # Getting the first pair
+
+            while pair:  # next() returns nil when there is no pairs left
+                yield pair
+                pair = next_(t, k)  # Getting the next pair
+
+        return pairs_generator
+
+    elif isinstance(tbl, Iterable):
+        return iter_to_dict(tbl).items()
+    else:
+        raise TypeError(f'unsupported type: {type(tbl).__name__!r}')
+
+
 class LuaObjectWrapper(ABC):
     """Abstract class for Lua class wrappers, such as :class:`gmod.entity.Entity`.
     Subclasses of ``LuaObjectWrapper`` can be used in :class:`LuaObject` calls and :const:`G` indexing operations.

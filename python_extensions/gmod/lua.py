@@ -27,7 +27,7 @@ class Reference:
 
 def can_push(o):
     """Returns ``True`` if ``o`` can be pushed to the Lua stack."""
-    return o is None or isinstance(o, (Number, LuaObject, str, bytes, bool, LuaObjectWrapper))
+    return o is None or isinstance(o, (Number, LuaObject, str, bytes, bool, LuaObjectWrapper, Iterable))
 
 
 def check_pushable(o):
@@ -67,6 +67,8 @@ def push_pyval_to_stack(val):
         ls.push_bool(val)
     elif isinstance(val, LuaObjectWrapper):
         ls.push_ref(val.lua_obj._ref_)
+    elif isinstance(val, Iterable):
+        push_pyval_to_stack(table(val))
 
 
 class SelfCallingNamespace:

@@ -24,6 +24,17 @@ class Reference:
         ls.pop(1)
 
 
+def can_push(o):
+    """Returns ``True`` if ``o`` can be pushed to the Lua stack."""
+    return o is None or isinstance(o, (Number, LuaObject, str, bytes, bool, LuaObjectWrapper))
+
+
+def check_pushable(o):
+    """Raises :class:`TypeError` if ``o`` isn't pushable to the Lua stack."""
+    if not can_push(o):
+        raise TypeError(f'unsupported value type: type - {type(o).__name__!r}, value - {o!r}')
+
+
 def push_pyval_to_stack(val):
     """Converts a Python value to a Lua value and pushes it to the Lua stack.
 
@@ -39,6 +50,8 @@ def push_pyval_to_stack(val):
     :class:`bool`                   bool
     :class:`LuaObjectWrapper`       Whatever ``LuaObjectWrapper.lua_obj._ref_ is pointing to
     """
+    check_pushable(val)
+
     if val is None:
         ls.push_nil()
     if isinstance(val, Number):
@@ -53,8 +66,6 @@ def push_pyval_to_stack(val):
         ls.push_bool(val)
     elif isinstance(val, LuaObjectWrapper):
         ls.push_ref(val.lua_obj._ref_)
-    else:
-        raise TypeError(f'unsupported value type: {type(val)}')
 
 
 class SelfCallingNamespace:
@@ -95,8 +106,8 @@ class SelfCallingFunction:
         self._func = func
         self._funcname = funcname
 
-    def __call__(self, *args, **kwargs):
-        self._func(self._obj, *args)
+    def __call__(self, *args, _autoconvert_=True, **kwargs):
+        return self._func(self._obj, *args, _autoconvert_)
 
     def __repr__(self):
         return f'<SelfCallingFunction {self._funcname!r} (target={self._obj!r}, func={self._func!r})>'
@@ -126,6 +137,42 @@ class LuaObject:
     @property
     def _(self):
         return SelfCallingNamespace(self)
+
+    def _autoconvert_to_py(self):
+        """Tries to convert itself to an appropriate Python type. Returns self if conversion is not possible."""
+
+        # Convertable Lua types and corresponding conversion functions
+        types_and_converters = {
+            ValueType.NIL: lambda _: None,
+            ValueType.BOOL: bool,
+            ValueType.NUMBER: float,
+            ValueType.STRING: str
+        }
+
+        if self._type_ in types_and_converters:
+            # Convert self using the conversion func which corresponds to the Lua type of self.
+            return types_and_converters[self._type_](self)
+        else:
+            return self
+
+    def _table_to_str(self):
+        keys_and_vals = {}
+
+        next_ = G.pairs(self)[0]  # Retrieving the pairs iterator function
+
+        t = self  # Table that we iterate
+        k = None  # Current key
+        v = None  # Current value
+
+        pair = next_(t, None)  # Getting the first pair
+
+        while pair:  # next() returns nil when there is no pairs left
+            k, v = pair  # Unpacking the pair
+            keys_and_vals[k] = v
+
+            pair = next_(t, k)  # Getting the next pair
+
+        return repr(keys_and_vals)
 
     def _convert_to_byte_or_str(self):
         if self._type_ == ValueType.NIL:
@@ -196,21 +243,32 @@ class LuaObject:
         else:
             self._set(key, value)
 
-    def __call__(self, *args):
+    def __call__(self, *args, _autoconvert_=True):
         if self._type_ == ValueType.NIL:
             raise ValueError("can't call nil")
+
+        for o in args:
+            check_pushable(o)
 
         ls.push_ref(self._ref_)
         for val in args:
             push_pyval_to_stack(val)
         ls.call(len(args), -1)
+
         returns = []
         while ls.top() > 1:
             returns.insert(0, LuaObject())
+
         if len(returns) == 1:
-            return returns[0]
+            if _autoconvert_:
+                return returns[0]._autoconvert_to_py()
+            else:
+                return returns[0]
         elif len(returns) > 1:
-            return tuple(returns)
+            if _autoconvert_:
+                return tuple((o._autoconvert_to_py() for o in returns))
+            else:
+                return tuple(returns)
 
     def __repr__(self):
         return f'<LuaObject (type={self._type_name_!s})>'
@@ -247,8 +305,9 @@ def exec(code):
     ls.pop(1)  # GLOBAL
 
 
-def eval(expr):
+def eval(expr, autoconvert=True):
     """Evaluates a single Lua expression. Returns a :class:`LuaObject` with an evaluation result.
+    If ``autoconvert`` is ``True``, tries to convert primitive Lua types to Python analogues.
 
     ::
 
@@ -282,7 +341,11 @@ def eval(expr):
     ls.set_field(-2, b'_gpy_temp')
 
     ls.pop(1)  # GLOBAL
-    return obj
+
+    if autoconvert:
+        return obj._autoconvert_to_py()
+    else:
+        return obj
 
 
 def table(iterable):

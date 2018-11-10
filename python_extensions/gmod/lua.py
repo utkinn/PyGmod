@@ -313,7 +313,7 @@ def exec(code):
     ls.pop(1)  # GLOBAL
 
 
-def eval(expr, autoconvert=True):
+def eval(expr, *, autoconvert=True):
     """Evaluates a single Lua expression. Returns a :class:`LuaObject` with an evaluation result.
     If ``autoconvert`` is ``True``, tries to convert primitive Lua types to Python analogues.
 

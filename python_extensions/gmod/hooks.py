@@ -14,7 +14,7 @@ from sys import stderr
 import traceback
 from types import MethodType
 
-from . import lua
+from . import lua, error_notif
 
 __all__ = ['hook']
 
@@ -33,6 +33,7 @@ def event_occurred(event):
         try:
             callback(*pydata)
         except:
+            error_notif.show()
             print(f'Exception in hook "{callback.__module__}.{callback.__name__}":', file=stderr)
             traceback.print_exc()
 

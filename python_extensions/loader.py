@@ -12,7 +12,7 @@ import sys
 import os.path
 import traceback
 
-from gmod import lua, streams, realms
+from gmod import lua, streams, realms, error_notif
 
 __all__ = ['main']
 
@@ -42,6 +42,8 @@ def prepare_and_print_tb():
 
 
 def handle_exception_in_addon():
+    error_notif.show()
+
     # Constructing a bar of 50 underscores to visually separate tracebacks from other output.
     bar = '_' * 50 + '\n'
 
@@ -105,6 +107,8 @@ def main():
     ''')
 
     patch_hook_call()
+
+    error_notif.setup()
 
     log('Loading addons...')
 

@@ -84,7 +84,7 @@ def hook(event: str):
         raise TypeError('event must be str')
 
     def decorator(func):
-        if lua.G['py']['_watched_events']._type_name_ == b'nil':
+        if lua.G['py']['_watched_events']._type_name_ == 'nil':
             lua.G['py']['_watched_events'] = lua.table(())
 
         lua.G['py']['_watched_events'][event] = True

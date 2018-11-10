@@ -76,7 +76,7 @@ class LuaObject:
     def _type_name_(self):
         """Returns the :class:`str` type representation of the held value."""
         with self._context_:
-            return ls.get_type_name(ls.get_type(-1))
+            return ls.get_type_name(ls.get_type(-1)).decode()
 
     def _convert_to_byte_or_str(self):
         if self._type_ == ValueType.NIL:

@@ -52,7 +52,10 @@ def push_pyval_to_stack(val):
     elif isinstance(val, bool):
         ls.push_bool(val)
     elif isinstance(val, LuaObjectWrapper):
-        ls.push_ref(val.lua_obj._ref_)
+        lua_obj = val.lua_obj
+        if not isinstance(lua_obj, LuaObject):
+            raise TypeError(f'lua_obj property must return LuaObject, not {type(lua_obj).__name__!r}')
+        ls.push_ref(lua_obj._ref_)
     else:
         raise TypeError(f'unsupported value type: {type(val)}')
 

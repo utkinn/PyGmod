@@ -41,6 +41,14 @@
 
             # Also, you have to explicitly convert LuaObjects to Python objects.
 
+        .. attribute:: _type_
+
+            Returns the :class:`luastack.ValueType` of the held value.
+
+        .. attribute:: _type_name_
+
+            Returns the :class:`str` representation of the type of the held value.
+
     .. data:: G
 
         Lua Global table. Can be indexed to get and set :class:`LuaObject` instances.

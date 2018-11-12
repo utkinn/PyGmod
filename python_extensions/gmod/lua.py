@@ -167,19 +167,8 @@ class LuaObject:
     def _table_to_str(self):
         keys_and_vals = {}
 
-        next_ = G.pairs(self)[0]  # Retrieving the pairs iterator function
-
-        t = self  # Table that we iterate
-        k = None  # Current key
-        v = None  # Current value
-
-        pair = next_(t, None)  # Getting the first pair
-
-        while pair:  # next() returns nil when there is no pairs left
-            k, v = pair  # Unpacking the pair
+        for k, v in pairs(self):
             keys_and_vals[k] = v
-
-            pair = next_(t, k)  # Getting the next pair
 
         return repr(keys_and_vals)
 

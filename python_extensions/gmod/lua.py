@@ -439,7 +439,7 @@ def pairs(tbl):
                 yield pair
                 pair = next_(t, k)  # Getting the next pair
 
-        return pairs_generator
+        return pairs_generator()
 
     elif isinstance(tbl, Iterable):
         return iter_to_dict(tbl).items()

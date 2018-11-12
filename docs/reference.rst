@@ -15,6 +15,7 @@ This is the reference of the PyGmod libraries.
     reference/exceptions
     reference/hooks
     reference/lua
+    reference/luanamespace
     reference/net
     reference/entity
     reference/player

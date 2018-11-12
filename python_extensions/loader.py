@@ -13,6 +13,7 @@ import os.path
 import traceback
 
 from gmod import lua, streams, realms
+import luastack
 
 __all__ = ['main']
 
@@ -123,3 +124,5 @@ def main():
             log('"' + addon_dir + '" successfully loaded.')
 
     log('Loading finished')
+
+    luastack.setup_complete = True

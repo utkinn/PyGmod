@@ -428,6 +428,56 @@ def pairs(tbl):
         raise TypeError(f'unsupported type: {type(tbl).__name__!r}')
 
 
+lua_functions = {}
+
+
+def luafunction(pyfunction):
+    """Creates a Lua function out of a Python function.
+
+    >>> @luafunction
+    ... def noclip_log(ply, noclip):
+    ...     print(ply._.Nick(), 'changed noclip state to', noclip)
+    ...
+    >>> hook.Add('PlayerNoClip', 'noclip_log', noclip_log)
+    """
+
+    func_id = pyfunction.__module__ + '.' + pyfunction.__name__
+
+    # Backing function which calls pyfunction and receives the return values.
+    passer = eval(f'''
+    function(...)
+        py._func_in = {{...}}
+        py._func_in_n = #py._func_in
+        
+        if CLIENT then
+            py._SwitchToClient()
+        else
+            py._SwitchToServer()
+        end
+        
+        py.Exec("from gmod import lua; lua.pass_call({func_id!r})")
+        
+        return py._func_rtn
+    end
+    ''')
+
+    lua_functions[func_id] = pyfunction
+
+    return passer
+
+
+def pass_call(func_id):
+    """Called in Lua by a backing function when it called. "Passes" the call, args, and gives the return values back."""
+    pyfunc = lua_functions[func_id]
+
+    args_table = G.py._func_in
+    n_args = int(G.py._func_in_n)
+
+    args = [args_table[i] for i in range(1, n_args + 1)]
+
+    G.py._func_rtn = pyfunc(*args)
+
+
 class LuaObjectWrapper(ABC):
     """Abstract class for Lua class wrappers, such as :class:`gmod.entity.Entity`.
     Subclasses of ``LuaObjectWrapper`` can be used in :class:`LuaObject` calls and :const:`G` indexing operations.

@@ -15,17 +15,20 @@ LUA_FUNC(py_Exec) {
     return 0;
 }
 
-LUA_FUNC(py_SwitchToClient) {
-    PyThreadState_Swap(clientInterp);
-    setup(clientLua);
+void swap(PyThreadState *state, ILuaBase *lua) {
+    if (is_setup_complete()) {
+        PyThreadState_Swap(state);
+        setup(lua);
+    }
+}
 
+LUA_FUNC(py_SwitchToClient) {
+    swap(clientInterp, clientLua);
     return 0;
 }
 
 LUA_FUNC(py_SwitchToServer) {
-    PyThreadState_Swap(serverInterp);
-    setup(serverLua);
-
+    swap(serverInterp, serverLua);
     return 0;
 }
 

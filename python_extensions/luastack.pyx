@@ -114,8 +114,15 @@ cdef ILuaBase* lua = NULL
 # Stack functions are no-ops if this equals False.
 IN_GMOD = False
 
+# Used in gmod.lua.luafunction() to know whether in should swap realm subinterpreters or not.
+setup_complete = False
 
-cdef public setup(ILuaBase* base):
+
+cdef public bool is_setup_complete():
+    return setup_complete
+
+
+cdef public void setup(ILuaBase* base):
     """This function is called in ``giveILuaBasePtrToLuastack()`` in ``main.cpp`` of the C++ module."""
     global lua
     global IN_GMOD

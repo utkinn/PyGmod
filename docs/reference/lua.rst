@@ -14,9 +14,13 @@
         #. :class:`bool`
         #. :class:`str`
 
+        For example::
+
+            print(bool(G.CLIENT))  # True/False
+
         If this ``LuaObject`` instance is pointing to a callable table or function, you can call it
         with passing arguments of primitive Python types such as :class:`int`, :class:`float`, :class:`bool`,
-        :class:`str`, :class:`bytes` and another ``LuaObject``\ s.
+        :class:`str`, :class:`bytes` and other ``LuaObject``\ s.
 
         If the callable returns anything, calling of ``LuaObject`` will give another ``LuaObject``\ s which point to
         the returned values.
@@ -58,3 +62,5 @@
             # Fooling everyone that we are in neither server nor client realm >:-D
             G.CLIENT = False
             G.SERVER = False
+
+            G['!!!'] = 123  # To get and set members with exotic names

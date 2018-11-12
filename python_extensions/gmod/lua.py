@@ -1,6 +1,6 @@
 """
-This module provides the tools for Garry's Mod Lua interoperability such as getting, setting values, indexing tables
-and calling functions.
+This module provides the access to Lua environment. You can use it for getting and setting arbitrary variables,
+calling available Garry's Mod Lua functions and manipulating and creating tables and objects.
 """
 
 from abc import ABC, abstractmethod
@@ -10,12 +10,14 @@ from collections.abc import Iterable
 # noinspection PyUnresolvedReferences
 from luastack import LuaStack, Special, IN_GMOD, ValueType
 
-__all__ = ['G', 'exec', 'eval', 'table', 'LuaObject', 'LuaObjectWrapper']
+__all__ = ['G', 'exec', 'eval', 'table', 'LuaObject', 'LuaObjectWrapper', 'pairs', 'luafunction']
 
 ls = LuaStack()
 
 
 class Reference:
+    """Context manager that pushes a reference on enter and pops it on exit."""
+
     def __init__(self, ref):
         self.ref = int(ref)
 
@@ -51,6 +53,7 @@ def push_pyval_to_stack(val):
     :class:`str`, :class:`bytes`    string
     :class:`bool`                   bool
     :class:`LuaObjectWrapper`       Whatever ``LuaObjectWrapper.lua_obj._ref_ is pointing to
+    :class:`Iterable`               Table
     """
     check_pushable(val)
 
@@ -360,6 +363,13 @@ def eval(expr, *, autoconvert=True):
 
 
 def iter_to_dict(iterable):
+    """Converts an iterable to a Lua Table-like dictionary.
+
+    >>> iter_to_dict({'a': 1})
+    {'a': 1}
+    >>> iter_to_dict([1, 2, 'a'])
+    {1: 1, 2: 2, 3: 'a'}
+    """
     if isinstance(iterable, dict):
         return iterable
     else:
@@ -367,7 +377,7 @@ def iter_to_dict(iterable):
         return {i + 1: as_tuple[i] for i in range(0, len(as_tuple))}
 
 
-def table(iterable=None):
+def table(iterable: Iterable = None):
     """Creates and returns a :class:`LuaObject` of a new Lua table from ``iterable`` (empty by default).
 
     ::
@@ -403,7 +413,16 @@ def table(iterable=None):
 
 
 def pairs(tbl):
-    """Works the same as ``pairs()`` in Lua."""
+    """Works the same as ``pairs()`` in Lua.
+
+    >>> tbl = table(('a', 'b', 'c'))
+    >>> for k, v in pairs(tbl):
+    ...     print(k, '-', v)
+    ...
+    1 - a
+    2 - b
+    3 - c
+    """
     if isinstance(tbl, LuaObject):
         if tbl._type_ != ValueType.TABLE:
             raise ValueError(f'this LuaObject is not a table, but {tbl._type_name_}, repr: {tbl!r}')

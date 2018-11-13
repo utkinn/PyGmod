@@ -1,6 +1,8 @@
 How PyGmod works
 =================
 
+.. image:: graph.png
+
 Let's suppose we have a simple "Hello World" PyGmod addon::
 
     addons\ ─┬─ example\ ─┬─ addon.json

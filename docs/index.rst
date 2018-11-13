@@ -40,3 +40,4 @@ Useful links
 ------------
 
 * `Contribute on GitHub <https://github.com/javabird25/PyGmod>`_
+* `Join the Discord server <https://discord.gg/aAs4qrj>`_

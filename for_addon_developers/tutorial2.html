@@ -1,0 +1,186 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Addon creation tutorial: part 2 &#8212; PyGmod 0.9-alpha documentation</title>
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Module Reference" href="../reference.html" />
+    <link rel="prev" title="Addon creation tutorial: part 1" href="tutorial1.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../reference.html" title="Module Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial1.html" title="Addon creation tutorial: part 1"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="addon-creation-tutorial-part-2">
+<h1>Addon creation tutorial: part 2<a class="headerlink" href="#addon-creation-tutorial-part-2" title="Permalink to this headline">¶</a></h1>
+<p><em>See the</em> <a class="reference internal" href="tutorial1.html"><span class="doc">Part 1</span></a> <em>if you haven’t seen it yet.</em></p>
+<p>In this tutorial we will improve our “Hello, World” addon a bit.</p>
+<p>We will print the “Hello, X!” text to the player’s chat instead of the game console, and there will be the player’s
+nickname in place of “X”.</p>
+<p>First, rename the <code class="docutils literal notranslate"><span class="pre">__shared_autorun__</span></code> folder to <code class="docutils literal notranslate"><span class="pre">__server_autorun__</span></code>, because we don’t need the client to
+participate in the “Hello world” printing process. The server will wait for new players and will print “Hello, X!” on
+their first spawn.</p>
+<img alt="../_images/rename_shared_to_server.png" src="../_images/rename_shared_to_server.png" />
+<p>Then, open the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> script again.</p>
+<p>We have to make two changes here: first, we need to print the text to the chat instead of the game console.
+We need to access Garry’s Mod Lua somehow. For this purpose, we can use <code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.luanamespace</span></code> module.
+Add this line to the top of the script:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod.luanamespace</span> <span class="k">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>Now we can use any Lua function right away.</p>
+<p>We will set a <code class="docutils literal notranslate"><span class="pre">PlayerInitialSpawn</span></code> hook with a callback which will actually print the greeting.</p>
+<p>To do so, we need to call <a class="reference external" href="http://wiki.garrysmod.com/page/hook/Add">hook.Add()</a> with 3 parameters: the event name,
+the hook ID and the callback. Everything is easy with the first two, buh how do we create a callback in Python?
+There is a nice function decorator to do so: <a class="reference internal" href="../reference/lua.html#gmod.lua.luafunction" title="gmod.lua.luafunction"><code class="xref py py-func docutils literal notranslate"><span class="pre">gmod.lua.luafunction()</span></code></a>.</p>
+<p>So, we define our callback:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod.luanamespace</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">gmod.lua</span> <span class="k">import</span> <span class="n">luafunction</span>
+
+<span class="nd">@luafunction</span>                    <span class="c1"># &lt;--</span>
+<span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">new_player</span><span class="p">):</span>          <span class="c1"># &lt;--</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>       <span class="c1"># &lt;--</span>
+</pre></div>
+</div>
+<p>and create a hook:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod.luanamespace</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">gmod.lua</span> <span class="k">import</span> <span class="n">luafunction</span>
+
+<span class="nd">@luafunction</span>
+<span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">new_player</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>
+
+<span class="n">hook</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s1">&#39;PlayerInitialSpawn&#39;</span><span class="p">,</span> <span class="s1">&#39;greet&#39;</span><span class="p">,</span> <span class="n">greet</span><span class="p">)</span>  <span class="c1"># &lt;--</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Player</span></code> objects have the <a class="reference external" href="http://wiki.garrysmod.com/page/Player/ChatPrint">ChatPrint()</a> method,
+which we can use to print text to their chat. In Lua, it would look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_player</span><span class="p">:</span><span class="n">ChatPrint</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notice the colon here. In PyGmod, there is a <code class="docutils literal notranslate"><span class="pre">._.</span></code> construction which plays the same role as the colon in Lua.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod.luanamespace</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">gmod.lua</span> <span class="k">import</span> <span class="n">luafunction</span>
+
+<span class="nd">@luafunction</span>
+<span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">new_player</span><span class="p">):</span>
+    <span class="n">new_player</span><span class="o">.</span><span class="n">_</span><span class="o">.</span><span class="n">ChatPrint</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>  <span class="c1"># &lt;--</span>
+
+<span class="n">hook</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s1">&#39;PlayerInitialSpawn&#39;</span><span class="p">,</span> <span class="s1">&#39;greet&#39;</span><span class="p">,</span> <span class="n">greet</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">world!</span></code> will be printed to the chat. Let’s make this greeting personal now: we will greet the player
+instead of the world.</p>
+<p>Now we get the player’s nick with <a class="reference external" href="http://wiki.garrysmod.com/page/Player/Nick">Nick()</a> method.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod.luanamespace</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">gmod.lua</span> <span class="k">import</span> <span class="n">luafunction</span>
+
+<span class="nd">@luafunction</span>
+<span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">new_player</span><span class="p">):</span>
+    <span class="n">new_player</span><span class="o">.</span><span class="n">_</span><span class="o">.</span><span class="n">ChatPrint</span><span class="p">(</span><span class="s1">&#39;Hello, &#39;</span> <span class="o">+</span> <span class="n">new_player</span><span class="o">.</span><span class="n">_</span><span class="o">.</span><span class="n">Nick</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;!&#39;</span><span class="p">)</span>  <span class="c1"># &lt;--</span>
+
+<span class="n">hook</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s1">&#39;PlayerInitialSpawn&#39;</span><span class="p">,</span> <span class="s1">&#39;greet&#39;</span><span class="p">,</span> <span class="n">greet</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We’re done here. Save and close the script, launch the game, start a new game and look at the chat.</p>
+<img alt="../_images/chat_msg.png" src="../_images/chat_msg.png" />
+<hr class="docutils" />
+<p>You have finished the tutorial and, I hope, you have understood how to make addons with PyGmod.
+If you have questions, you can always <a class="reference external" href="https://discord.gg/aAs4qrj">get help at our Discord server</a>.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/docs-logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial1.html"
+                        title="previous chapter">Addon creation tutorial: part 1</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../reference.html"
+                        title="next chapter">Module Reference</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/for_addon_developers/tutorial2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../reference.html" title="Module Reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial1.html" title="Addon creation tutorial: part 1"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, javabird25 (Protocs).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+    </div>
+  </body>
+</html>

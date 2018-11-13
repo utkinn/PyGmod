@@ -16,7 +16,8 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
     :caption: For Addon developers:
 
     for_addon_developers/getting_started
-    for_addon_developers/tutorial
+    for_addon_developers/tutorial1
+    for_addon_developers/tutorial2
     reference
     lua_reference
 
@@ -39,3 +40,4 @@ Useful links
 ------------
 
 * `Contribute on GitHub <https://github.com/javabird25/PyGmod>`_
+* `Join the Discord server <https://discord.gg/aAs4qrj>`_

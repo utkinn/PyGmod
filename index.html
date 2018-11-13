@@ -51,7 +51,6 @@ the possibility to create addons for Garry’s Mod with Python 3 programming lan
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#what-advantages-does-pygmod-have">What advantages does PyGmod have?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#how-pygmod-addons-look-like">How PyGmod addons look like?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#how-to-use-it">How to use it?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#what-is-next">What is next?</a></li>
 </ul>
 </li>
 </ul>
@@ -62,12 +61,13 @@ the possibility to create addons for Garry’s Mod with Python 3 programming lan
 <p class="caption"><span class="caption-text">For Addon developers:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="for_addon_developers/getting_started.html">Getting Started for Addon Developers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="for_addon_developers/tutorial.html">Addon creation tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="for_addon_developers/tutorial.html#create-addon-folders">1. Create addon folders</a></li>
-<li class="toctree-l2"><a class="reference internal" href="for_addon_developers/tutorial.html#create-the-initialization-script">2. Create the initialization script</a></li>
-<li class="toctree-l2"><a class="reference internal" href="for_addon_developers/tutorial.html#seeing-it-running">3. Seeing it running</a></li>
+<li class="toctree-l1"><a class="reference internal" href="for_addon_developers/tutorial1.html">Addon creation tutorial: part 1</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="for_addon_developers/tutorial1.html#create-addon-folders">1. Create addon folders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="for_addon_developers/tutorial1.html#create-the-initialization-script">2. Create the initialization script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="for_addon_developers/tutorial1.html#see-it-works">3. See it works</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="for_addon_developers/tutorial2.html">Addon creation tutorial: part 2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Module Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reference/chat.html"><code class="docutils literal notranslate"><span class="pre">chat</span></code> - manipulating the chat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/color.html"><code class="docutils literal notranslate"><span class="pre">color</span></code> - color classes</a></li>
@@ -76,6 +76,7 @@ the possibility to create addons for Garry’s Mod with Python 3 programming lan
 <li class="toctree-l2"><a class="reference internal" href="reference/exceptions.html"><code class="docutils literal notranslate"><span class="pre">exceptions</span></code> - PyGmod exception classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/hooks.html"><code class="docutils literal notranslate"><span class="pre">hooks</span></code> - game event handling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/lua.html"><code class="docutils literal notranslate"><span class="pre">lua</span></code> - Lua interoperability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/luanamespace.html"><code class="docutils literal notranslate"><span class="pre">luanamespace</span></code> - all Lua definitions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/net.html"><code class="docutils literal notranslate"><span class="pre">net</span></code> - communication between Client and Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/entity.html"><code class="docutils literal notranslate"><span class="pre">entity</span></code> - entity utilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/player.html"><code class="docutils literal notranslate"><span class="pre">player</span></code> - player utilities</a></li>
@@ -105,13 +106,8 @@ the possibility to create addons for Garry’s Mod with Python 3 programming lan
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="for_pygmod_developers/how_it_works.html">How PyGmod works</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/how_it_works.html#lua-launcher">1. Lua Launcher</a></li>
-<li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/how_it_works.html#realms-dlls-gmcl-pygmod-win32-dll-and-gmsv-pygmod-win32-dll">2. Realms’ DLLs: <code class="docutils literal notranslate"><span class="pre">gmcl_pygmod_win32.dll</span></code> and <code class="docutils literal notranslate"><span class="pre">gmsv_pygmod_win32.dll</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/how_it_works.html#main-pygmod-dll-pygmod-dll">3. Main PyGmod DLL: <code class="docutils literal notranslate"><span class="pre">pygmod.dll</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/how_it_works.html#loader-py">4. <code class="docutils literal notranslate"><span class="pre">loader.py</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/how_it_works.html#lua-api-wrappers">5. Lua API wrappers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/how_it_works.html#gmod-lua-module">6. <code class="docutils literal notranslate"><span class="pre">gmod.lua</span></code> module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/how_it_works.html#luastack-module">7. <code class="docutils literal notranslate"><span class="pre">luastack</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/how_it_works.html#startup">Startup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/how_it_works.html#api-levels">API levels</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference/internal.html">Internal modules</a><ul>
@@ -132,6 +128,7 @@ the possibility to create addons for Garry’s Mod with Python 3 programming lan
 <h2>Useful links<a class="headerlink" href="#useful-links" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><a class="reference external" href="https://github.com/javabird25/PyGmod">Contribute on GitHub</a></li>
+<li><a class="reference external" href="https://discord.gg/aAs4qrj">Join the Discord server</a></li>
 </ul>
 </div>
 </div>

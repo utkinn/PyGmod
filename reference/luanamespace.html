@@ -1,0 +1,256 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>luanamespace - all Lua definitions &#8212; PyGmod 0.9-alpha documentation</title>
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="net - communication between Client and Server" href="net.html" />
+    <link rel="prev" title="lua - Lua interoperability" href="lua.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="net.html" title="net - communication between Client and Server"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="lua.html" title="lua - Lua interoperability"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../reference.html" accesskey="U">Module Reference</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="luanamespace-all-lua-definitions">
+<h1><code class="docutils literal notranslate"><span class="pre">luanamespace</span></code> - all Lua definitions<a class="headerlink" href="#luanamespace-all-lua-definitions" title="Permalink to this headline">¶</a></h1>
+<p>Contains all names that are listed in <a class="reference external" href="https://wiki.garrysmod.com">Garry’s Mod Wiki</a>, that is, variables,
+functions, libraries, classes, etc, so you don’t have to prepend <code class="docutils literal notranslate"><span class="pre">lua.G</span></code> before Lua names.</p>
+<p>Best way to use it is import everything from it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod.luanamespace</span> <span class="k">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>And now you can write code that looks pretty much like Lua:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod.lua</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">gmod.luanamespace</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="k">def</span> <span class="nf">init</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello world&#39;</span><span class="p">)</span>
+
+<span class="n">hook</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s1">&#39;Initialized&#39;</span><span class="p">,</span> <span class="s1">&#39;init&#39;</span><span class="p">,</span> <span class="n">luafunction</span><span class="p">(</span><span class="n">init</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">log_chat_to_console</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">team_chat</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">_</span><span class="o">.</span><span class="n">Nick</span><span class="p">(),</span> <span class="s1">&#39;says:&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+<span class="n">hook</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s1">&#39;PlayerSay&#39;</span><span class="p">,</span> <span class="s1">&#39;logChatToConsole&#39;</span><span class="p">,</span> <span class="n">luafunction</span><span class="p">(</span><span class="n">init</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Keep in mind that Python standard library has many of them already implemented.
+Prefer using Python alternatives whenever possible.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Enumerations are not available from this module. Use <a class="reference internal" href="lua.html#gmod.lua.G" title="gmod.lua.G"><code class="xref py py-data docutils literal notranslate"><span class="pre">gmod.lua.G</span></code></a> to get them.</p>
+</div>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Some names are not accessible from this module for various reasons. You can still access them using <a class="reference internal" href="lua.html#gmod.lua.G" title="gmod.lua.G"><code class="xref py py-data docutils literal notranslate"><span class="pre">gmod.lua.G</span></code></a>.
+Trying to access them anyway will raise <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NameError" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">NameError</span></code></a>, since they are not created in the module at all.</p>
+<div class="section" id="globals">
+<h3>Globals<a class="headerlink" href="#globals" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="53%" />
+<col width="47%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Exclusion reason</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">assert</span></code>
+<code class="docutils literal notranslate"><span class="pre">next</span></code>
+<code class="docutils literal notranslate"><span class="pre">print</span></code>
+<code class="docutils literal notranslate"><span class="pre">type</span></code></td>
+<td>Python Keyword/name
+conflict</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">AddBackgroundImage</span></code>
+<code class="docutils literal notranslate"><span class="pre">CanAddServerToFavorite</span></code>
+<code class="docutils literal notranslate"><span class="pre">CancelLoading</span></code>
+<code class="docutils literal notranslate"><span class="pre">ChangeBackground</span></code>
+<code class="docutils literal notranslate"><span class="pre">ClearBackgroundImages</span></code>
+<code class="docutils literal notranslate"><span class="pre">ConsoleAutoComplete</span></code>
+<code class="docutils literal notranslate"><span class="pre">DrawBackground</span></code>
+<code class="docutils literal notranslate"><span class="pre">GameDetails</span></code>
+<code class="docutils literal notranslate"><span class="pre">GetDefaultLoadingHTML</span></code>
+<code class="docutils literal notranslate"><span class="pre">GetDemoFileDetails</span></code>
+<code class="docutils literal notranslate"><span class="pre">GetDownloadables</span></code>
+<code class="docutils literal notranslate"><span class="pre">GetLoadPanel</span></code>
+<code class="docutils literal notranslate"><span class="pre">GetLoadStatus</span></code>
+<code class="docutils literal notranslate"><span class="pre">GetMapList</span></code>
+<code class="docutils literal notranslate"><span class="pre">GetOverlayPanel</span></code>
+<code class="docutils literal notranslate"><span class="pre">GetSaveFileDetails</span></code>
+<code class="docutils literal notranslate"><span class="pre">IsInGame</span></code>
+<code class="docutils literal notranslate"><span class="pre">JoinServer</span></code>
+<code class="docutils literal notranslate"><span class="pre">LanguageChanged</span></code>
+<code class="docutils literal notranslate"><span class="pre">LoadLastMap</span></code>
+<code class="docutils literal notranslate"><span class="pre">NumDownloadables</span></code>
+<code class="docutils literal notranslate"><span class="pre">OpenFolder</span></code>
+<code class="docutils literal notranslate"><span class="pre">RecordDemoFrame</span></code>
+<code class="docutils literal notranslate"><span class="pre">RunGameUICommand</span></code>
+<code class="docutils literal notranslate"><span class="pre">SaveLastMap</span></code>
+<code class="docutils literal notranslate"><span class="pre">ToggleFavourite</span></code>
+<code class="docutils literal notranslate"><span class="pre">TranslateDownloadableName</span></code>
+<code class="docutils literal notranslate"><span class="pre">UpdateLoadPanel</span></code></td>
+<td>Menu-only function</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">gcinfo</span></code>
+<code class="docutils literal notranslate"><span class="pre">GetConVarNumber</span></code>
+<code class="docutils literal notranslate"><span class="pre">GetConVarString</span></code>
+<code class="docutils literal notranslate"><span class="pre">IncludeCS</span></code>
+<code class="docutils literal notranslate"><span class="pre">RunStringEx</span></code>
+<code class="docutils literal notranslate"><span class="pre">SScale</span></code>
+<code class="docutils literal notranslate"><span class="pre">ValidPanel</span></code></td>
+<td>Deprecated</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">AddConsoleCommand</span></code>
+<code class="docutils literal notranslate"><span class="pre">OnModelLoaded</span></code>
+<code class="docutils literal notranslate"><span class="pre">WorkshopFileBase</span></code>
+<code class="docutils literal notranslate"><span class="pre">GetConVar_Internal</span></code></td>
+<td>Internal</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="libraries">
+<h3>Libraries<a class="headerlink" href="#libraries" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="53%" />
+<col width="47%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Exclusion reason</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">input</span></code>
+<code class="docutils literal notranslate"><span class="pre">list</span></code>
+<code class="docutils literal notranslate"><span class="pre">math</span></code>
+<code class="docutils literal notranslate"><span class="pre">os</span></code></td>
+<td>Python Keyword/name
+conflict</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">umsg</span></code>
+<code class="docutils literal notranslate"><span class="pre">usermessage</span></code></td>
+<td>Deprecated</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/docs-logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">luanamespace</span></code> - all Lua definitions</a><ul>
+<li><a class="reference internal" href="#exceptions">Exceptions</a><ul>
+<li><a class="reference internal" href="#globals">Globals</a></li>
+<li><a class="reference internal" href="#libraries">Libraries</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="lua.html"
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">lua</span></code> - Lua interoperability</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="net.html"
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">net</span></code> - communication between Client and Server</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/reference/luanamespace.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="net.html" title="net - communication between Client and Server"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="lua.html" title="lua - Lua interoperability"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../reference.html" >Module Reference</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, javabird25 (Protocs).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+    </div>
+  </body>
+</html>

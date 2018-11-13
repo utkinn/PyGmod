@@ -4,8 +4,7 @@ Getting Started
 What is PyGmod?
 ---------------
 
-**PyGmod** is an experimental project which allows to create addons for sandbox game **Garry's Mod** more easily with
-Python.
+**PyGmod** is an experimental project which allows to create addons for sandbox game **Garry's Mod** with Python.
 
 PyGmod is currently in the Alpha development stage. Many features are planned, but not implemented yet.
 
@@ -35,17 +34,13 @@ How to use it?
 
 If you are a regular Garry's Mod player or addon developer, you have to
 `install the latest Python version <https://www.python.org/downloads/>`_, then
-`download <https://github.com/javabird25/PyGmod/releases>`_ and install PyGmod.
+`download the latest release <https://github.com/javabird25/PyGmod/releases/latest>`_, open the ZIP archive and
+follow the instructions in ``install.txt``.
 
-*(Full Installation tutorial will be available later.)*
+If you are a player that want to try out addons that require PyGmod, copy your addons to ``addons`` folder in your
+Garry's Mod folder and you're set.
 
-Then take a look :doc:`Getting Started for Addon Developers <for_addon_developers/getting_started>`.
+For addon developers: take a look at :doc:`Getting Started for Addon Developers <for_addon_developers/getting_started>`.
 
 If you are a PyGmod internal developer, you should check out
-:doc:`Getting Started for PyGmod developers <for_pygmod_developers/getting_started>`.
-
-What is next?
--------------
-
-Check out :doc:`Getting Started for Addon Developers <for_addon_developers/getting_started>` or
 :doc:`Getting Started for PyGmod developers <for_pygmod_developers/getting_started>`.

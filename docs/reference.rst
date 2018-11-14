@@ -10,5 +10,4 @@ This is the reference of the PyGmod libraries.
 
     reference/lua
     reference/luanamespace
-    reference/net
     reference/internal

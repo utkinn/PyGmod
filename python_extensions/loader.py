@@ -4,7 +4,6 @@
 Here is what it does:
 
 #. Redirects I/O to Garry's Mod console with :mod:`gmod.streams` I/O classes.
-#. Patches the ``hook.Call`` Lua function to delegate hook calls to :mod:`gmod.hooks` module.
 #. Scans ``addons\`` directory for PyGmod addons and initializes them.
 """
 
@@ -12,7 +11,8 @@ import sys
 import os.path
 import traceback
 
-from gmod import lua, streams, realms
+from gmod import lua, streams
+# noinspection PyUnresolvedReferences
 import luastack
 
 __all__ = ['main']
@@ -69,32 +69,6 @@ def redirect_output():
     streams.setup()
 
 
-def patch_hook_call():
-    """Patches the ``hook.Call`` Lua function to delegate hook calls to :mod:`gmod.hooks` module."""
-    lua.exec('''
-    py._watched_events = {}
-    
-    hook.SilentCall = hook.Call
-
-    local function newCall(eventName, gamemodeTable, ...)
-        if isstring(eventName) and py and py._watched_events and py._watched_events[eventName] then
-            _py_hook_data = {...}
-            _py_n_data = #{...}
-            if CLIENT then
-                py._SwitchToClient()
-            else
-                py._SwitchToServer()
-            end
-            py.Exec('import gmod.hooks; gmod.hooks.event_occurred("'..eventName..'")')
-        end
-
-        return hook.SilentCall(eventName, gamemodeTable, ...)
-    end
-
-    hook.Call = newCall
-    ''')
-
-
 def main():
     """Finishes the PyGmod initialization."""
     redirect_output()
@@ -105,11 +79,10 @@ def main():
     end)
     ''')
 
-    patch_hook_call()
-
     log('Loading addons...')
 
-    realm_pkg = f'__{realms.REALM}_autorun__'
+    realm = 'client' if lua.G.CLIENT else 'server'
+    realm_pkg = f'__{realm}_autorun__'
 
     sys.path.append(os.path.abspath(ADDONS_PATH))
 

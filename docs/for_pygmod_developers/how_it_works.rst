@@ -78,7 +78,6 @@ Instead of initializing Python again, a subinterpreter is created and swapped to
 Here is what it does:
 
 #. Redirects I/O to Garry's Mod console with :mod:`gmod.streams` I/O classes.
-#. Patches the ``hook.Call`` Lua function to delegate hook calls to :mod:`gmod.hooks` module.
 #. Scans ``addons\`` directory for PyGmod addons and initializes them.
 
 5. :mod:`gmod.lua` module

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Addon creation tutorial: part 1 &#8212; PyGmod 0.9-alpha documentation</title>
+    <title>Addon creation tutorial: part 1 &#8212; PyGmod 0.10-alpha documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Module Reference" href="../reference.html" />
+    <link rel="next" title="Addon creation tutorial: part 2" href="tutorial2.html" />
     <link rel="prev" title="Getting Started for Addon Developers" href="getting_started.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -30,12 +30,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../reference.html" title="Module Reference"
+          <a href="tutorial2.html" title="Addon creation tutorial: part 2"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="getting_started.html" title="Getting Started for Addon Developers"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.10-alpha documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -94,8 +94,8 @@ This handles things like telling entities what to do, controlling weapons/player
 <code class="docutils literal notranslate"><span class="pre">__shared_autorun__.__init__</span></code> and <code class="docutils literal notranslate"><span class="pre">__client_autorun__.__init__</span></code> for <strong>client</strong>. As you can see,
 <code class="docutils literal notranslate"><span class="pre">__shared_autorun__.__init__</span></code> is ran two times: in <strong>server</strong> and in <strong>client</strong>.</p>
 <p>Realms are independent, so, for example, if you create a global variable in the client realm, you won’t be available
-to immediately access it from the server realm. You can use <a class="reference internal" href="../reference/net.html#module-gmod.net" title="gmod.net"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.net</span></code></a> module
-to connect the realms and use <a class="reference internal" href="../reference/realms.html#module-gmod.realms" title="gmod.realms"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.realms</span></code></a> to determine the current realm.</p>
+to immediately access it from the server realm. You can use <code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.net</span></code> module
+to connect the realms and use <code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod.realms</span></code> to determine the current realm.</p>
 <hr class="docutils" />
 <ol class="arabic">
 <li><p class="first">Open <strong>Notepad</strong>.</p>
@@ -171,8 +171,8 @@ Proceed to the <a class="reference internal" href="tutorial2.html"><span class="
   <p class="topless"><a href="getting_started.html"
                         title="previous chapter">Getting Started for Addon Developers</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../reference.html"
-                        title="next chapter">Module Reference</a></p>
+  <p class="topless"><a href="tutorial2.html"
+                        title="next chapter">Addon creation tutorial: part 2</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -206,12 +206,12 @@ Proceed to the <a class="reference internal" href="tutorial2.html"><span class="
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../reference.html" title="Module Reference"
+          <a href="tutorial2.html" title="Addon creation tutorial: part 2"
              >next</a> |</li>
         <li class="right" >
           <a href="getting_started.html" title="Getting Started for Addon Developers"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.9-alpha documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.10-alpha documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

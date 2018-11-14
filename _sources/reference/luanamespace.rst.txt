@@ -28,6 +28,8 @@ And now you can write code that looks pretty much like Lua::
 
 .. note:: Enumerations are not available from this module. Use :data:`gmod.lua.G` to get them.
 
+.. note:: Creating variables in Python won't make them available in Lua. Use :data:`gmod.lua.G` to set values in Lua.
+
 Exceptions
 ----------
 

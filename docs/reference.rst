@@ -8,17 +8,6 @@ This is the reference of the PyGmod libraries.
     :maxdepth: 1
     :glob:
 
-    reference/chat
-    reference/color
-    reference/concommands
-    reference/draw
-    reference/exceptions
-    reference/hooks
     reference/lua
-    reference/material
-    reference/net
-    reference/entity
-    reference/player
-    reference/realms
-    reference/util
+    reference/luanamespace
     reference/internal

@@ -14,9 +14,13 @@
         #. :class:`bool`
         #. :class:`str`
 
+        For example::
+
+            print(bool(G.CLIENT))  # True/False
+
         If this ``LuaObject`` instance is pointing to a callable table or function, you can call it
         with passing arguments of primitive Python types such as :class:`int`, :class:`float`, :class:`bool`,
-        :class:`str`, :class:`bytes` and another ``LuaObject``\ s.
+        :class:`str`, :class:`bytes` and other ``LuaObject``\ s.
 
         If the callable returns anything, calling of ``LuaObject`` will give another ``LuaObject``\ s which point to
         the returned values.
@@ -35,11 +39,16 @@
 
             first_player = G.player.GetAll()[1]
 
-            add_text(white_color, "First player's nick is " + str(first_player.Nick(first_player)))
-            # Since Player:Nick() is an equivalent of Player.Nick(Player) (pay attention to the dot instead of the colon),
-            # you have to pass the first_player again, otherwise there will be an error.
+            add_text(white_color, "First player's nick is " + first_player._.Nick(first_player))
+            # "._." is a PyGmod idiom which is an equivalent of a colon call (Player:Nick()).
 
-            # Also, you have to explicitly convert LuaObjects to Python objects.
+        .. attribute:: _type_
+
+            Returns the :class:`luastack.ValueType` of the held value.
+
+        .. attribute:: _type_name_
+
+            Returns the :class:`str` representation of the type of the held value.
 
     .. data:: G
 
@@ -53,3 +62,5 @@
             # Fooling everyone that we are in neither server nor client realm >:-D
             G.CLIENT = False
             G.SERVER = False
+
+            G['!!!'] = 123  # To get and set members with exotic names

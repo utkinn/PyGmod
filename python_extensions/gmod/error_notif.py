@@ -1,10 +1,11 @@
 """Script that shows a little icon in the top-left corner when an exception happens."""
 
-from . import material, hooks, draw
+from .luanamespace import *
+from .lua import luafunction
 
 __all__ = ['setup', 'show']
 
-error_icon = material.Material('pygmod_error.png')
+error_icon, _ = Material('pygmod_error.png')
 should_draw_icon = False
 
 
@@ -14,9 +15,12 @@ def show():
 
 
 def setup():
-    @hooks.hook('DrawOverlay')
     def draw_pygmod_error_icon():
         if not should_draw_icon:
             return
 
-        draw.textured_box(10, 10, 16, 16, error_icon)
+        surface.SetDrawColor(255, 255, 255, 255)
+        surface.SetMaterial(error_icon)
+        surface.DrawTexturedRect(20, 20, 32, 32)
+
+    hook.Add('DrawOverlay', 'pygmod_show_error_icon', luafunction(draw_pygmod_error_icon))

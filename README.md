@@ -6,4 +6,5 @@ Experimental project which strives to provide the possibility to create addons f
 with Python 3 programming language.
 
 [Documentation](https://javabird25.github.io/PyGmod/)  
-[Download](https://github.com/javabird25/PyGmod/releases)
+[Download](https://github.com/javabird25/PyGmod/releases)  
+[Join our Discord server](https://discord.gg/aAs4qrj)

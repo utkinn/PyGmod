@@ -1,8 +1,8 @@
 Lua Reference
 =============
 
-You can interoperate with Python from Lua, for example, run arbitrary Python code.
-All interop functions are in the ``py`` global table.
+You can communicate with Python from Lua, for example, run arbitrary Python code.
+All functions are in the ``py`` global table.
 
 .. function:: py.Exec(code)
 
@@ -21,4 +21,3 @@ These functions are used by PyGmod internally and not intended to be used by the
               py._SwitchToServer()
 
     Switches to the PyGmod sub-interpreter which corresponds to the specified realm.
-    Used primarily by the :mod:`gmod.hooks` module.

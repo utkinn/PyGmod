@@ -1,19 +1,23 @@
 """
-This module provides the tools for Garry's Mod Lua interoperability such as getting, setting values, indexing tables
-and calling functions.
+This module provides the access to Lua environment. You can use it for getting and setting arbitrary variables,
+calling available Garry's Mod Lua functions and manipulating and creating tables and objects.
 """
 
 from abc import ABC, abstractmethod
 from numbers import Number
+from collections.abc import Iterable
 
+# noinspection PyUnresolvedReferences
 from luastack import LuaStack, Special, IN_GMOD, ValueType
 
-__all__ = ['G', 'exec', 'eval', 'table', 'LuaObjectWrapper']
+__all__ = ['G', 'exec', 'eval', 'table', 'LuaObject', 'LuaObjectWrapper', 'pairs', 'luafunction']
 
 ls = LuaStack()
 
 
 class Reference:
+    """Context manager that pushes a reference on enter and pops it on exit."""
+
     def __init__(self, ref):
         self.ref = int(ref)
 
@@ -22,6 +26,17 @@ class Reference:
 
     def __exit__(self, exc_type, exc_value, traceback):
         ls.pop(1)
+
+
+def can_push(o):
+    """Returns ``True`` if ``o`` can be pushed to the Lua stack."""
+    return o is None or isinstance(o, (Number, LuaObject, str, bytes, bool, LuaObjectWrapper, Iterable))
+
+
+def check_pushable(o):
+    """Raises :class:`TypeError` if ``o`` isn't pushable to the Lua stack."""
+    if not can_push(o):
+        raise TypeError(f'unsupported value type: type - {type(o).__name__!r}, value - {o!r}')
 
 
 def push_pyval_to_stack(val):
@@ -38,7 +53,10 @@ def push_pyval_to_stack(val):
     :class:`str`, :class:`bytes`    string
     :class:`bool`                   bool
     :class:`LuaObjectWrapper`       Whatever ``LuaObjectWrapper.lua_obj._ref_ is pointing to
+    :class:`Iterable`               Table
     """
+    check_pushable(val)
+
     if val is None:
         ls.push_nil()
     if isinstance(val, Number):
@@ -52,12 +70,55 @@ def push_pyval_to_stack(val):
     elif isinstance(val, bool):
         ls.push_bool(val)
     elif isinstance(val, LuaObjectWrapper):
-        lua_obj = val.lua_obj
-        if not isinstance(lua_obj, LuaObject):
-            raise TypeError(f'lua_obj property must return LuaObject, not {type(lua_obj).__name__!r}')
-        ls.push_ref(lua_obj._ref_)
-    else:
-        raise TypeError(f'unsupported value type: {type(val)}')
+        ls.push_ref(val.lua_obj._ref_)
+    elif isinstance(val, Iterable):
+        # noinspection PyTypeChecker
+        push_pyval_to_stack(table(val))
+
+
+class SelfCallingNamespace:
+    """Namespace which gives :class:`SelfCallingFunction`\\ s when indexed.
+
+    >>> ply = Player(1)
+    >>> ply._
+    <SelfCallingNamespace (target=<LuaObject (type=entity)>)>
+    >>> ply._.Nick
+    <SelfCallingFunction 'Nick' (target=<LuaObject (type=entity)>)>
+    """
+
+    def __init__(self, lo):
+        self._luaobj = lo
+
+    def _get(self, item):
+        return SelfCallingFunction(self._luaobj, self._luaobj._get(item), item)
+
+    def __getitem__(self, item):
+        return self._get(item)
+
+    def __getattr__(self, item):
+        return self._get(item)
+
+    def __repr__(self):
+        return f'<SelfCallingNamespace (target={self._luaobj!r})>'
+
+
+class SelfCallingFunction:
+    """Wrapper of Lua function which calls it with self (same purpose as colon in Lua has).
+
+    >>> ply = Player(1)
+    >>> ply._.Nick()  # Same as "ply:Nick()" in Lua
+    """
+
+    def __init__(self, obj, func, funcname):
+        self._obj = obj
+        self._func = func
+        self._funcname = funcname
+
+    def __call__(self, *args, _autoconvert_=True, **kwargs):
+        return self._func(self._obj, *args, _autoconvert_)
+
+    def __repr__(self):
+        return f'<SelfCallingFunction {self._funcname!r} (target={self._obj!r}, func={self._func!r})>'
 
 
 class LuaObject:
@@ -70,26 +131,61 @@ class LuaObject:
         ls.free_ref(self._ref_)
 
     @property
-    def type(self):
+    def _type_(self):
         """Returns the :class:`luastack.ValueType` of the held value."""
         with self._context_:
             return ls.get_type(-1)
 
     @property
-    def type_name(self):
+    def _type_name_(self):
         """Returns the :class:`str` type representation of the held value."""
         with self._context_:
-            return ls.get_type_name(ls.get_type(-1))
+            return ls.get_type_name(ls.get_type(-1)).decode()
+
+    @property
+    def _(self):
+        return SelfCallingNamespace(self)
+
+    def _autoconvert_to_py(self):
+        """Tries to convert itself to an appropriate Python type. Returns self if conversion is not possible."""
+
+        # Convertable Lua types and corresponding conversion functions
+        types_and_converters = {
+            ValueType.NIL: lambda _: None,
+            ValueType.BOOL: bool,
+            ValueType.NUMBER: float,
+            ValueType.STRING: str
+        }
+
+        if self._type_ in types_and_converters:
+            # Convert self using the conversion func which corresponds to the Lua type of self.
+            return types_and_converters[self._type_](self)
+        else:
+            return self
+
+    # noinspection PyUnusedLocal
+    def _table_to_str(self):
+        keys_and_vals = {}
+
+        for k, v in pairs(self):
+            keys_and_vals[k] = v
+
+        return repr(keys_and_vals)
 
     def _convert_to_byte_or_str(self):
-        if self.type == ValueType.NIL:
+        if self._type_ == ValueType.NIL:
             return 'None'
-
-        with self._context_:
-            val = ls.get_string(-1)
-            if val is None:
-                raise ValueError("can't convert this value to str/bytes")
-            return val
+        elif self._type_ == ValueType.STRING:
+            with self._context_:
+                val = ls.get_string(-1)
+                if val is None:
+                    raise ValueError("can't convert this value to str/bytes")
+                return val
+        elif self._type_ == ValueType.TABLE:
+            return self._table_to_str()
+        else:
+            with self._context_:
+                return G.tostring(self)[1]
 
     def __str__(self):
         val = self._convert_to_byte_or_str()
@@ -118,7 +214,7 @@ class LuaObject:
             return ls.get_bool(-1)
 
     def _get(self, key):
-        if self.type == ValueType.NIL:
+        if self._type_ == ValueType.NIL:
             raise ValueError("can't index nil")
 
         with self._context_:
@@ -133,7 +229,7 @@ class LuaObject:
         return self._get(item)
 
     def _set(self, key, value):
-        if self.type == ValueType.NIL:
+        if self._type_ == ValueType.NIL:
             raise ValueError("can't index nil")
 
         with self._context_:
@@ -150,24 +246,35 @@ class LuaObject:
         else:
             self._set(key, value)
 
-    def __call__(self, *args):
-        if self.type == ValueType.NIL:
+    def __call__(self, *args, _autoconvert_=True):
+        if self._type_ == ValueType.NIL:
             raise ValueError("can't call nil")
+
+        for o in args:
+            check_pushable(o)
 
         ls.push_ref(self._ref_)
         for val in args:
             push_pyval_to_stack(val)
         ls.call(len(args), -1)
+
         returns = []
         while ls.top() > 1:
             returns.insert(0, LuaObject())
+
         if len(returns) == 1:
-            return returns[0]
+            if _autoconvert_:
+                return returns[0]._autoconvert_to_py()
+            else:
+                return returns[0]
         elif len(returns) > 1:
-            return tuple(returns)
+            if _autoconvert_:
+                return tuple((o._autoconvert_to_py() for o in returns))
+            else:
+                return tuple(returns)
 
     def __repr__(self):
-        return f'<LuaObject (type={self.type_name.decode()!s})>'
+        return f'<LuaObject: {self!s}>'
 
 
 # Lua global table
@@ -201,8 +308,9 @@ def exec(code):
     ls.pop(1)  # GLOBAL
 
 
-def eval(expr):
+def eval(expr, *, autoconvert=True):
     """Evaluates a single Lua expression. Returns a :class:`LuaObject` with an evaluation result.
+    If ``autoconvert`` is ``True``, tries to convert primitive Lua types to Python analogues.
 
     ::
 
@@ -236,34 +344,146 @@ def eval(expr):
     ls.set_field(-2, b'_gpy_temp')
 
     ls.pop(1)  # GLOBAL
-    return obj
+
+    if autoconvert:
+        return obj._autoconvert_to_py()
+    else:
+        return obj
 
 
-def table(iterable):
-    """Creates and returns a :class:`LuaObject` of a new Lua table from ``iterable``.
+def iter_to_dict(iterable):
+    """Converts an iterable to a Lua Table-like dictionary.
+
+    >>> iter_to_dict({'a': 1})
+    {'a': 1}
+    >>> iter_to_dict([1, 2, 'a'])
+    {1: 1, 2: 2, 3: 'a'}
+    """
+    if isinstance(iterable, dict):
+        return iterable
+    else:
+        as_tuple = tuple(iterable)
+        return {i + 1: as_tuple[i] for i in range(0, len(as_tuple))}
+
+
+def table(iterable: Iterable = None):
+    """Creates and returns a :class:`LuaObject` of a new Lua table from ``iterable`` (empty by default).
 
     ::
 
-        tbl = lua.table(1, 2, 3)
+        tbl = lua.table((1, 2, 3))
         lua.G.PrintTable(tbl)
+        # 1 = 1
+        # 2 = 2
+        # 3 = 3
+
+        tbl = lua.table({'a': 1, 2: 'b', 1: {1, 2, 3}})
+        lua.G.PrintTable(tbl)
+        # 1:
+        #   1 = 1
+        #   2 = 2
+        #   3 = 3
+        # 2 = b
+        # a = 1
     """
-    ls.clear()  # Everything might go wrong if the stack is not empty
 
-    ls.create_table()
-    ls.push_special(Special.GLOBAL)
-    ls.get_field(-1, b'table')
-    for v in iterable:
-        ls.get_field(-1, b'insert')
-        ls.push(1)  # Pushing that new table again
-        try:
-            push_pyval_to_stack(v)
-        except TypeError:  # In case of a value that can't be pushed
-            ls.clear()
-            raise  # Raising TypeError again
-        ls.call(2, 0)
-    ls.pop(2)  # Pop the 'table' namespace and the global table
+    if not isinstance(iterable, Iterable):
+        raise TypeError(f'iterable must be actually iterable, not {type(iterable).__name__!r}')
 
-    return LuaObject()  # The new table is grabbed and popped by the LuaObject's constructor
+    if iterable is None:
+        iterable = {}
+    else:
+        iterable = iter_to_dict(iterable)
+
+    tbl = eval('{}')
+    for k, v in iterable.items():
+        tbl[k] = v
+    return tbl
+
+
+def pairs(tbl):
+    """Works the same as ``pairs()`` in Lua.
+
+    >>> tbl = table(('a', 'b', 'c'))
+    >>> for k, v in pairs(tbl):
+    ...     print(k, '-', v)
+    ...
+    1 - a
+    2 - b
+    3 - c
+    """
+    if isinstance(tbl, LuaObject):
+        if tbl._type_ != ValueType.TABLE:
+            raise ValueError(f'this LuaObject is not a table, but {tbl._type_name_}, repr: {tbl!r}')
+
+        def pairs_generator():
+            next_ = G.pairs(tbl)[0]  # Retrieving the pairs iterator function
+
+            t = tbl  # Table that we iterate
+            k = None  # Current key
+
+            pair = next_(t, None)  # Getting the first pair
+
+            while pair:  # next() returns nil when there is no pairs left
+                yield pair
+                pair = next_(t, k)  # Getting the next pair
+
+        return pairs_generator()
+
+    elif isinstance(tbl, Iterable):
+        return iter_to_dict(tbl).items()
+    else:
+        raise TypeError(f'unsupported type: {type(tbl).__name__!r}')
+
+
+lua_functions = {}
+
+
+def luafunction(pyfunction):
+    """Creates a Lua function out of a Python function.
+
+    >>> @luafunction
+    ... def noclip_log(ply, noclip):
+    ...     print(ply._.Nick(), 'changed noclip state to', noclip)
+    ...
+    >>> hook.Add('PlayerNoClip', 'noclip_log', noclip_log)
+    """
+
+    func_id = pyfunction.__module__ + '.' + pyfunction.__name__
+
+    # Backing function which calls pyfunction and receives the return values.
+    passer = eval(f'''
+    function(...)
+        py._func_in = {{...}}
+        py._func_in_n = #py._func_in
+        
+        if CLIENT then
+            py._SwitchToClient()
+        else
+            py._SwitchToServer()
+        end
+        
+        py.Exec("from gmod import lua; lua.pass_call({func_id!r})")
+        
+        return py._func_rtn
+    end
+    ''')
+
+    lua_functions[func_id] = pyfunction
+
+    return passer
+
+
+def pass_call(func_id):
+    """Called in Lua by a backing function when it called. "Passes" the call, args, and gives the return values back."""
+    pyfunc = lua_functions[func_id]
+
+    args_table = G.py._func_in
+    n_args = int(G.py._func_in_n)
+
+    args = [args_table[i] for i in range(1, n_args + 1)]
+
+    G.py._func_rtn = pyfunc(*args)
 
 
 class LuaObjectWrapper(ABC):

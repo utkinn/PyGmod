@@ -1,5 +1,5 @@
-Addon creation tutorial
-=======================
+Addon creation tutorial: part 1
+===============================
 
 In this tutorial you will learn how to create a simple "Hello world" addon with PyGmod.
 
@@ -48,13 +48,34 @@ When PyGmod sees your addon each time you start a new game in Garry's Mod, PyGmo
 ``(your addon folder name, "hello_world" in our case)\python\__shared_autorun__\__init__.py``. As you can see,
 we have to create ``__init__.py`` in ``__shared_autorun__`` folder to do anything useful.
 
+A note about the game states
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+PyGmod runs initialization scripts for each **game realm**.
+
+Garry's Mod game session consists of two realms: the **client** realm and the **server** realm.
+
+The **client** state is basically your game client. It handles things such as visual rendering.
+It can communicate with **server** state via the net library as an example.
+
+The **server** state handles things on the server; it's the only state used on Dedicated Servers.
+This handles things like telling entities what to do, controlling weapons/players and all game logic
+(what happens when and how in game modes).
+
+First, PyGmod runs ``__shared_autorun__.__init__`` and ``__server_autorun__.__init__`` for **server**, then it runs
+``__shared_autorun__.__init__`` and ``__client_autorun__.__init__`` for **client**. As you can see,
+``__shared_autorun__.__init__`` is ran two times: in **server** and in **client**.
+
+Realms are independent, so, for example, if you create a global variable in the client realm, you won't be available
+to immediately access it from the server realm. You can use :mod:`gmod.net` module
+to connect the realms and use :mod:`gmod.realms` to determine the current realm.
+
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1. Open **Notepad**.
 2. Paste this::
 
     print('Hello world!')
-
 
 3. Go to ``File -> Save as...`` and find ``hello_world\python\__shared_autorun__\`` folder.
 4. Open **File type** box and select **All files (\*.\*)** option instead of **Text document (\*.txt)**.
@@ -63,7 +84,7 @@ we have to create ``__init__.py`` in ``__shared_autorun__`` folder to do anythin
 
 .. image:: addon_tutorial_images/init_script.png
 
-3. Seeing it running
+3. See it works
 --------------------
 
 1. Launch **Garry's Mod**.
@@ -86,3 +107,4 @@ we have to create ``__init__.py`` in ``__shared_autorun__`` folder to do anythin
 =============
 
 Congratulations! You just made your first PyGmod addon.
+Proceed to the :doc:`Part 2 of the tutorial <tutorial2>`.

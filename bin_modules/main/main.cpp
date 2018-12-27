@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include <Python.h>
 #include "GarrysMod/Lua/Interface.h"
 
@@ -23,6 +25,11 @@ void giveILuaBasePtrToLuastack(ILuaBase* ptr) {
 // Redirects the Python stdout and stderr to "pygmod.log" for debugging errors which prevent Garry's Mod IO from working.
 void redirectIO_toLogFile() {
     PyRun_SimpleString("import sys; sys.stdout = sys.stderr = open('pygmod.log', 'w+')");
+}
+
+bool isFileExists(const char *path) {
+    std::ifstream file(path);
+    return file.good();
 }
 
 DLL_EXPORT int pygmod_run(lua_State *state, bool client) {
@@ -53,7 +60,11 @@ DLL_EXPORT int pygmod_run(lua_State *state, bool client) {
     extendLua(LUA);
     cons.log("Lua2Python Lua extensions loaded");
 
-    // redirectIO_toLogFile();  // In case of the broken loader
+    if (isFileExists("out_to_log.pygmod")) {
+        redirectIO_toLogFile();  // In case of the broken loader
+        cons.log("The output was redirected to the file 'pygmod.log' in the Garry's Mod root directory.");
+    }
+
     PyRun_SimpleString("import loader; loader.main()");
 
     if (PyErr_Occurred()) {

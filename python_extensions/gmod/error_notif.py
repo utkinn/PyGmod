@@ -2,19 +2,26 @@
 
 import time
 
+from luastack import IN_GMOD
 from .luanamespace import *
 from .lua import luafunction
 
 __all__ = ['setup', 'show']
 
+if IN_GMOD:
+    error_icon, _ = Material('pygmod_error.png')
+
 # Hide the error icon after n milliseconds
 ICON_HIDE_DELAY = 5
-error_icon, _ = Material('pygmod_error.png')
 should_draw_icon = False
 hide_icon_at = 0
 
 
 def show():
+    """
+    Shows the error icon in the top-left corner of the screen
+    which then disappears after :data:`ICON_HIDE_DELAY` seconds.
+    """
     global should_draw_icon, hide_icon_at
 
     should_draw_icon = True
@@ -22,6 +29,7 @@ def show():
 
 
 def setup():
+    """Registers a ``DrawOverlay`` hook for showing an error icon later."""
     def draw_pygmod_error_icon():
         global should_draw_icon
 

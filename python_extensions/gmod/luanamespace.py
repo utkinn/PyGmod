@@ -1,3 +1,6 @@
+from unittest.mock import Mock
+
+from luastack import IN_GMOD
 from .lua import G as _G
 
 
@@ -6,7 +9,10 @@ def _extend(names):
     gl = globals()
 
     for n in names:
-        gl[n] = _G[n]
+        if not IN_GMOD:
+            gl[n] = Mock()
+        else:
+            gl[n] = _G[n]
 
 
 # Global functions

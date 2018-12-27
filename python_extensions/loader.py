@@ -26,23 +26,20 @@ ADDONS_PATH = 'garrysmod\\addons'
 SHARED_PACKAGE = '__shared_autorun__'
 
 
-def prepare_and_print_tb():
+def prepare_and_print_tb(exc_type, exc_value, tb):
     # Getting traceback text as a list of strings,
     # string at index 0 is "Traceback (most recent call last):", next strings are the frames.
     # The first frame is this loader's frame where it imports an addon.
     # We don't need this frame because it has no relation to the addon, so we will get rid of it
     # by deleting the string at index 1 from the text list.
-    traceback_text = traceback.format_exception(*sys.exc_info())
-
-    # Deleting the loader's frame
-    del traceback_text[1]
+    traceback_text = traceback.format_exception(exc_type, exc_value, tb)
 
     # Printing the clean traceback
     for l in traceback_text:
         sys.stderr.write(l)
 
 
-def handle_exception_in_addon():
+def handle_exception(exc_type, exc_value, tb):
     error_notif.show()
 
     # Constructing a bar of 50 underscores to visually separate tracebacks from other output.
@@ -53,8 +50,11 @@ def handle_exception_in_addon():
 
     print()
     print_bar()
-    prepare_and_print_tb()
+    prepare_and_print_tb(exc_type, exc_value, tb)
     print_bar()
+
+
+sys.excepthook = handle_exception
 
 
 def try_import(addon_dir, pkg):
@@ -64,7 +64,7 @@ def try_import(addon_dir, pkg):
     except ImportError:
         pass
     except BaseException:
-        handle_exception_in_addon()
+        sys.excepthook(*sys.exc_info())
 
 
 def redirect_output():

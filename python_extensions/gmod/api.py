@@ -1,3 +1,8 @@
+"""
+Contains all variables, functions, libraries, classes, etc.
+that are listed in Garry's Mod Wiki (https://wiki.garrysmod.com).
+"""
+
 import lua
 
 _G = lua.Globals()
@@ -8,7 +13,10 @@ def _extend(names):
     gl = globals()
 
     for n in names:
-        gl[n] = _G[n]
+        val = _G[n]
+        # Setting the value only if it is available in the current dream (is not None)
+        if val is not None:
+            gl[n] = _G[n]
 
 
 # Global functions

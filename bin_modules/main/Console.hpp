@@ -12,15 +12,17 @@ struct Color {
 
 // Provides printing and logging functionality to Garry's Mod console.
 class Console {
+    ILuaBase *lua;
+
 public:
     Console(ILuaBase *lua) : lua(lua) {};
 
     // string overloads
 
-    // Prints message to the console.
+    // Prints the message to the console.
     void println(string message);
 
-    // Prints message to the console with a color.
+    // Prints the message to the console with a color.
     void println(string message, Color& color);
 
     // Prints "[PyGmod] " + message to the console.
@@ -34,10 +36,10 @@ public:
 
     // const char* overloads
 
-    // Prints message to the console.
+    // Prints the message to the console.
     void println(const char* message);
 
-    // Prints message to the console with a color.
+    // Prints the message to the console with a color.
     void println(const char* message, Color& color);
 
     // Prints "[PyGmod] " + message to the console.
@@ -51,10 +53,10 @@ public:
 
     // int overloads
 
-    // Prints message to the console.
+    // Prints the message to the console.
     void println(int message);
 
-    // Prints message to the console with a color.
+    // Prints the message to the console with a color.
     void println(int message, Color& color);
 
     // Prints "[PyGmod] " + message to the console.
@@ -65,7 +67,4 @@ public:
 
     // Prints "[PyGmod] WARNING: " + message to the console.
     void warn(int message);
-
-private:
-    ILuaBase *lua;
 };

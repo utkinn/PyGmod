@@ -28,8 +28,8 @@ void Console::println(const char* message, Color& color) {
     // Stack here: _G, MsgC, Color structure(r, g, b)
 
     lua->PushString(message);  // Pushing the message
-    lua->PushString("\n");  // Add newline
-    lua->Call(3, 0);  // Calling "MsgC" with 2 arguments (color and message) and 0 return values and popping the function and the arguments from the stack
+    lua->PushString("\n");  // Adding a newline
+    lua->Call(3, 0);  // Calling "MsgC" with 3 arguments (color, message, newline) and 0 return values and popping the function and the arguments from the stack
 
     lua->Pop();  // Popping the global table from the stack
 }

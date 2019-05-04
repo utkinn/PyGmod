@@ -35,15 +35,15 @@ void Console::println(const char* message, Color& color) {
 }
 
 void Console::log(const char* message) {
-    println(("[PyGmod] " + string(message)).c_str());
+    println(("[PyGmod|pygmod.dll|LOG] " + string(message)).c_str());
 }
 
 void Console::error(const char* message) {
-    println(("[PyGmod] ERROR: " + string(message)).c_str(), Color{ 255, 0, 0 });
+    println(("[PyGmod|pygmod.dll|ERROR] " + string(message)).c_str(), Color{ 255, 0, 0 });
 }
 
 void Console::warn(const char* message) {
-    println(("[PyGmod] WARNING: " + string(message)).c_str(), Color{ 255, 255, 0 });
+    println(("[PyGmod|pygmod.dll|WARNING] " + string(message)).c_str(), Color{ 255, 255, 0 });
 }
 
 void Console::println(string message) {

@@ -47,7 +47,7 @@ def exec_lua(lua_code):
 
 
 def eval_lua(lua_code):
-    """Evaluates a lua expression and returns the result."""
+    """Evaluates a Lua expression and returns the result."""
     exec_lua('_pygmod_eval_result = ' + lua_code)
     return G._pygmod_eval_result
 
@@ -238,7 +238,7 @@ class MethodCallNamespace(BaseGetNamespace):
 
 
 class Table(Callable, LuaNamespace):
-    """Lua table wrapper.
+    """Class for representing Lua tables.
 
     :class:`Table` has a multifunctional constructor::
 
@@ -317,7 +317,7 @@ class Table(Callable, LuaNamespace):
         """
         return TableItemIterator(self)
 
-    def to_dict(self):
+    def __dict__(self):
         """
         Returns this table as a :class:`dict`.
         Equivalent to ``dict(table.items())``.

@@ -74,19 +74,23 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\python_extensions\luastack.h" />
     <ClInclude Include="lua2py_interop.hpp" />
     <ClInclude Include="Console.hpp" />
     <ClInclude Include="include\GarrysMod\Lua\Interface.h" />
     <ClInclude Include="include\GarrysMod\Lua\LuaBase.h" />
     <ClInclude Include="include\GarrysMod\Lua\Types.h" />
     <ClInclude Include="include\GarrysMod\Lua\UserData.h" />
+    <ClInclude Include="python_extensions\luapyobject.hpp" />
+    <ClInclude Include="python_extensions\stack_utils.hpp" />
+    <ClInclude Include="python_extensions\_luastack.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\python_extensions\luastack.cpp" />
     <ClCompile Include="lua2py_interop.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="python_extensions\luapyobject.cpp" />
+    <ClCompile Include="python_extensions\stack_utils.cpp" />
+    <ClCompile Include="python_extensions\_luastack.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

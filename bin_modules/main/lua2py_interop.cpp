@@ -1,35 +1,28 @@
 #include "lua2py_interop.hpp"
-#include "../../python_extensions/luastack.h"
+#include "python_extensions/_luastack.hpp"
 
 #define LUA_FUNC(name) int name(lua_State *state)
 
 // Realm subinterpreters which are created by pygmod_run()
 PyThreadState *clientInterp, *serverInterp;
-ILuaBase *clientLua, *serverLua;
 
 // Eexcutes a string of Python code.
 LUA_FUNC(py_Exec) {
     const char *code = LUA->CheckString();
     PyRun_SimpleString(code);
-
+	LUA->Pop();
     return 0;
 }
 
-void swap(PyThreadState *state, ILuaBase *lua) {
-    if (is_setup_complete()) {
-        PyThreadState_Swap(state);
-        setup(lua);
-    }
-}
-
+// Swaps the current subinterpreter to client.
 LUA_FUNC(py_SwitchToClient) {
-    swap(clientInterp, clientLua);
+	PyThreadState_Swap(clientInterp);
     return 0;
 }
 
 // Swaps the current subinterpreter to server.
 LUA_FUNC(py_SwitchToServer) {
-    swap(serverInterp, serverLua);
+	PyThreadState_Swap(serverInterp);
     return 0;
 }
 

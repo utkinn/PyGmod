@@ -1,15 +1,15 @@
-"""Script that shows a little icon in the top-left corner when an exception happens."""
+"""
+Script that shows a little icon in the top-left corner
+when an uncaught exception in PyGmod itself or PyGmod addon happens.
+"""
 
 import time
 
-from luastack import IN_GMOD
-from .luanamespace import *
-from .lua import luafunction
+from gmod.api import Material, surface, hook
 
 __all__ = ['setup', 'show']
 
-if IN_GMOD:
-    error_icon, _ = Material('pygmod_error.png')
+error_icon, _ = Material('pygmod_error.png')
 
 # Hide the error icon after n milliseconds
 ICON_HIDE_DELAY = 5
@@ -43,4 +43,4 @@ def setup():
         if time.clock() > hide_icon_at:
             should_draw_icon = False
 
-    hook.Add('DrawOverlay', 'pygmod_show_error_icon', luafunction(draw_pygmod_error_icon))
+    hook.Add('DrawOverlay', 'pygmod_show_error_icon', draw_pygmod_error_icon)

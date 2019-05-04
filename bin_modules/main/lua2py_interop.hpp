@@ -1,3 +1,5 @@
+// Lua functions for interacting with Python
+
 #pragma once
 
 #include "GarrysMod/Lua/Interface.h"

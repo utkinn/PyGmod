@@ -3,13 +3,13 @@
 
 #define LUA_FUNC(name) int name(lua_State *state)
 
+// Realm subinterpreters which are created by pygmod_run()
 PyThreadState *clientInterp, *serverInterp;
 ILuaBase *clientLua, *serverLua;
 
 // Eexcutes a string of Python code.
 LUA_FUNC(py_Exec) {
     const char *code = LUA->CheckString();
-
     PyRun_SimpleString(code);
 
     return 0;
@@ -27,6 +27,7 @@ LUA_FUNC(py_SwitchToClient) {
     return 0;
 }
 
+// Swaps the current subinterpreter to server.
 LUA_FUNC(py_SwitchToServer) {
     swap(serverInterp, serverLua);
     return 0;

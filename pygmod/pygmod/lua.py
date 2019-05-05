@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable, Mapping
 from functools import wraps, partial
 
-import _luastack
+from pygmod import _luastack
 
 __all__ = ["LuaError", "exec_lua", "eval_lua", "G", "Table"]
 

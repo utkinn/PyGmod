@@ -3,21 +3,18 @@ Contains all variables, functions, libraries, classes, etc.
 that are listed in Garry's Mod Wiki (https://wiki.garrysmod.com).
 """
 
-import lua
+import sys
+from pygmod import lua
 
 _G = lua.Globals()
 
-
 def _extend(names):
     """Puts all names from ``names`` to the module namespace."""
-    gl = globals()
+    gl = sys.modules[__name__]
 
-    for n in names:
-        val = _G[n]
-        # Setting the value only if it is available in the current dream (is not None)
-        if val is not None:
-            gl[n] = _G[n]
-
+    for name in names:
+        value = _G[name] if name in _G else None
+        setattr(gl, name, value)
 
 # Global functions
 _global_funcs = [

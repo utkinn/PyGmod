@@ -11,7 +11,7 @@ import sys
 from os import path, listdir
 from logging import getLogger
 
-from gmod import _streams, logging_config
+from pygmod import _streams, logging_config
 
 _streams.setup()
 logging_config.configure()

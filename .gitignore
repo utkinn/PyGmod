@@ -16,3 +16,4 @@ python_extensions/*/*.h
 *.idb
 *.iml
 .idea
+*.swp

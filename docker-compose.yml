@@ -1,0 +1,10 @@
+version: '3'
+services:
+  cpp_tests:
+    build:
+      context: .
+      dockerfile: cpp_tests.Dockerfile
+  python_tests:
+    build:
+      context: .
+      dockerfile: python_tests.Dockerfile

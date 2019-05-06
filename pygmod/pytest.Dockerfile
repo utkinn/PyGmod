@@ -1,3 +1,7 @@
+# This Dockerfile builds and tests the Python extension
+# Python tests are run using pytest
+# C++ tests are run using Google Test (TODO)
+
 FROM python:3
 
 WORKDIR /usr/src/app

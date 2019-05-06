@@ -3,4 +3,4 @@ services:
   pygmod_package_tests:
     build:
       context: ./pygmod/
-      dockerfile: Dockerfile
+      dockerfile: pytest.Dockerfile

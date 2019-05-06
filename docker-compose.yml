@@ -1,6 +1,10 @@
 version: '3'
 services:
-  pygmod_package_tests:
+  pygmod_python_extension_python_tests:
     build:
       context: ./pygmod/
       dockerfile: pytest.Dockerfile
+  pygmod_python_extension_cpp_tests:
+    build:
+      context: ./pygmod/
+      dockerfile: gtest.Dockerfile

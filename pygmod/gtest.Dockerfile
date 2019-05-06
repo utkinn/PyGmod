@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 
 RUN apt-get update && \
-    apt-get install -y g++ cmake libgtest-dev git
+    apt-get install -y g++ cmake libgtest-dev git python3-dev
 
 # Download GarrysMod headers
 RUN git clone https://github.com/Facepunch/gmod-module-base.git && \

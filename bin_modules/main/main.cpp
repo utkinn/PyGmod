@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-#include "GarrysMod/Lua/Interface.h"
+#include <GarrysMod/Lua/Interface.h>
 
 #include "Console.hpp"
 #include "python_extensions/luapyobject.hpp"

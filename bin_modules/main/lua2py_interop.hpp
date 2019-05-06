@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "GarrysMod/Lua/Interface.h"
+#include <GarrysMod/Lua/Interface.h>
 #include <Python.h>
 
 using namespace GarrysMod::Lua;

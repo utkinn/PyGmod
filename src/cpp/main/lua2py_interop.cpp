@@ -1,5 +1,5 @@
 #include "lua2py_interop.hpp"
-#include "python_extensions/_luastack.hpp"
+#include "py_extensions/_luastack.hpp"
 
 #define LUA_FUNC(name) int name(lua_State *state)
 

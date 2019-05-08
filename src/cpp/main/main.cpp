@@ -6,8 +6,8 @@
 #include <GarrysMod/Lua/Interface.h>
 
 #include "Console.hpp"
-#include "python_extensions/luapyobject.hpp"
-#include "python_extensions/_luastack.hpp"
+#include "py_extensions/luapyobject.hpp"
+#include "py_extensions/_luastack.hpp"
 #include "lua2py_interop.hpp"
 
 using namespace GarrysMod::Lua;
@@ -15,14 +15,14 @@ using std::to_string;
 
 // Adds the _luastack Python extension module to builtins and initializes it.
 void addAndInitializeLuastackExtension() {
-	PyImport_AppendInittab("pygmod._luastack", PyInit__luastack);
+	PyImport_AppendInittab("_luastack", PyInit__luastack);
 }
 
 // Initializes the _luastack module by calling its init() function.
 void initLuastack(ILuaBase *ptr) {
-	createPyObjectMetatable(ptr);
+	createLuaPyObjectMetatable(ptr);
 
-	PyObject *luastackModule = PyImport_ImportModule("pygmod._luastack");  // import _luastack
+	PyObject *luastackModule = PyImport_ImportModule("_luastack");  // import _luastack
 	PyObject *initFunc = PyObject_GetAttrString(luastackModule, "init");  // initFunc = _luastack.init
 	Py_DECREF(PyObject_CallFunction(initFunc, "l", reinterpret_cast<long>(ptr)));  // initFunc(ILuaBase memory address)
 	Py_DECREF(initFunc);
@@ -70,10 +70,11 @@ DLL_EXPORT int pygmod_run(lua_State *state, bool client) {
 
 	redirectIOToLogFile();
 
-	PyRun_SimpleString("import loader; loader.main()");  // See python\loader.py
+	PyRun_SimpleString("from pygmod import loader; loader.main()");  // See python\loader.py
 
 	if (PyErr_Occurred()) {
 		cons.error("Something went wrong");
+		PyErr_Print();
 		return 0;
 	}
 

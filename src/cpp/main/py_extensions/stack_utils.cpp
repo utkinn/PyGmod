@@ -44,7 +44,9 @@ PyObject *getStackValAsPythonObj(ILuaBase *lua, int index) {
 	case Type::STRING:
 		return PyUnicode_FromString(lua->GetString(index, NULL));
 	case Type::FUNCTION:
-		luaModule = PyImport_ImportModule("lua");
+		luaModule = PyImport_ImportModule("pygmod.lua");
+		if (luaModule == NULL)
+			return NULL;
 		luaFuncFromStackTopFunc = PyObject_GetAttrString(luaModule, "_lua_func_from_stack_top");
 		luaFuncObject = PyObject_CallFunction(luaFuncFromStackTopFunc, "");
 		Py_DECREF(luaFuncFromStackTopFunc);
@@ -52,7 +54,9 @@ PyObject *getStackValAsPythonObj(ILuaBase *lua, int index) {
 		return luaFuncObject;
 	case Type::TABLE:
 	default:
-		luaModule = PyImport_ImportModule("lua");
+		luaModule = PyImport_ImportModule("pygmod.lua");
+		if (luaModule == NULL)
+			return NULL;
 		tableFromStackTopFunc = PyObject_GetAttrString(luaModule, "_table_from_stack_top");
 		tableObject = PyObject_CallFunction(tableFromStackTopFunc, "");
 		Py_DECREF(tableFromStackTopFunc);

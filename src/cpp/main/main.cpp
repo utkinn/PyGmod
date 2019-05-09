@@ -70,7 +70,7 @@ DLL_EXPORT int pygmod_run(lua_State *state, bool client) {
 
 	redirectIOToLogFile();
 
-	PyRun_SimpleString("from pygmod import loader; loader.main()");  // See python\loader.py
+	PyRun_SimpleString("from pygmod import _loader; _loader.main()");  // See python\loader.py
 
 	if (PyErr_Occurred()) {
 		cons.error("Something went wrong");

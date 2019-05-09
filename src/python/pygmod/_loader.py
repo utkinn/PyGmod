@@ -1,5 +1,5 @@
 """
-``loader.py`` is the second part of the initialization system.
+``_loader.py`` is the second part of the initialization system.
 
 Here is what it does:
 

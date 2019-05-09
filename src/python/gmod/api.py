@@ -6,15 +6,14 @@ that are listed in Garry's Mod Wiki (https://wiki.garrysmod.com).
 import sys
 from pygmod import lua
 
-_G = lua.Globals()
 
 def _extend(names):
     """Puts all names from ``names`` to the module namespace."""
     gl = sys.modules[__name__]
-
     for name in names:
-        value = _G[name] if name in _G else None
+        value = lua.G[name]
         setattr(gl, name, value)
+
 
 # Global functions
 _global_funcs = [

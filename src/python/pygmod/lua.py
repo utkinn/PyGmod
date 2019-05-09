@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable, Mapping
 from functools import wraps, partial
 
-from pygmod import _luastack
+import _luastack
 
 __all__ = ["LuaError", "exec_lua", "eval_lua", "G", "Table"]
 
@@ -118,6 +118,8 @@ class LuaNamespace(BaseGetNamespace):
     @auto_pop
     def _get(self, name):
         self._push_namespace_object()
+        if not isinstance(name, str):
+            print("???", name)
         _luastack.get_field(-1, name)
         return _luastack.get_stack_val_as_python_obj()
 

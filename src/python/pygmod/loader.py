@@ -16,8 +16,7 @@ from pygmod import _streams, logging_config
 _streams.setup()
 logging_config.configure()
 
-import lua
-from gmod import error_notif
+from pygmod import lua, error_notif
 
 __all__ = ['main']
 

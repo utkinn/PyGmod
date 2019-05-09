@@ -3,7 +3,7 @@
 import sys
 from io import TextIOBase
 
-import lua
+from pygmod import lua
 
 __all__ = ["setup"]
 
@@ -31,7 +31,7 @@ class GmodConsoleOut(GmodConsoleOutStream):
 
     def write(self, s):
         """Writes string ``s`` to Garry's Mod console with ``Msg`` Lua function."""
-        lua.Globals().Msg(s)
+        lua.G.Msg(s)
         return len(s)
 
 
@@ -46,8 +46,7 @@ class GmodConsoleErr(GmodConsoleOutStream):
         Writes string ``s`` to Garry's Mod console
         with ``MsgC`` Lua function with red color.
         """
-        g = lua.Globals()
-        g.MsgC(g.Color(255, 0, 0), s)
+        lua.G.MsgC(lua.G.Color(255, 0, 0), s)
         return len(s)
 
 

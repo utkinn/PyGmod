@@ -21,13 +21,13 @@ sys.path.insert(0, os.path.abspath('../python_extensions'))
 # -- Project information -----------------------------------------------------
 
 project = 'PyGmod'
-copyright = '2018, javabird25 (Protocs)'
+copyright = '2019, javabird25 (Protocs)'
 author = 'javabird25 (Protocs)'
 
 # The short X.Y version
-version = '0.10'
+version = '0.11'
 # The full version, including alpha/beta/rc tags
-release = '0.10-alpha'
+release = '0.11-alpha'
 
 
 # -- General configuration ---------------------------------------------------

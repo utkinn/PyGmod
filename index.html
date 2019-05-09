@@ -1,19 +1,17 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Welcome to PyGmod’s documentation! &#8212; PyGmod 0.10-alpha documentation</title>
+    <meta charset="utf-8" />
+    <title>Welcome to PyGmod’s documentation! &#8212; PyGmod 0.11-alpha documentation</title>
     <link rel="stylesheet" href="_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -26,12 +24,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="getting_started.html" title="Getting Started"
              accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PyGmod 0.10-alpha documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="#">PyGmod 0.11-alpha documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -69,8 +64,8 @@ the possibility to create addons for Garry’s Mod with Python 3 programming lan
 </li>
 <li class="toctree-l1"><a class="reference internal" href="for_addon_developers/tutorial2.html">Addon creation tutorial: part 2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Module Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/lua.html"><code class="docutils literal notranslate"><span class="pre">lua</span></code> - Lua interoperability</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/luanamespace.html"><code class="docutils literal notranslate"><span class="pre">luanamespace</span></code> - all Lua definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/lua.html"><code class="docutils literal notranslate"><span class="pre">pygmod.lua</span></code> - Lua interoperability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/api.html"><code class="docutils literal notranslate"><span class="pre">pygmod.gmodapi</span></code> - all Garry’s Mod Lua definitions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/internal.html">Internal modules</a></li>
 </ul>
 </li>
@@ -89,6 +84,11 @@ the possibility to create addons for Garry’s Mod with Python 3 programming lan
 <li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/building.html#instructions">Instructions</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="for_pygmod_developers/running_tests.html">Running Unit tests</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/running_tests.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/running_tests.html#instructions">Instructions</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="for_pygmod_developers/building_docs.html">Building documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/building_docs.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="for_pygmod_developers/building_docs.html#instructions">Instructions</a></li>
@@ -100,23 +100,21 @@ the possibility to create addons for Garry’s Mod with Python 3 programming lan
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference/internal.html">Internal modules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/internal/loader.html"><code class="docutils literal notranslate"><span class="pre">loader</span></code> - addon loader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/internal/luastack.html"><code class="docutils literal notranslate"><span class="pre">luastack</span></code> - Lua Stack manipulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/internal/streams.html"><code class="docutils literal notranslate"><span class="pre">streams</span></code> - I/O to Garry’s Mod</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/internal/luastack.html"><code class="docutils literal notranslate"><span class="pre">_luastack</span></code> - Lua Stack manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/internal/streams.html"><code class="docutils literal notranslate"><span class="pre">pygmod._streams</span></code> - I/O to Garry’s Mod</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <hr class="docutils" />
 <ul class="simple">
-<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
 <div class="section" id="useful-links">
 <h2>Useful links<a class="headerlink" href="#useful-links" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><a class="reference external" href="https://github.com/javabird25/PyGmod">Contribute on GitHub</a></li>
-<li><a class="reference external" href="https://discord.gg/aAs4qrj">Join the Discord server</a></li>
+<li><p><a class="reference external" href="https://github.com/javabird25/PyGmod">Contribute on GitHub</a></p></li>
+<li><p><a class="reference external" href="https://discord.gg/aAs4qrj">Join the Discord server</a></p></li>
 </ul>
 </div>
 </div>
@@ -154,8 +152,6 @@ the possibility to create addons for Garry’s Mod with Python 3 programming lan
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -171,17 +167,14 @@ the possibility to create addons for Garry’s Mod with Python 3 programming lan
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="getting_started.html" title="Getting Started"
              >next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PyGmod 0.10-alpha documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="#">PyGmod 0.11-alpha documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2018, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+        &#169; Copyright 2019, javabird25 (Protocs).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0.
     </div>
   </body>
 </html>

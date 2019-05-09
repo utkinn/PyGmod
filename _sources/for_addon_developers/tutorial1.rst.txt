@@ -45,13 +45,13 @@ The folder structure should look like:
 -----------------------------------
 
 When PyGmod sees your addon each time you start a new game in Garry's Mod, PyGmod runs
-``(your addon folder name, "hello_world" in our case)\python\__shared_autorun__\__init__.py``. As you can see,
-we have to create ``__init__.py`` in ``__shared_autorun__`` folder to do anything useful.
+``(your addon folder name, "hello_world" in our case)\python\__shared_autorun__\__init__.py``.
+So, we have to create a file ``__init__.py`` in ``__shared_autorun__`` folder.
 
 A note about the game states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-PyGmod runs initialization scripts for each **game realm**.
+PyGmod runs autorun scripts for each **game realm**.
 
 Garry's Mod game session consists of two realms: the **client** realm and the **server** realm.
 
@@ -62,25 +62,25 @@ The **server** state handles things on the server; it's the only state used on D
 This handles things like telling entities what to do, controlling weapons/players and all game logic
 (what happens when and how in game modes).
 
-First, PyGmod runs ``__shared_autorun__.__init__`` and ``__server_autorun__.__init__`` for **server**, then it runs
-``__shared_autorun__.__init__`` and ``__client_autorun__.__init__`` for **client**. As you can see,
-``__shared_autorun__.__init__`` is ran two times: in **server** and in **client**.
+First, PyGmod runs ``__shared_autorun__.__init__`` and ``__server_autorun__.__init__`` for the **server**, then it runs
+``__shared_autorun__.__init__`` and ``__client_autorun__.__init__`` for the **client**. As you can see,
+``__shared_autorun__.__init__`` is ran two times: in the **server** and in the **client**.
 
-Realms are independent, so, for example, if you create a global variable in the client realm, you won't be available
-to immediately access it from the server realm. You can use :mod:`gmod.net` module
-to connect the realms and use :mod:`gmod.realms` to determine the current realm.
+Realms are independent, so, for example, if you create a global variable in the client realm, you won't be able
+to access it from the server realm. You can use Garry's Mod's
+`net library <http://wiki.garrysmod.com/page/Net_Library_Usage>` to establish communication between the realms.
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1. Open **Notepad**.
-2. Paste this::
+2. Paste this code::
 
     print('Hello world!')
 
 3. Go to ``File -> Save as...`` and find ``hello_world\python\__shared_autorun__\`` folder.
 4. Open **File type** box and select **All files (\*.\*)** option instead of **Text document (\*.txt)**.
 5. Change **Encoding** to **UTF-8**.
-6. Type ``__init__.py`` to **File name** field and click **Save**.
+6. Type ``__init__.py`` in **File name** field and click **Save**.
 
 .. image:: addon_tutorial_images/init_script.png
 

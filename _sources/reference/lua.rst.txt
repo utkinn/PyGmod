@@ -1,66 +1,149 @@
-``lua`` - Lua interoperability
-==============================
+``pygmod.lua`` - Lua interoperability
+=====================================
 
-.. automodule:: gmod.lua
-    :members:
+Access to the Lua environment. Can be used for getting and setting arbitrary variables,
+calling Lua functions and manipulating tables and objects.
 
-    .. class:: LuaObject
+.. data:: G
 
-        Proxy to Lua values.
+    Lua global namespace. Same as ``_G`` in Lua.
 
-        Can be converted to a Python object with these type conversions:
+    ::
 
-        #. :class:`int`, :class:`float`
-        #. :class:`bool`
-        #. :class:`str`
+        MsgN = G.MsgN
+        MsgN('Hi there!')
 
-        For example::
+        ply = G.Player(1)
+        # Use "._." where you would use ":" in Lua
+        ply._.Extinguish()
 
-            print(bool(G.CLIENT))  # True/False
+        # Fooling everyone that we are in neither server nor client realm >:-D
+        G.CLIENT = False
+        G.SERVER = False
 
-        If this ``LuaObject`` instance is pointing to a callable table or function, you can call it
-        with passing arguments of primitive Python types such as :class:`int`, :class:`float`, :class:`bool`,
-        :class:`str`, :class:`bytes` and other ``LuaObject``\ s.
+        # Creating variables with exotic names
+        G['!!!'] = 123
 
-        If the callable returns anything, calling of ``LuaObject`` will give another ``LuaObject``\ s which point to
-        the returned values.
+    .. note::
 
-        The *only* publicly available way of getting ``LuaObject`` instances is indexing the :data:`G` singleton.
+        Members which names start with ``_``
+        should be accessed with the subscription syntax::
 
-        .. warning::
+            # Won't work
+            G._foo
+            # Will work
+            G['_foo']
 
-            Do not create ``LuaObject`` instances by yourself. Use the :data:`G` indexation instead.
+.. class:: Table
 
-        Example of using ``LuaObject``\ s::
+    Class for representing Lua tables.
 
-            chat = G.chat  # Getting 'chat' namespace
-            add_text = chat.AddText  # Getting 'chat.AddText' function
-            white_color = G.Color(255, 255, 255, 255)
+    :class:`Table` has a multifunctional constructor::
 
-            first_player = G.player.GetAll()[1]
+        # Creating an empty table
+        t = Table()
 
-            add_text(white_color, "First player's nick is " + first_player._.Nick(first_player))
-            # "._." is a PyGmod idiom which is an equivalent of a colon call (Player:Nick()).
+        # Converting a dict to a table
+        d = {'a': 1, 'b': 2}
+        t = Table(d)
 
-        .. attribute:: _type_
+        # Converting an iterable to a table
+        i = [1, 2, 3]
+        t = Table(i)
 
-            Returns the :class:`luastack.ValueType` of the held value.
+    Constructor which takes :class:`int` as argument is intended for internal use.
+    More specifically, it wraps a table referenced by :func:`_luastack.reference_create`
 
-        .. attribute:: _type_name_
+    .. note::
 
-            Returns the :class:`str` representation of the type of the held value.
+        Members which names start with ``_``
+        should be accessed with the subscription syntax::
 
-    .. data:: G
+            # Won't work
+            Table({"_foo": 1})._foo
+            # Will work
+            Table({"_foo": 1})['_foo']
 
-        Lua Global table. Can be indexed to get and set :class:`LuaObject` instances.
+    If the undelying table's metatable has ``__call`` function, this object can be called::
 
-        For example::
+        from gmod.api import setmetatable
 
-            MsgN = G.MsgN
-            MsgN('Hi there!')
+        tbl = Table()
 
-            # Fooling everyone that we are in neither server nor client realm >:-D
-            G.CLIENT = False
-            G.SERVER = False
+        def __call(self):
+            print("hi")
 
-            G['!!!'] = 123  # To get and set members with exotic names
+        setmetatable(tbl, Table({"__call": __call}))
+        tbl()  # Prints "hi"
+
+    :class:`Table` objects can be iterated like dictionaries::
+
+        # Iterating through keys
+        for k in tbl:
+            ...
+        for k in tbl.keys():
+            ...
+
+        # Iterating through values
+        for v in tbl.values():
+            ...
+
+        # Iterating through keys and values
+        for k, v in tbl.items():
+            ...
+
+    A :class:`Table` object can be converted to a dictionary:
+
+    >>> from lua import eval_lua
+    >>> tbl = eval_lua("{a = 1, b = 2, c = 3}")
+    >>> print(dict(tbl))
+    {'a': 1, 'b': 2, 'c': 3}
+
+    .. method:: keys()
+
+        Returns a keys iterator for this table. Same as ``iter(table)``.
+
+    .. method:: values()
+
+        Returns a values iterator for this table.
+
+        >>> tbl = Table({'a': 1, 'b': 2, 'c': 3})
+        >>> for v in tbl.values():
+        ...    print(v)
+        ...
+        1
+        2
+        3
+
+    .. method:: items()
+
+        Returns a key-value pairs iterator for this table.
+
+        >>> tbl = Table({'a': 1, 'b': 2, 'c': 3})
+        >>> for k, v in tbl.items():
+        ...    print(k, v)
+        ...
+        a 1
+        b 2
+        c 3
+
+
+.. function:: exec_lua(code: str) -> None
+
+    Runs a string of Lua code.
+
+    ::
+
+        exec_lua("print(jit.version)")
+        # "LuaJIT 2.0.4" will be printed to the console
+
+.. function:: eval_lua(code: str) -> object
+
+    Evaluates a Lua expression and returns the result.
+
+    >>> print(eval_lua("function() return 123 end")())
+    123
+
+.. exception:: LuaError
+
+    Raised when a Lua error occurs while running some Lua code in Python.

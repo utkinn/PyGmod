@@ -1,24 +1,22 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>luastack - Lua Stack manipulation &#8212; PyGmod 0.10-alpha documentation</title>
+    <meta charset="utf-8" />
+    <title>_luastack - Lua Stack manipulation &#8212; PyGmod 0.11-alpha documentation</title>
     <link rel="stylesheet" href="../../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="streams - I/O to Garry’s Mod" href="streams.html" />
-    <link rel="prev" title="loader - addon loader" href="loader.html" /> 
+    <link rel="next" title="pygmod._streams - I/O to Garry’s Mod" href="streams.html" />
+    <link rel="prev" title="Internal modules" href="../internal.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,15 +25,12 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="streams.html" title="streams - I/O to Garry’s Mod"
+          <a href="streams.html" title="pygmod._streams - I/O to Garry’s Mod"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="loader.html" title="loader - addon loader"
+          <a href="../internal.html" title="Internal modules"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">PyGmod 0.10-alpha documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">PyGmod 0.11-alpha documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../reference.html" >Module Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../internal.html" accesskey="U">Internal modules</a> &#187;</li> 
       </ul>
@@ -47,24 +42,7 @@
           <div class="body" role="main">
             
   <div class="section" id="luastack-lua-stack-manipulation">
-<h1><code class="docutils literal notranslate"><span class="pre">luastack</span></code> - Lua Stack manipulation<a class="headerlink" href="#luastack-lua-stack-manipulation" title="Permalink to this headline">¶</a></h1>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">luastack</span></code> is not a part of the <code class="docutils literal notranslate"><span class="pre">gmod</span></code> package. So, instead of:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod.luastack</span> <span class="k">import</span> <span class="o">*</span>
-</pre></div>
-</div>
-<p>or:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod</span> <span class="k">import</span> <span class="o">*</span>
-<span class="c1"># Trying to use luastack</span>
-</pre></div>
-</div>
-<p><em>you should use</em>:</p>
-<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">luastack</span> <span class="k">import</span> <span class="o">*</span>
-<span class="c1"># Using luastack</span>
-</pre></div>
-</div>
-</div>
+<h1><code class="docutils literal notranslate"><span class="pre">_luastack</span></code> - Lua Stack manipulation<a class="headerlink" href="#luastack-lua-stack-manipulation" title="Permalink to this headline">¶</a></h1>
 <p>This module contains functions for manipulating the Lua stack. The lowest level of Garry’s Mod Lua interoperability.</p>
 <div class="section" id="lua-stack-description">
 <h2>Lua Stack description<a class="headerlink" href="#lua-stack-description" title="Permalink to this headline">¶</a></h2>
@@ -73,32 +51,25 @@ Each element in this stack represents a Lua value (<code class="docutils literal
 <p>For convenience, most query operations in the API do not follow a strict stack discipline.
 Instead, they can refer to any element in the stack by using an index:</p>
 <ul class="simple">
-<li>A positive index represents an absolute stack position (starting at <strong>1</strong>)</li>
-<li>A negative index represents an offset relative to the top of the stack.</li>
+<li><p>A positive index represents an absolute stack position (starting at <strong>1</strong>)</p></li>
+<li><p>A negative index represents an offset relative to the top of the stack.</p></li>
 </ul>
 <p>More specifically, if the stack has <strong>n</strong> elements, then index <strong>1</strong> represents the first element
 (that is, the element that was pushed onto the stack first) and index <strong>n</strong> represents the last element;
 index <strong>-1</strong> also represents the last element (that is, the element at the top)
 and index <strong>-n</strong> represents the first element.
 We say that an index is valid if it lies between <strong>1</strong> and the stack top (that is, if <strong>1 ≤ abs(index) ≤ top</strong>).</p>
-<dl class="data">
-<dt id="IN_GMOD">
-<code class="descname">IN_GMOD</code><a class="headerlink" href="#IN_GMOD" title="Permalink to this definition">¶</a></dt>
-<dd><p>Boolean constant which is <code class="docutils literal notranslate"><span class="pre">True</span></code> if PyGmod system is running during a Garry’s Mod session.
-This constant is used in PyGmod libraries for preventing some code from executing when generating documentation.</p>
-</dd></dl>
-
 <dl class="var">
-<dt id="_CPPv33lua">
-<span id="_CPPv23lua"></span><span id="lua__ILuaBaseP"></span>ILuaBase *<code class="descname">lua</code><a class="headerlink" href="#_CPPv33lua" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Pointer to Lua Stack C++ object. Not available to Python.</p>
-<p>Being set by <a class="reference internal" href="#_CPPv35setupP8ILuaBase" title="setup"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">setup()</span></code></a>.</p>
+<dt id="_CPPv43lua">
+<span id="_CPPv33lua"></span><span id="_CPPv23lua"></span><span id="lua__ILuaBaseP"></span>ILuaBase *<code class="descname">lua</code><a class="headerlink" href="#_CPPv43lua" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Pointer to Lua Stack C++ object. Not accessible from Python.</p>
+<p>Being set by <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">init()</span></code>.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv35setupP8ILuaBase">
-<span id="_CPPv25setupP8ILuaBase"></span><span id="setup__ILuaBaseP"></span>void <code class="descname">setup</code><span class="sig-paren">(</span>ILuaBase *<em>lua</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv35setupP8ILuaBase" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the global lua pointer and <a class="reference internal" href="#IN_GMOD" title="IN_GMOD"><code class="xref py py-data docutils literal notranslate"><span class="pre">IN_GMOD</span></code></a>.</p>
+<dt id="init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>lua_base_ptr: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the internal Lua state pointer.</p>
 </dd></dl>
 
 </div>
@@ -113,296 +84,90 @@ this result is equal to the number of elements in the stack (and so <strong>0</s
 </dd></dl>
 
 <dl class="function">
-<dt id="equal">
-<code class="descname">equal</code><span class="sig-paren">(</span><em>a: int</em>, <em>b: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#equal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the two values in acceptable indices <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are equal,
-following the semantics of the Lua <code class="docutils literal notranslate"><span class="pre">==</span></code> operator (that is, may call metamethods).
-Otherwise returns <code class="docutils literal notranslate"><span class="pre">False</span></code>. Also returns <code class="docutils literal notranslate"><span class="pre">False</span></code> if any of the indices is non valid.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="raw_equal">
-<code class="descname">raw_equal</code><span class="sig-paren">(</span><em>a: int</em>, <em>b: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#raw_equal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the two values in acceptable indices
-<code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are primitively equal (that is, without calling metamethods).
-Otherwise returns <code class="docutils literal notranslate"><span class="pre">False</span></code>. Also returns <code class="docutils literal notranslate"><span class="pre">False</span></code> if any of the indices are non valid.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="insert">
-<code class="descname">insert</code><span class="sig-paren">(</span><em>destination_index: int</em><span class="sig-paren">)</span><a class="headerlink" href="#insert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Moves the top element into the given valid index, shifting up the elements above this index to open space.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="throw_error">
-<code class="descname">throw_error</code><span class="sig-paren">(</span><em>message: bytes</em><span class="sig-paren">)</span><a class="headerlink" href="#throw_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raises a Lua error with the given <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a> message.</p>
-<p>It also adds at the beginning of the message the file name and the line number where the error occurred,
-if this information is available.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="create_table">
 <code class="descname">create_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#create_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new empty table and pushes it onto the stack.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="push">
-<code class="descname">push</code><span class="sig-paren">(</span><em>stack_pos: int</em><span class="sig-paren">)</span><a class="headerlink" href="#push" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="push_special">
-<code class="descname">push_special</code><span class="sig-paren">(</span><em>type: int</em><span class="sig-paren">)</span><a class="headerlink" href="#push_special" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pushes a special value onto the stack. Use <a class="reference internal" href="#Special" title="Special"><code class="xref py py-class docutils literal notranslate"><span class="pre">Special</span></code></a> enum.</p>
+<dt id="push_globals">
+<code class="descname">push_globals</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#push_globals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pushes the globals table (aka _G) to the stack.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="push_nil">
-<code class="descname">push_nil</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#push_nil" title="Permalink to this definition">¶</a></dt>
+<code class="descname">push_nil</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#push_nil" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pushes a <code class="docutils literal notranslate"><span class="pre">nil</span></code> value onto the stack.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="push_number">
-<code class="descname">push_number</code><span class="sig-paren">(</span><em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#push_number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pushes a number <code class="docutils literal notranslate"><span class="pre">num</span></code> onto the stack.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="push_string">
-<code class="descname">push_string</code><span class="sig-paren">(</span><em>val: bytes</em><span class="sig-paren">)</span><a class="headerlink" href="#push_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pushes a <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a> object onto the stack.</p>
-<p>You can push <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;...&#39;</span>
-<span class="n">push_string</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="push_bool">
-<code class="descname">push_bool</code><span class="sig-paren">(</span><em>val: bool</em><span class="sig-paren">)</span><a class="headerlink" href="#push_bool" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pushes a boolean value <code class="docutils literal notranslate"><span class="pre">val</span></code> onto the stack.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="pop">
-<code class="descname">pop</code><span class="sig-paren">(</span><em>amt: int = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#pop" title="Permalink to this definition">¶</a></dt>
+<code class="descname">pop</code><span class="sig-paren">(</span><em>amt=1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#pop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pops <code class="docutils literal notranslate"><span class="pre">amt</span></code> elements from the stack.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="clear">
-<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#clear" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clears the stack (pops all values).</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="get_table">
-<code class="descname">get_table</code><span class="sig-paren">(</span><em>stack_pos: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#get_table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pushes onto the stack the value <code class="docutils literal notranslate"><span class="pre">t[k]</span></code>, where <code class="docutils literal notranslate"><span class="pre">t</span></code> is the value at the given valid index <code class="docutils literal notranslate"><span class="pre">stack_pos</span></code>
-and <code class="docutils literal notranslate"><span class="pre">k</span></code> is the value at the top of the stack.</p>
-<p>This function pops the key from the stack (putting the resulting value in its place).</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="get_field">
-<code class="descname">get_field</code><span class="sig-paren">(</span><em>stack_pos: int</em>, <em>name: bytes</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#get_field" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pushes onto the stack the value <code class="docutils literal notranslate"><span class="pre">t[name]</span></code>, where <code class="docutils literal notranslate"><span class="pre">t</span></code> is the value at the given valid index <code class="docutils literal notranslate"><span class="pre">stack_pos</span></code>.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="set_table">
-<code class="descname">set_table</code><span class="sig-paren">(</span><em>stack_pos: int</em><span class="sig-paren">)</span><a class="headerlink" href="#set_table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Does the equivalent to <code class="docutils literal notranslate"><span class="pre">t[k]</span> <span class="pre">=</span> <span class="pre">v</span></code>,
-where <code class="docutils literal notranslate"><span class="pre">t</span></code> is the value at the given valid index <code class="docutils literal notranslate"><span class="pre">stack_pos</span></code>,
-<code class="docutils literal notranslate"><span class="pre">v</span></code> is the value at the top of the stack, and <code class="docutils literal notranslate"><span class="pre">k</span></code> is the value just below the top.</p>
-<p>This function pops both the key and the value from the stack.</p>
+<code class="descname">get_field</code><span class="sig-paren">(</span><em>stack_index: int</em>, <em>name: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#get_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pushes onto the stack the value <code class="docutils literal notranslate"><span class="pre">t[name]</span></code>, where <code class="docutils literal notranslate"><span class="pre">t</span></code> is the value at the given valid index <code class="docutils literal notranslate"><span class="pre">stack_index</span></code>.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="set_field">
-<code class="descname">set_field</code><span class="sig-paren">(</span><em>stack_pos: int</em>, <em>name: bytes</em><span class="sig-paren">)</span><a class="headerlink" href="#set_field" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_field</code><span class="sig-paren">(</span><em>stack_index: int</em>, <em>name: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#set_field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does the equivalent to <code class="docutils literal notranslate"><span class="pre">t[k]</span> <span class="pre">=</span> <span class="pre">v</span></code>,
-where <code class="docutils literal notranslate"><span class="pre">t</span></code> is the value at the given valid index <code class="docutils literal notranslate"><span class="pre">stack_pos</span></code>
+where <code class="docutils literal notranslate"><span class="pre">t</span></code> is the value at the given valid index <code class="docutils literal notranslate"><span class="pre">stack_index</span></code>
 and <code class="docutils literal notranslate"><span class="pre">v</span></code> is the value at the top of the stack.</p>
 <p>This function pops the value from the stack.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="call">
-<code class="descname">call</code><span class="sig-paren">(</span><em>args: int</em>, <em>results: int</em><span class="sig-paren">)</span><a class="headerlink" href="#call" title="Permalink to this definition">¶</a></dt>
+<code class="descname">call</code><span class="sig-paren">(</span><em>args: int</em>, <em>results: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#call" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls a function.</p>
 <p>To call a function you must use the following protocol:</p>
 <ol class="arabic simple">
-<li>The function to be called is pushed onto the stack</li>
-<li>The arguments to the function are pushed in direct order; that is, the first argument is pushed first.</li>
-<li>You call this function; <code class="docutils literal notranslate"><span class="pre">args</span></code> is the number of arguments that you pushed onto the stack.</li>
+<li><p>The function to be called is pushed onto the stack</p></li>
+<li><p>The arguments to the function are pushed in direct order; that is, the first argument is pushed first.</p></li>
+<li><p>You call this function; <code class="docutils literal notranslate"><span class="pre">args</span></code> is the number of arguments that you pushed onto the stack.</p></li>
 </ol>
 <p>All arguments and the function value are popped from the stack when the function is called.
 The function results are pushed onto the stack when the function returns.
 The number of results is adjusted to <code class="docutils literal notranslate"><span class="pre">results</span></code>.
 The function results are pushed onto the stack in direct order (the first result is pushed first),
 so that after the call the last result is on the top of the stack.</p>
-<p>The following example shows how the host program can do the equivalent to this Lua code:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="s2">&quot;how&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Here it is with PyGmod’s luastack:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">push_special</span><span class="p">(</span><span class="n">Special</span><span class="o">.</span><span class="n">GLOBAL</span><span class="p">)</span>
-<span class="n">get_field</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>  <span class="c1"># function to be called</span>
-<span class="n">push_string</span><span class="p">(</span><span class="s2">&quot;how&quot;</span><span class="p">)</span>  <span class="c1"># 1st argument</span>
-<span class="n">get_field</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">)</span>  <span class="c1"># table to be indexed</span>
-<span class="n">get_field</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span>  <span class="c1"># push result of t.x (2nd arg)</span>
-<span class="n">remove</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># remove &#39;t&#39; from the stack</span>
-<span class="n">push_number</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span>  <span class="c1"># 3rd argument</span>
-<span class="n">call</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># call &#39;f&#39; with 3 arguments and 1 result</span>
-<span class="n">set_field</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>  <span class="c1"># set global &#39;a&#39;</span>
-</pre></div>
-</div>
-<p>Note that the code above is “balanced”: at its end, the stack is back to its original configuration.
-This is considered good programming practice.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="get_string">
-<code class="descname">get_string</code><span class="sig-paren">(</span><em>stack_pos: int = -1</em><span class="sig-paren">)</span> &#x2192; bytes<a class="headerlink" href="#get_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a> value of a string item at <code class="docutils literal notranslate"><span class="pre">stack_pos</span></code> index of the stack.</p>
-<p>Negative values can be used for indexing the stack from top.</p>
+<dt id="reference_create">
+<code class="descname">reference_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#reference_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new reference to an object on the top of the stack and pops that object.
+Returns the reference.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="get_number">
-<code class="descname">get_number</code><span class="sig-paren">(</span><em>stack_pos: int = -1</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#get_number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> value of a number item at <code class="docutils literal notranslate"><span class="pre">stack_pos</span></code> index of the stack.</p>
-<p>Negative values can be used for indexing the stack from top.</p>
+<dt id="reference_push">
+<code class="descname">reference_push</code><span class="sig-paren">(</span><em>ref: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#reference_push" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pushes the object which the reference <code class="docutils literal notranslate"><span class="pre">ref</span></code> points to, to the top of the stack.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="get_bool">
-<code class="descname">get_bool</code><span class="sig-paren">(</span><em>stack_pos: int = -1</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#get_bool" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the boolean value of a boolean item at <code class="docutils literal notranslate"><span class="pre">stack_pos</span></code> index of the stack.</p>
-<p>Negative values can be used for indexing the stack from top.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="create_ref">
-<code class="descname">create_ref</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#create_ref" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saves the value at the top of the stack to a reference, pops it and returns the reference ID.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="free_ref">
-<code class="descname">free_ref</code><span class="sig-paren">(</span><em>ref: int</em><span class="sig-paren">)</span><a class="headerlink" href="#free_ref" title="Permalink to this definition">¶</a></dt>
-<dd><p>Frees the reference with ID <code class="docutils literal notranslate"><span class="pre">ref</span></code>.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="push_ref">
-<code class="descname">push_ref</code><span class="sig-paren">(</span><em>ref: int</em><span class="sig-paren">)</span><a class="headerlink" href="#push_ref" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pushes the value saved in the reference with ID <code class="docutils literal notranslate"><span class="pre">ref</span></code> onto the stack.</p>
+<dt id="reference_free">
+<code class="descname">reference_free</code><span class="sig-paren">(</span><em>ref: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#reference_free" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frees the reference <code class="docutils literal notranslate"><span class="pre">ref</span></code>.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="get_type">
-<code class="descname">get_type</code><span class="sig-paren">(</span><em>stack_pos: int</em><span class="sig-paren">)</span> &#x2192; ValueType<a class="headerlink" href="#get_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns <a class="reference internal" href="#ValueType" title="ValueType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueType</span></code></a>
-enum member which corresponds to the type of the value at index <code class="docutils literal notranslate"><span class="pre">stack_pos</span></code> of the stack.</p>
+<code class="descname">get_type</code><span class="sig-paren">(</span><em>stack_pos: int</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#get_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of the type of the Lua value at the given stack index.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="get_type_name">
-<code class="descname">get_type_name</code><span class="sig-paren">(</span><em>type: ValueType</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#get_type_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a lowercase string representation of <code class="docutils literal notranslate"><span class="pre">type</span></code> type.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="is_type">
-<code class="descname">is_type</code><span class="sig-paren">(</span><em>stack_pos: int</em>, <em>type: ValueType</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#is_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the value’s type at index <code class="docutils literal notranslate"><span class="pre">stack_pos</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">type</span></code> argument.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="special-values">
-<h2>Special values<a class="headerlink" href="#special-values" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="Special">
-<em class="property">class </em><code class="descname">Special</code><span class="sig-paren">(</span><em>enum.enum</em><span class="sig-paren">)</span><a class="headerlink" href="#Special" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enum of special values. The only practically usable value is <a class="reference internal" href="#Special.GLOBAL" title="Special.GLOBAL"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Special.GLOBAL</span></code></a>.</p>
-<p>Special values can be pushed with <a class="reference internal" href="#push_special" title="push_special"><code class="xref py py-func docutils literal notranslate"><span class="pre">push_special()</span></code></a>.</p>
-<dl class="attribute">
-<dt id="Special.GLOBAL">
-<code class="descname">GLOBAL</code><a class="headerlink" href="#Special.GLOBAL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents the global Lua namespace (<code class="docutils literal notranslate"><span class="pre">_G</span></code>).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="Special.ENVIRONMENT">
-<code class="descname">ENVIRONMENT</code><a class="headerlink" href="#Special.ENVIRONMENT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents the environment table.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="Special.REGISTRY">
-<code class="descname">REGISTRY</code><a class="headerlink" href="#Special.REGISTRY" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents the registry table. More data can be found in
-<a class="reference external" href="https://www.lua.org/pil/27.3.1.html">Official Lua documentation</a>.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="value-types">
-<h2>Value types<a class="headerlink" href="#value-types" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="ValueType">
-<em class="property">class </em><code class="descname">ValueType</code><span class="sig-paren">(</span><em>enum.enum</em><span class="sig-paren">)</span><a class="headerlink" href="#ValueType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enum of Lua value types.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NIL</span><span class="p">,</span>
-<span class="n">BOOL</span><span class="p">,</span>
-<span class="n">LIGHTUSERDATA</span><span class="p">,</span>
-<span class="n">NUMBER</span><span class="p">,</span>
-<span class="n">STRING</span><span class="p">,</span>
-<span class="n">TABLE</span><span class="p">,</span>
-<span class="n">FUNCTION</span><span class="p">,</span>
-<span class="n">USERDATA</span><span class="p">,</span>
-<span class="n">THREAD</span><span class="p">,</span>
-
-<span class="c1"># UserData</span>
-<span class="n">ENTITY</span><span class="p">,</span>
-<span class="n">VECTOR</span><span class="p">,</span>
-<span class="n">ANGLE</span><span class="p">,</span>
-<span class="n">PHYSOBJ</span><span class="p">,</span>
-<span class="n">SAVE</span><span class="p">,</span>
-<span class="n">RESTORE</span><span class="p">,</span>
-<span class="n">DAMAGEINFO</span><span class="p">,</span>
-<span class="n">EFFECTDATA</span><span class="p">,</span>
-<span class="n">MOVEDATA</span><span class="p">,</span>
-<span class="n">RECIPIENTFILTER</span><span class="p">,</span>
-<span class="n">USERCMD</span><span class="p">,</span>
-<span class="n">SCRIPTEDVEHICLE</span><span class="p">,</span>
-
-<span class="c1"># Client Only</span>
-<span class="n">MATERIAL</span><span class="p">,</span>
-<span class="n">PANEL</span><span class="p">,</span>
-<span class="n">PARTICLE</span><span class="p">,</span>
-<span class="n">PARTICLEEMITTER</span><span class="p">,</span>
-<span class="n">TEXTURE</span><span class="p">,</span>
-<span class="n">USERMSG</span><span class="p">,</span>
-
-<span class="n">CONVAR</span><span class="p">,</span>
-<span class="n">IMESH</span><span class="p">,</span>
-<span class="n">MATRIX</span><span class="p">,</span>
-<span class="n">SOUND</span><span class="p">,</span>
-<span class="n">PIXELVISHANDLE</span><span class="p">,</span>
-<span class="n">DLIGHT</span><span class="p">,</span>
-<span class="n">VIDEO</span><span class="p">,</span>
-<span class="n">FILE</span>
-</pre></div>
-</div>
+<dt id="get_stack_val_as_python_obj">
+<code class="descname">get_stack_val_as_python_obj</code><span class="sig-paren">(</span><em>stack_index=-1</em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#get_stack_val_as_python_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a Lua value on the given index of the stack to a Python value and returns it.</p>
 </dd></dl>
 
 </div>
@@ -419,21 +184,19 @@ enum member which corresponds to the type of the value at index <code class="doc
             </a></p>
   <h3><a href="../../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">luastack</span></code> - Lua Stack manipulation</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">_luastack</span></code> - Lua Stack manipulation</a><ul>
 <li><a class="reference internal" href="#lua-stack-description">Lua Stack description</a></li>
 <li><a class="reference internal" href="#stack-manipulation">Stack manipulation</a></li>
-<li><a class="reference internal" href="#special-values">Special values</a></li>
-<li><a class="reference internal" href="#value-types">Value types</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="loader.html"
-                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">loader</span></code> - addon loader</a></p>
+  <p class="topless"><a href="../internal.html"
+                        title="previous chapter">Internal modules</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="streams.html"
-                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">streams</span></code> - I/O to Garry’s Mod</a></p>
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">pygmod._streams</span></code> - I/O to Garry’s Mod</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -447,8 +210,6 @@ enum member which corresponds to the type of the value at index <code class="doc
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -464,22 +225,19 @@ enum member which corresponds to the type of the value at index <code class="doc
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="streams.html" title="streams - I/O to Garry’s Mod"
+          <a href="streams.html" title="pygmod._streams - I/O to Garry’s Mod"
              >next</a> |</li>
         <li class="right" >
-          <a href="loader.html" title="loader - addon loader"
+          <a href="../internal.html" title="Internal modules"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">PyGmod 0.10-alpha documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">PyGmod 0.11-alpha documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../reference.html" >Module Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../internal.html" >Internal modules</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2018, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+        &#169; Copyright 2019, javabird25 (Protocs).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0.
     </div>
   </body>
 </html>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Getting Started for Addon Developers &#8212; PyGmod 0.11-alpha documentation</title>
+    <title>Running Unit tests &#8212; PyGmod 0.11-alpha documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -15,8 +15,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Addon creation tutorial: part 1" href="tutorial1.html" />
-    <link rel="prev" title="Getting Started" href="../getting_started.html" /> 
+    <link rel="next" title="Building documentation" href="building_docs.html" />
+    <link rel="prev" title="Building" href="building.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -25,10 +25,10 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="tutorial1.html" title="Addon creation tutorial: part 1"
+          <a href="building_docs.html" title="Building documentation"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../getting_started.html" title="Getting Started"
+          <a href="building.html" title="Building"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.11-alpha documentation</a> &#187;</li> 
       </ul>
@@ -39,10 +39,37 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="getting-started-for-addon-developers">
-<h1>Getting Started for Addon Developers<a class="headerlink" href="#getting-started-for-addon-developers" title="Permalink to this headline">¶</a></h1>
-<p>First, check out <a class="reference internal" href="tutorial1.html"><span class="doc">Addon development tutorial</span></a> to learn how to create simple addons.
-Then, see <a class="reference internal" href="../reference.html"><span class="doc">Module reference</span></a> to see the list of libraries PyGmod provides to you.</p>
+  <div class="section" id="running-unit-tests">
+<h1>Running Unit tests<a class="headerlink" href="#running-unit-tests" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://hub.docker.com/editions/community/docker-ce-desktop-windows">Docker Desktop for Windows</a></p></li>
+</ol>
+</div>
+<div class="section" id="instructions">
+<h2>Instructions<a class="headerlink" href="#instructions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="python-tests">
+<h3>Python tests<a class="headerlink" href="#python-tests" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p>Run in a command prompt from the repository root:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">f</span> <span class="n">python_tests</span><span class="o">.</span><span class="n">Dockerfile</span> <span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="c-tests">
+<h3>C++ tests<a class="headerlink" href="#c-tests" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p>Run in a command prompt from the repository root:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">f</span> <span class="n">cpp_tests</span><span class="o">.</span><span class="n">Dockerfile</span> <span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
 </div>
 
 
@@ -54,16 +81,29 @@ Then, see <a class="reference internal" href="../reference.html"><span class="do
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/docs-logo.png" alt="Logo"/>
             </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Running Unit tests</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#instructions">Instructions</a><ul>
+<li><a class="reference internal" href="#python-tests">Python tests</a></li>
+<li><a class="reference internal" href="#c-tests">C++ tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../getting_started.html"
-                        title="previous chapter">Getting Started</a></p>
+  <p class="topless"><a href="building.html"
+                        title="previous chapter">Building</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="tutorial1.html"
-                        title="next chapter">Addon creation tutorial: part 1</a></p>
+  <p class="topless"><a href="building_docs.html"
+                        title="next chapter">Building documentation</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/for_addon_developers/getting_started.rst.txt"
+      <li><a href="../_sources/for_pygmod_developers/running_tests.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -88,10 +128,10 @@ Then, see <a class="reference internal" href="../reference.html"><span class="do
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="tutorial1.html" title="Addon creation tutorial: part 1"
+          <a href="building_docs.html" title="Building documentation"
              >next</a> |</li>
         <li class="right" >
-          <a href="../getting_started.html" title="Getting Started"
+          <a href="building.html" title="Building"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.11-alpha documentation</a> &#187;</li> 
       </ul>

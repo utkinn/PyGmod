@@ -16,7 +16,7 @@ from pygmod import _streams, logging_config
 _streams.setup()
 logging_config.configure()
 
-from pygmod import lua, error_notif
+from pygmod import lua, _error_notif
 
 __all__ = ['main']
 
@@ -27,7 +27,7 @@ SHARED_PACKAGE = '__shared_autorun__'
 
 
 def handle_exception(exc_type, exc_value, tb):
-    error_notif.show()
+    _error_notif.show()
     logger.exception("Unhandled PyGmod exception", exc_info=(exc_type, exc_value, tb))
 
 
@@ -42,13 +42,13 @@ def try_import(addon_dir, pkg):
     except ImportError:
         pass
     except BaseException:
-        error_notif.show()
+        _error_notif.show()
         logger.exception("Exception in addon %r", addon_dir)
 
 
 def main():
     """Finishes the PyGmod initialization."""
-    error_notif.setup()
+    _error_notif.setup()
 
     logger.info('Loading addons...')
 

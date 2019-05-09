@@ -5,7 +5,7 @@ when an uncaught exception in PyGmod itself or PyGmod addon happens.
 
 import time
 
-from gmod.api import Material, surface, hook
+from pygmod.gmodapi import Material, surface, hook
 
 __all__ = ['setup', 'show']
 

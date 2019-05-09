@@ -27,13 +27,13 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
 
     for_pygmod_developers/getting_started
     for_pygmod_developers/building
+    for_pygmod_developers/running_tests
     for_pygmod_developers/building_docs
     for_pygmod_developers/how_it_works
     reference/internal
 
 ===================
 
-* :ref:`modindex`
 * :ref:`search`
 
 Useful links

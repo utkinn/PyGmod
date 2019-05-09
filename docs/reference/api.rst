@@ -1,40 +1,35 @@
-``luanamespace`` - all Lua definitions
-======================================
+``pygmod.gmodapi`` - all Garry's Mod Lua definitions
+====================================================
 
-Contains all names that are listed in `Garry's Mod Wiki <https://wiki.garrysmod.com>`_, that is, variables,
-functions, libraries, classes, etc, so you don't have to prepend ``lua.G`` before Lua names.
+Contains all variables, functions, libraries, classes, etc. that are listed in
+`Garry's Mod Wiki <https://wiki.garrysmod.com>`_.
 
-Best way to use it is import everything from it::
+The simplest way to use this module is to import everything from it::
 
-    from gmod.luanamespace import *
+    from pygmod.api import *
 
-And now you can write code that looks pretty much like Lua::
+And now you can write code that looks similar to Lua::
 
-    from gmod.lua import *
-    from gmod.luanamespace import *
+    from pygmod.api import *
 
     def init():
         print('Hello world')
 
-    hook.Add('Initialized', 'init', luafunction(init))
+    hook.Add('Initialized', 'init', init)
 
     def log_chat_to_console(sender, text, team_chat):
         print(sender._.Nick(), 'says:', text)
 
-    hook.Add('PlayerSay', 'logChatToConsole', luafunction(init))
+    hook.Add('PlayerSay', 'logChatToConsole', init)
 
-.. note:: Keep in mind that Python standard library has many of them already implemented.
-    Prefer using Python alternatives whenever possible.
+.. note:: Enums can not be accessed with this module. Use :data:`pygmod.lua.G` instead.
 
-.. note:: Enumerations are not available from this module. Use :data:`gmod.lua.G` to get them.
+.. note:: Creating variables in Python won't make them visible in Lua. Use :data:`pygmod.lua.G` to set values in Lua.
 
-.. note:: Creating variables in Python won't make them available in Lua. Use :data:`gmod.lua.G` to set values in Lua.
+Excluded definitions
+-----------------------
 
-Exceptions
-----------
-
-Some names are not accessible from this module for various reasons. You can still access them using :data:`gmod.lua.G`.
-Trying to access them anyway will raise :class:`NameError`, since they are not created in the module at all.
+Some definitions are not accessible from this module for various reasons. You can still access them with :data:`pygmod.lua.G`.
 
 Globals
 ^^^^^^^
@@ -42,15 +37,15 @@ Globals
 +-------------------------------+---------------------------+
 |             Name              |     Exclusion reason      |
 +===============================+===========================+
-| ``assert``                    | Python Keyword/name       |
-| ``next``                      | conflict                  |
-| ``print``                     |                           |
+| ``assert``                    | Python                    |
+| ``next``                      | keyword/builtin/module    |
+| ``print``                     | conflict                  |
 | ``type``                      |                           |
 +-------------------------------+---------------------------+
 | ``AddBackgroundImage``        | Menu-only function        |
-| ``CanAddServerToFavorite``    |                           |
-| ``CancelLoading``             |                           |
-| ``ChangeBackground``          |                           |
+| ``CanAddServerToFavorite``    | Neither Python nor Lua    |
+| ``CancelLoading``             | addons are able to        |
+| ``ChangeBackground``          | access the Menu realm     |
 | ``ClearBackgroundImages``     |                           |
 | ``ConsoleAutoComplete``       |                           |
 | ``DrawBackground``            |                           |
@@ -96,9 +91,9 @@ Libraries
 +-------------------------------+---------------------------+
 |             Name              |     Exclusion reason      |
 +===============================+===========================+
-| ``input``                     | Python Keyword/name       |
-| ``list``                      | conflict                  |
-| ``math``                      |                           |
+| ``input``                     | Python                    |
+| ``list``                      | keyword/builtin/module    |
+| ``math``                      | conflict                  |
 | ``os``                        |                           |
 +-------------------------------+---------------------------+
 | ``umsg``                      | Deprecated                |

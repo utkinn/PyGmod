@@ -9,5 +9,5 @@ This is the reference of the PyGmod libraries.
     :glob:
 
     reference/lua
-    reference/luanamespace
+    reference/api
     reference/internal

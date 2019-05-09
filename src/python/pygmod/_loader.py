@@ -11,10 +11,10 @@ import sys
 from os import path, listdir
 from logging import getLogger
 
-from pygmod import _streams, logging_config
+from pygmod import _streams, _logging_config
 
 _streams.setup()
-logging_config.configure()
+_logging_config.configure()
 
 from pygmod import lua, _error_notif
 

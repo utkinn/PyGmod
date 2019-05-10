@@ -49,7 +49,7 @@
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gmod.api</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="o">*</span>
 
 <span class="k">if</span> <span class="n">SERVER</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">new_player</span><span class="p">):</span>
@@ -82,7 +82,7 @@ When it’s loaded by Garry’s Mod’s addon system, the launcher activates
 <li><p>Appends <code class="docutils literal notranslate"><span class="pre">garrysmod\pygmod\</span></code> to <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.path" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.path</span></code></a>.</p></li>
 <li><p>Calls <code class="docutils literal notranslate"><span class="pre">init()</span></code> in <code class="xref py py-mod docutils literal notranslate"><span class="pre">_luastack</span></code>, thus setting the internal Lua stack pointer.</p></li>
 <li><p>Adds <a class="reference internal" href="../lua_reference.html"><span class="doc">functions for manipulating Python from Lua</span></a>.</p></li>
-<li><p>Calls <code class="docutils literal notranslate"><span class="pre">main()</span></code> in <code class="docutils literal notranslate"><span class="pre">loader.py</span></code>.</p></li>
+<li><p>Calls <code class="docutils literal notranslate"><span class="pre">main()</span></code> in <code class="docutils literal notranslate"><span class="pre">pygmod\_loader.py</span></code>.</p></li>
 <li><p>Saves the server Python subinterpreter for later use.</p></li>
 </ol>
 </div>
@@ -92,18 +92,18 @@ When it’s loaded by Garry’s Mod’s addon system, the launcher activates
 <p>Instead of initializing Python again, a subinterpreter is created and swapped to.</p>
 </div>
 </div>
-<div class="section" id="loader-py">
-<h3>4. <code class="docutils literal notranslate"><span class="pre">loader.py</span></code><a class="headerlink" href="#loader-py" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">loader.py</span></code> finishes the initialization.</p>
+<div class="section" id="pygmod-loader-py">
+<h3>4. <code class="docutils literal notranslate"><span class="pre">pygmod\_loader.py</span></code><a class="headerlink" href="#pygmod-loader-py" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">pygmod\_loader.py</span></code> finishes the initialization.</p>
 <ol class="arabic simple">
-<li><p>Redirects I/O to Garry’s Mod console with <code class="xref py py-mod docutils literal notranslate"><span class="pre">gmod._streams</span></code> I/O classes.</p></li>
+<li><p>Redirects I/O to Garry’s Mod console with <code class="xref py py-mod docutils literal notranslate"><span class="pre">pygmod._streams</span></code> I/O classes.</p></li>
 <li><p>Scans <code class="docutils literal notranslate"><span class="pre">addons\</span></code> directory for PyGmod addons and initializes them.</p></li>
 </ol>
 </div>
-<div class="section" id="lua-module">
-<h3>5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lua</span></code> module<a class="headerlink" href="#lua-module" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">Player()</span></code> returns <code class="xref py py-class docutils literal notranslate"><span class="pre">lua.Table</span></code> (for now, all userdata are represented as tables).
-<code class="xref py py-mod docutils literal notranslate"><span class="pre">lua</span></code> module is itself a wrapper over <code class="xref py py-mod docutils literal notranslate"><span class="pre">_luastack</span></code> module.</p>
+<div class="section" id="pygmod-lua-module">
+<h3>5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">pygmod.lua</span></code> module<a class="headerlink" href="#pygmod-lua-module" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Player()</span></code> returns <code class="xref py py-class docutils literal notranslate"><span class="pre">pygmod.lua.Table</span></code> (for now, all userdata are represented as tables).
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">pygmod.lua</span></code> module is itself a wrapper over <code class="xref py py-mod docutils literal notranslate"><span class="pre">_luastack</span></code> module.</p>
 </div>
 <div class="section" id="luastack-module">
 <h3>6. <code class="xref py py-mod docutils literal notranslate"><span class="pre">_luastack</span></code> module<a class="headerlink" href="#luastack-module" title="Permalink to this headline">¶</a></h3>
@@ -134,8 +134,8 @@ This is the most low-level way of interacting with Lua.</p>
 <li><a class="reference internal" href="#client">Client</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#loader-py">4. <code class="docutils literal notranslate"><span class="pre">loader.py</span></code></a></li>
-<li><a class="reference internal" href="#lua-module">5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lua</span></code> module</a></li>
+<li><a class="reference internal" href="#pygmod-loader-py">4. <code class="docutils literal notranslate"><span class="pre">pygmod\_loader.py</span></code></a></li>
+<li><a class="reference internal" href="#pygmod-lua-module">5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">pygmod.lua</span></code> module</a></li>
 <li><a class="reference internal" href="#luastack-module">6. <code class="xref py py-mod docutils literal notranslate"><span class="pre">_luastack</span></code> module</a></li>
 </ul>
 </li>

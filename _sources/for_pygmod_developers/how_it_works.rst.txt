@@ -16,7 +16,7 @@ Let's suppose we have a simple "Hello World" PyGmod addon::
 
 ``__init__.py``::
 
-    from gmod.api import *
+    from pygmod.gmodapi import *
 
     if SERVER:
         def greet(new_player):
@@ -52,7 +52,7 @@ Server
 #. Appends ``garrysmod\pygmod\`` to :data:`sys.path`.
 #. Calls ``init()`` in :mod:`_luastack`, thus setting the internal Lua stack pointer.
 #. Adds :doc:`functions for manipulating Python from Lua <../lua_reference>`.
-#. Calls ``main()`` in ``loader.py``.
+#. Calls ``main()`` in ``pygmod\_loader.py``.
 #. Saves the server Python subinterpreter for later use.
 
 Client
@@ -62,19 +62,19 @@ Client's routine is the same as server's except the step **2**.
 
 Instead of initializing Python again, a subinterpreter is created and swapped to.
 
-4. ``loader.py``
-^^^^^^^^^^^^^^^^
+4. ``pygmod\_loader.py``
+^^^^^^^^^^^^^^^^^^^^^^^^
 
-``loader.py`` finishes the initialization.
+``pygmod\_loader.py`` finishes the initialization.
 
-#. Redirects I/O to Garry's Mod console with :mod:`gmod._streams` I/O classes.
+#. Redirects I/O to Garry's Mod console with :mod:`pygmod._streams` I/O classes.
 #. Scans ``addons\`` directory for PyGmod addons and initializes them.
 
-5. :mod:`lua` module
-^^^^^^^^^^^^^^^^^^^^
+5. :mod:`pygmod.lua` module
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``Player()`` returns :class:`lua.Table` (for now, all userdata are represented as tables).
-:mod:`lua` module is itself a wrapper over :mod:`_luastack` module.
+``Player()`` returns :class:`pygmod.lua.Table` (for now, all userdata are represented as tables).
+:mod:`pygmod.lua` module is itself a wrapper over :mod:`_luastack` module.
 
 6. :mod:`_luastack` module
 ^^^^^^^^^^^^^^^^^^^^^^^^^^

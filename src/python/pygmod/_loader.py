@@ -3,7 +3,7 @@
 
 Here is what it does:
 
-#. Redirects I/O to Garry's Mod console with :mod:`gmod.streams` I/O classes.
+#. Redirects I/O to Garry's Mod console with :mod:`pygmod._streams` I/O classes.
 #. Scans ``addons\\`` directory for PyGmod addons and initializes them.
 """
 
@@ -16,7 +16,7 @@ from pygmod import _streams, _logging_config
 _streams.setup()
 _logging_config.configure()
 
-from pygmod import lua, _error_notif
+from pygmod import lua, _error_notif, _repl
 
 __all__ = ['main']
 
@@ -49,6 +49,7 @@ def try_import(addon_dir, pkg):
 def main():
     """Finishes the PyGmod initialization."""
     _error_notif.setup()
+    _repl.setup()
 
     logger.info('Loading addons...')
 

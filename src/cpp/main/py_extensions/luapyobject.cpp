@@ -15,8 +15,6 @@ LUA_FUNC(luapyobject_call) {
 		return 0;
 	}
 
-	PyRun_SimpleString("import _luastack; _luastack.stack_dump()");
-
 	int nArgs = LUA->Top() - 1;  // -1 because the userdata itself is also pushed as the first argument. The rest are the call arguments.
 	PyObject *argsTuple = PyTuple_New(nArgs);  // Creating a tuple for arguments
 	for (int i = 2; i <= LUA->Top(); i++) {  // Filling the tuple with arguments

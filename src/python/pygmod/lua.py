@@ -89,9 +89,7 @@ class BaseGetNamespace(ABC):
 
     def __getattr__(self, attr):
         if attr.startswith('_'):
-            super().__getattribute__(self, attr)
-            return
-
+            return super().__getattribute__(attr)
         return self._get(attr)
 
 
@@ -118,8 +116,6 @@ class LuaNamespace(BaseGetNamespace):
     @auto_pop
     def _get(self, name):
         self._push_namespace_object()
-        if not isinstance(name, str):
-            print("???", name)
         _luastack.get_field(-1, name)
         return _luastack.get_stack_val_as_python_obj()
 
@@ -155,9 +151,8 @@ class LuaNamespace(BaseGetNamespace):
     def __delattr__(self, attr):
         if attr.startswith('_'):
             super().__delattr__(attr)
-            return
-
-        self._del(attr)
+        else:
+            self._del(attr)
 
 
 class Globals(LuaNamespace):

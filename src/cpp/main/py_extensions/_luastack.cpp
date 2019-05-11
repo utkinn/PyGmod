@@ -59,7 +59,7 @@ Py_MODULE_FUNC(setField) {
 	if (!PyArg_ParseTuple(args, "is", &stackIndex, &name))
 		return NULL;
 
-	MS_LUA->GetField(stackIndex, name);
+	MS_LUA->SetField(stackIndex, name);
 
 	Py_RETURN_NONE;
 }
@@ -103,7 +103,7 @@ Py_MODULE_FUNC(call) {
 		Py_RETURN_NONE;
 	else {
 	    // Handling a Lua error by raising lua.LuaError
-		PyObject *luaModule = PyImport_ImportModule("lua");
+		PyObject *luaModule = PyImport_ImportModule("pygmod.lua");
 		PyObject *luaErrorExc = PyObject_GetAttrString(luaModule, "LuaError");
 		PyErr_SetString(luaErrorExc, MS_LUA->GetString());
 		Py_DECREF(luaErrorExc);

@@ -2,10 +2,12 @@
 #include "luapyobject.hpp"
 #include "stack_utils.hpp"
 
-static int luapyobject_call(lua_State* state) {
-    // Getting the function PyObject
-	UserData* ud = reinterpret_cast<UserData*>(LUA->GetUserdata(1));
-	PyObject* func = reinterpret_cast<PyObject*>(ud->data);
+#define LUA_FUNC(name) static int name(lua_State *state)
+
+LUA_FUNC(luapyobject_call) {
+	// Getting the function PyObject
+	UserData *ud = reinterpret_cast<UserData *>(LUA->GetUserdata(1));
+	PyObject *func = reinterpret_cast<PyObject *>(ud->data);
 
 	if (!PyCallable_Check(func)) {
 		LUA->ArgError(1, "this Python object is not callable");
@@ -15,8 +17,8 @@ static int luapyobject_call(lua_State* state) {
 
 	PyRun_SimpleString("import _luastack; _luastack.stack_dump()");
 
-	int nArgs = LUA->Top() - 1;  // ???
-	PyObject* argsTuple = PyTuple_New(nArgs);  // Creating a tuple for arguments
+	int nArgs = LUA->Top() - 1;  // -1 because the userdata itself is also pushed as the first argument. The rest are the call arguments.
+	PyObject *argsTuple = PyTuple_New(nArgs);  // Creating a tuple for arguments
 	for (int i = 2; i <= 2 + nArgs; i++) {  // Filling the tuple with arguments
 		PyTuple_SetItem(argsTuple, i - 2, getStackValAsPythonObj(LUA, i));
 	}

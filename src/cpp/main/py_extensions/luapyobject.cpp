@@ -22,8 +22,13 @@ LUA_FUNC(luapyobject_call) {
 	for (int i = 2; i <= 2 + nArgs; i++) {  // Filling the tuple with arguments
 		PyTuple_SetItem(argsTuple, i - 2, getStackValAsPythonObj(LUA, i));
 	}
-	LUA->Pop(nArgs);  // Popping the arguments
-	PyObject* result = PyObject_CallObject(func, argsTuple);  // Calling the function
+	PyObject *result = PyObject_CallObject(func, argsTuple);  // Calling the function
+	if (result == NULL) {  // If result == NULL, func has thrown an exception
+		PyErr_Print();
+		Py_DECREF(argsTuple);
+		LUA->ThrowError("Exception in Python function");
+		return 0;
+	}
 	pushPythonObj(LUA, result);  // Pushing the result to the stack
 
 	Py_DECREF(argsTuple);

@@ -231,7 +231,7 @@ class MethodCallNamespace(BaseGetNamespace):
         self._tbl = tbl
 
     def _get(self, name):
-        return partial(self._tbl)
+        return partial(self._tbl[name], self._tbl)
 
 
 class Table(Callable, LuaNamespace):

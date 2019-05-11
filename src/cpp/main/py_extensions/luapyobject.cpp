@@ -36,12 +36,23 @@ LUA_FUNC(luapyobject_call) {
 	return 1;
 }
 
+LUA_FUNC(luapyobject_gc) {
+	// Here we decrease the reference count, as we previously increased it in pushPythonObj()
+	UserData *ud = reinterpret_cast<UserData *>(LUA->GetUserdata(1));
+	PyObject *obj = reinterpret_cast<PyObject *>(ud->data);
+	Py_DECREF(obj);
+	return 0;
+}
+
 // Creates a metatable for representing Python objects in Lua.
 void createLuaPyObjectMetatable(ILuaBase *lua) {
 	lua->CreateMetaTableType("PyObject", LUA_TYPE_PYOBJECT);
 
 	lua->PushCFunction(luapyobject_call);
 	lua->SetField(-2, "__call");
+
+	lua->PushCFunction(luapyobject_gc);
+	lua->SetField(-2, "__gc");
 
 	lua->Pop();
 }

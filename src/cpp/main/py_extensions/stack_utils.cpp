@@ -22,6 +22,9 @@ void pushPythonObj(ILuaBase *lua, PyObject *obj) {
 		Py_DECREF(refPyInt);
 	}
 	else {  // Pushing a userdata with PyObject
+		Py_INCREF(obj);  // This is necessary because otherwise that Python object could be deallocated even though being stored in our userdata.
+						 // By increasing the reference count we tell Python that this object is still in use 
+		                 // and therefore shouldn't be destroyed by the garbage collector.
 		UserData *pyObjectUserdataContainer = reinterpret_cast<UserData *>(lua->NewUserdata(sizeof(UserData)));
 		pyObjectUserdataContainer->data = reinterpret_cast<void *>(obj);
 		pyObjectUserdataContainer->type = LUA_TYPE_PYOBJECT;

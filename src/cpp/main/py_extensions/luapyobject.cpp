@@ -19,7 +19,7 @@ LUA_FUNC(luapyobject_call) {
 
 	int nArgs = LUA->Top() - 1;  // -1 because the userdata itself is also pushed as the first argument. The rest are the call arguments.
 	PyObject *argsTuple = PyTuple_New(nArgs);  // Creating a tuple for arguments
-	for (int i = 2; i <= 2 + nArgs; i++) {  // Filling the tuple with arguments
+	for (int i = 2; i <= LUA->Top(); i++) {  // Filling the tuple with arguments
 		PyTuple_SetItem(argsTuple, i - 2, getStackValAsPythonObj(LUA, i));
 	}
 	PyObject *result = PyObject_CallObject(func, argsTuple);  // Calling the function

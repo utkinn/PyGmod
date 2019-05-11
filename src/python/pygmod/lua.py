@@ -289,7 +289,7 @@ class Table(Callable, LuaNamespace):
     #     ...
 
     def __call__(self, *args):
-        if Globals().getmetatable(self).__call is None:
+        if G.getmetatable(self)["__call"] is None:
             raise ValueError("this table's metatable "
                              "does not have __call method")
 

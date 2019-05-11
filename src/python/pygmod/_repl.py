@@ -51,8 +51,10 @@ def create_output(fr):
     text._.SetPos(7, 25)
     text._.SetSize(ScrW() // 2 - 15, ScrH() // 2 - 65)
     text._.InsertColorChange(255, 255, 255, 255)
-    text._.AppendText('Python ' + sys.version + '\n' +
-                      'Type "help", "copyright", "credits" or "license" for more information.\n')
+    text._.AppendText(
+        'Python ' + sys.version + '\n' +
+        'Type "help", "copyright", "credits" or "license" for more information.\n'
+    )
 
     def layout(self, *_):
         self._.SetFontInternal('DebugFixed')
@@ -106,12 +108,13 @@ def open_repl(*_):
     submit = create_submit_button(fr)
 
     cons = PyGmodREPL(fr, text)
-    cons.runcode('from gmod.luanamespace import *')
+    cons.runcode('from pygmod.gmodapi import *')
 
     replace_stdout(fr, text)
 
     def enter(*_):
-        text._.AppendText(('>>> ' if not cons.buffer else '... ') + inp._.GetText() + '\n')
+        text._.AppendText(
+            ('>>> ' if not cons.buffer else '... ') + inp._.GetText() + '\n')
 
         input_complete = not cons.push(inp._.GetText())
         prompt_lbl._.SetText('>>>' if input_complete else '. . .')

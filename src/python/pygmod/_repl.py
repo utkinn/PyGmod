@@ -1,3 +1,4 @@
+import traceback
 from code import InteractiveConsole
 from io import TextIOBase
 import sys
@@ -34,6 +35,29 @@ class PyGmodREPL(InteractiveConsole):
             super().runcode(code)
         except SystemExit:  # Closing the console on exit() call
             self.frame._.Close()
+
+    def showtraceback(self):
+        self.write(traceback.format_exc())
+
+    def showsyntaxerror(self, filename=None):
+        # Code copied from code.py
+        exc_type, value, tb = sys.exc_info()
+        sys.last_type = exc_type
+        sys.last_value = value
+        sys.last_traceback = tb
+        if filename and exc_type is SyntaxError:
+            # Work hard to stuff the correct filename in the exception
+            try:
+                msg, (dummy_filename, lineno, offset, line) = value.args
+            except ValueError:
+                # Not the format we expect; leave it alone
+                pass
+            else:
+                # Stuff in the right filename
+                value = SyntaxError(msg, (filename, lineno, offset, line))
+                sys.last_value = value
+        lines = traceback.format_exception_only(exc_type, value)
+        self.write(''.join(lines))
 
 
 def create_frame():

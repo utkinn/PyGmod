@@ -111,6 +111,7 @@ def create_input_field(fr):
     inp._.SetPos(35, ScrH() // 2 - 30)
     inp._.SetSize(ScrW() // 2 - 80, 20)
     inp._.SetFont('DebugFixed')
+    inp._.RequestFocus()
 
     return inp
 

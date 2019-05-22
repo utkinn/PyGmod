@@ -2,16 +2,12 @@
 #include "_luastack.hpp"
 #include <GarrysMod/Lua/Interface.h>
 #include "stack_utils.hpp"
+#include "realms.hpp"
 
 // Defining a custom Lua value type for Python objects in Lua
 #define LUA_TYPE_PYOBJECT (Type::COUNT + 1)
 
 using namespace GarrysMod::Lua;
-
-enum Realm {
-	CLIENT,
-	SERVER
-};
 
 // Macro for retrieving ILuaBase from the module state
 #define MS_LUA (*reinterpret_cast<ILuaBase**>(PyModule_GetState(module)))

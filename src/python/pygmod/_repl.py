@@ -13,8 +13,7 @@ class PyGmodReplOut(TextIOBase):
         self.text_entry = text_entry
 
     def write(self, s: str):
-        te_self = self.text_entry._
-        te_self.AppendText(s)
+        self.text_entry._.AppendText(s)
         return len(s)
 
 
@@ -25,10 +24,9 @@ class PyGmodREPL(InteractiveConsole):
         self.text_entry = text_entry
 
     def write(self, data):
-        te_self = self.text_entry._
-        te_self.InsertColorChange(255, 64, 64, 255)
-        te_self.AppendText(data)
-        te_self.InsertColorChange(255, 255, 255, 255)
+        self.text_entry._.InsertColorChange(255, 64, 64, 255)
+        self.text_entry._.AppendText(data)
+        self.text_entry._.InsertColorChange(255, 255, 255, 255)
 
     def runcode(self, code):
         try:

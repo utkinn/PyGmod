@@ -80,11 +80,6 @@ def create_output(fr):
         'Type "help", "copyright", "credits" or "license" for more information.\n'
     )
 
-    def layout(self, *_):
-        self._.SetFontInternal('DebugFixed')
-
-    text.PerformLayout = layout
-
     return text
 
 
@@ -139,7 +134,7 @@ def open_repl(*_):
 
     def enter(*_):
         text._.AppendText(
-            ('>>> ' if not cons.buffer else '... ') + inp._.GetText() + '\n')
+            ('>>> ' if not cons.buffer else '. . .  ') + inp._.GetText() + '\n')
 
         input_complete = not cons.push(inp._.GetText())
         prompt_lbl._.SetText('>>>' if input_complete else '. . .')

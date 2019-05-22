@@ -18,6 +18,7 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
     for_addon_developers/getting_started
     for_addon_developers/tutorial1
     for_addon_developers/tutorial2
+    python_console
     reference
     lua_reference
 

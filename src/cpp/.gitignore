@@ -1,0 +1,14 @@
+# CMake cache
+CMakeFiles
+CMakeCache.txt
+gmod-module-base-prefix
+cmake_install.cmake
+Makefile
+
+# Build products
+*.dll*
+*.lib
+*.ilk
+*.pdb
+*.exp
+*.cbp

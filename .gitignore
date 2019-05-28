@@ -1,19 +1,8 @@
-.vs
-*.obj
-python_extensions/build
-python_extensions/my_setup.py
-python_extensions/*/*.c
-python_extensions/*.cpp
-python_extensions/*/*.cpp
-python_extensions/*.h
-python_extensions/*/*.h
-*.pyd
-*log
-*.vcxproj.user
-*build
-*.pdb
-*.pyc
-*.idb
-*.iml
+# PyCharm
 .idea
-*.swp
+# Visual Studio
+.vs
+# Visual Studio CMake cache
+out/
+# Python Virtualenv
+venv

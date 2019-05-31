@@ -1,16 +1,17 @@
+import logging
+
 import pytest
 
 import _luastack
 from pygmod import lua
 
+logging.basicConfig(level=logging.DEBUG)
 
-# @pytest.fixture
-# def mock_luastack(mocker):
-#     mocker.patch("_luastack")
+
 @pytest.fixture(autouse=True)
 def luastack():
     yield
-    _luastack.reset_stack()
+    _luastack.stack = [_luastack.StackPad()]
 
 
 def test_auto_pop_from_empty_stack():
@@ -120,9 +121,53 @@ def test_lua_namespace_delattr_underscore(lua_namespace_instance):
     assert not hasattr(lua_namespace_instance, "_to_delete")
 
 
+def test_callable_constructor(mocker):
+    mock = mocker.Mock()
+    _luastack.stack.append(mock)
+    func = lua._lua_func_from_stack_top()
+    assert mock == _luastack.references[func._LuaObject__ref]
+
+
 def test_callable_returns_none(mocker):
-    mocker.patch("_luastack.call")
-    ...
+    def call(*_):
+        _luastack.pop(3 + 1)  # Arguments 1, 2, 3 + the function itself
+
+    mocker.patch("_luastack.call", side_effect=call)
+
+    mock = mocker.Mock()
+    _luastack.stack.append(mock)
+    func = lua._lua_func_from_stack_top()
+    returned_value = func(1, 2, 3)
+    assert returned_value is None
+
+
+def test_callable_returns_one_val(mocker):
+    def call(*_):
+        _luastack.pop(3 + 1)  # Arguments 1, 2, 3 + the function itself
+        _luastack.stack.append("returned value")
+
+    mocker.patch("_luastack.call", side_effect=call)
+
+    mock = mocker.Mock()
+    _luastack.stack.append(mock)
+    func = lua._lua_func_from_stack_top()
+    returned_value = func(1, 2, 3)
+    assert returned_value == "returned value"
+
+
+def test_callable_returns_many_vals(mocker):
+    def call(*_):
+        _luastack.pop(3 + 1)  # Arguments 1, 2, 3 + the function itself
+        _luastack.stack.append("returned value 1")
+        _luastack.stack.append("returned value 2")
+
+    mocker.patch("_luastack.call", side_effect=call)
+
+    mock = mocker.Mock()
+    _luastack.stack.append(mock)
+    func = lua._lua_func_from_stack_top()
+    returned_value = func(1, 2, 3)
+    assert returned_value == ("returned value 1", "returned value 2")
 
 
 def test_method_call_namespace(mocker):
@@ -140,5 +185,10 @@ def test_method_call_namespace(mocker):
     a["method"]()
     mock.assert_called_with(table)
 
+# TODO: Table tests: iterator classes
 
-# TODO: Table tests: Table class, iterator classes
+
+def test_table_from_dict():
+    d = {"a": 1, "_b": 2, "c": {"d": 0, "e": [1, 2, 3]}}
+    tbl = lua.Table(d)
+    assert _luastack.references[tbl._LuaObject__ref] == d

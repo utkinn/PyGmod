@@ -4,7 +4,7 @@
 #define LUA_FUNC(name) int name(lua_State *state)
 
 // Realm subinterpreters which are created by pygmod_run()
-PyThreadState *clientInterp, *serverInterp;
+PyThreadState *clientInterp = nullptr, *serverInterp = nullptr;
 
 // Eexcutes a string of Python code.
 LUA_FUNC(py_Exec) {
@@ -16,13 +16,19 @@ LUA_FUNC(py_Exec) {
 
 // Swaps the current subinterpreter to client.
 LUA_FUNC(py_SwitchToClient) {
-	PyThreadState_Swap(clientInterp);
+	if (clientInterp != nullptr)
+		PyThreadState_Swap(clientInterp);
+	else
+		LUA->ThrowError("client Python state is not available");
     return 0;
 }
 
 // Swaps the current subinterpreter to server.
 LUA_FUNC(py_SwitchToServer) {
-	PyThreadState_Swap(serverInterp);
+	if (serverInterp != nullptr)
+		PyThreadState_Swap(serverInterp);
+	else
+		LUA->ThrowError("server Python state is not available");
     return 0;
 }
 

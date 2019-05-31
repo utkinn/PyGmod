@@ -8,11 +8,11 @@
 
 #include <GarrysMod/Lua/Interface.h>
 
-DLL_IMPORT int pygmod_run(lua_State *state, bool client);
+DLL_IMPORT int pygmod_run(lua_State *state);
 DLL_IMPORT int pygmod_finalize(lua_State *state);
 
 GMOD_MODULE_OPEN() {
-    return pygmod_run(state, true);  // See bin_modules\main\main.cpp
+    return pygmod_run(state);  // See src\cpp\main\main.cpp
 }
 
 GMOD_MODULE_CLOSE() {

@@ -1,18 +1,9 @@
 #include <Python.h>
 #include "luapyobject.hpp"
 #include "stack_utils.hpp"
-#include "realms.hpp"
+#include "../realms.hpp"
 
 #define LUA_FUNC(name) static int name(lua_State *state)
-
-// Retrieves the current realm.
-Realm getCurrentRealm(lua_State *state) {
-    LUA->PushSpecial(SPECIAL_GLOB);
-    LUA->GetField(-1, "CLIENT");
-    bool client = LUA->GetBool();
-    LUA->Pop(2);
-    return client ? CLIENT : SERVER;
-}
 
 // Switches the Python interpreter to the current realm.
 void switchToCurrentRealm(lua_State *state) {

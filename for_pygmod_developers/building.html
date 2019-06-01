@@ -52,7 +52,8 @@
 <div class="section" id="instructions">
 <h2>Instructions<a class="headerlink" href="#instructions" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
-<li><p>Copy <code class="docutils literal notranslate"><span class="pre">lua_launcher\pygmod_launcher</span></code> to <code class="docutils literal notranslate"><span class="pre">garrysmod\addons</span></code>.</p></li>
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">src\lua\addons\pygmod_launcher</span></code> to <code class="docutils literal notranslate"><span class="pre">garrysmod\addons</span></code>.</p></li>
+<li><p>Copy the contents of <code class="docutils literal notranslate"><span class="pre">src\lua\lua\includes</span></code> to <code class="docutils literal notranslate"><span class="pre">garrysmod\lua\includes</span></code>. Confirm the overwriting of <code class="docutils literal notranslate"><span class="pre">init.lua</span></code>.</p></li>
 <li><p>Copy <code class="docutils literal notranslate"><span class="pre">src\python\pygmod</span></code> to <code class="docutils literal notranslate"><span class="pre">garrysmod\pygmod</span></code>.</p></li>
 <li><p>Open <strong>Developer Command Prompt for VS</strong> (most likely residing in your Start menu, folder <strong>Visual Studio</strong>),
 <code class="docutils literal notranslate"><span class="pre">cd</span></code> to <code class="docutils literal notranslate"><span class="pre">src\cpp</span></code>.</p></li>
@@ -72,8 +73,10 @@ from <code class="docutils literal notranslate"><span class="pre">src\cpp</span>
                           ├─ pygmod.dll
                           ├─ garrysmod\ ─┬─ addons\ ─── pygmod_launcher\ ─┬─ addon.json
                           │              │                                └─ lua\ ───── init.lua
-                          │              └─ lua\ ────── bin\ ─────────────┬─ gmsv_pygmod_win32.dll
-                          │                                               └─ gmcl_pygmod_win32.dll
+                          │              └─ lua\ ────┬─ bin\ ─────────────┬─ gmsv_pygmod_win32.dll
+                          │                          │                    └─ gmcl_pygmod_win32.dll
+                          │                          └─ includes\ ────────┬─ init.lua (Modified)
+                          │                                               └─ original_init.lua
                           └─ pygmod\ ────── pygmod\ ──────────────────────┬─ __init__.py
                                                                           ├─ _error_notif.py
                                                                           └─ ...
@@ -148,7 +151,7 @@ from <code class="docutils literal notranslate"><span class="pre">src\cpp</span>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
     </div>
   </body>
 </html>

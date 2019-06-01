@@ -27,8 +27,13 @@ void pushPythonObj(ILuaBase *lua, PyObject *obj) {
 		                 // and therefore shouldn't be destroyed by the garbage collector.
 		UserData *pyObjectUserdataContainer = reinterpret_cast<UserData *>(lua->NewUserdata(sizeof(UserData)));
 		pyObjectUserdataContainer->data = reinterpret_cast<void *>(obj);
-		pyObjectUserdataContainer->type = LUA_TYPE_PYOBJECT;
-		lua->CreateMetaTableType("PyObject", LUA_TYPE_PYOBJECT);
+		if (PyCallable_Check(obj)) {
+			pyObjectUserdataContainer->type = LUA_TYPE_PYCALLABLE;
+			lua->CreateMetaTableType("PyCallable", LUA_TYPE_PYCALLABLE);
+		} else {
+			pyObjectUserdataContainer->type = LUA_TYPE_PYOBJECT;
+			lua->CreateMetaTableType("PyObject", LUA_TYPE_PYOBJECT);
+		}
 		lua->SetMetaTable(-2);
 	}
 }

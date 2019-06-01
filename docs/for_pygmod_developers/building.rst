@@ -11,7 +11,8 @@ Requirements for building
 Instructions
 ------------
 
-#. Copy ``lua_launcher\pygmod_launcher`` to ``garrysmod\addons``.
+#. Copy ``src\lua\addons\pygmod_launcher`` to ``garrysmod\addons``.
+#. Copy the contents of ``src\lua\lua\includes`` to ``garrysmod\lua\includes``. Confirm the overwriting of ``init.lua``.
 #. Copy ``src\python\pygmod`` to ``garrysmod\pygmod``.
 #. Open **Developer Command Prompt for VS** (most likely residing in your Start menu, folder **Visual Studio**),
    ``cd`` to ``src\cpp``.
@@ -33,8 +34,10 @@ Final directory structure should looks like this:
                               ├─ pygmod.dll
                               ├─ garrysmod\ ─┬─ addons\ ─── pygmod_launcher\ ─┬─ addon.json
                               │              │                                └─ lua\ ───── init.lua
-                              │              └─ lua\ ────── bin\ ─────────────┬─ gmsv_pygmod_win32.dll
-                              │                                               └─ gmcl_pygmod_win32.dll
+                              │              └─ lua\ ────┬─ bin\ ─────────────┬─ gmsv_pygmod_win32.dll
+                              │                          │                    └─ gmcl_pygmod_win32.dll
+                              │                          └─ includes\ ────────┬─ init.lua (Modified)
+                                                                              └─ original_init.lua
                               └─ pygmod\ ────── pygmod\ ──────────────────────┬─ __init__.py
                                                                               ├─ _error_notif.py
                                                                               └─ ...

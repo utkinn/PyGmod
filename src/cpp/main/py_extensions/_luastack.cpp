@@ -3,9 +3,6 @@
 #include <GarrysMod/Lua/Interface.h>
 #include "stack_utils.hpp"
 
-// Defining a custom Lua value type for Python objects in Lua
-#define LUA_TYPE_PYOBJECT (Type::COUNT + 1)
-
 using namespace GarrysMod::Lua;
 
 // Macro for retrieving ILuaBase from the module state

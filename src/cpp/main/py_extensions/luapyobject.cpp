@@ -16,7 +16,7 @@ void switchToCurrentRealm(lua_State *state) {
     LUA->Pop(2);
 }
 
-LUA_FUNC(luapyobject_call) {
+LUA_FUNC(luapycallable_call) {
 	switchToCurrentRealm(state);
 
 	// Getting the function PyObject
@@ -60,11 +60,23 @@ LUA_FUNC(luapyobject_gc) {
 void createLuaPyObjectMetatable(ILuaBase *lua) {
 	lua->CreateMetaTableType("PyObject", LUA_TYPE_PYOBJECT);
 
-	lua->PushCFunction(luapyobject_call);
+	lua->PushCFunction(luapyobject_gc);
+	lua->SetField(-2, "__gc");
+
+	// TODO: More functionality
+
+	lua->Pop();
+
+	lua->CreateMetaTableType("PyCallable", LUA_TYPE_PYCALLABLE);
+
+	lua->PushCFunction(luapycallable_call);
 	lua->SetField(-2, "__call");
 
 	lua->PushCFunction(luapyobject_gc);
 	lua->SetField(-2, "__gc");
+
+	lua->PushString("function");
+	lua->SetField(-2, "__type");
 
 	lua->Pop();
 }

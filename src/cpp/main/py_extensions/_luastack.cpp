@@ -55,6 +55,15 @@ Py_MODULE_FUNC(setField) {
 
 	Py_RETURN_NONE;
 }
+Py_MODULE_FUNC(push) {
+    int stackIndex;
+
+	if (!PyArg_ParseTuple(args, "i", &stackIndex))
+		return NULL;
+
+	MS_LUA->Push(stackIndex);
+	Py_RETURN_NONE;
+}
 Py_MODULE_FUNC(pushGlobals) {
 	MS_LUA->PushSpecial(SPECIAL_GLOB);
 	Py_RETURN_NONE;
@@ -197,6 +206,9 @@ static PyMethodDef methods[] = {
 	 PyDoc_STR("set_field(stack_index: int, name: str) -> None\n" \
 	 "Does the equivalent to t[k] = v, where t is the value at the given valid index and v is the value at the top of the stack.\n\n" \
 	 "This function pops the value from the stack. As in Lua, this function may trigger a metamethod for the \"newindex\" event.")},
+	{"push", push, METH_VARARGS,
+	 PyDoc_STR("push(stack_index: int) -> None\n" \
+	 "Pushes a copy of the element at the given valid index onto the stack.")},
 	{"push_globals", pushGlobals, METH_NOARGS,
 	 PyDoc_STR("push_globals() -> None\n" \
 	 "Pushes the globals table (aka _G) to the stack.")},

@@ -23,7 +23,7 @@ void pushPythonObj(ILuaBase *lua, PyObject *obj) {
 	}
 	else {  // Pushing a userdata with PyObject
 		Py_INCREF(obj);  // This is necessary because otherwise that Python object could be deallocated even though being stored in our userdata.
-						 // By increasing the reference count we tell Python that this object is still in use 
+						 // By increasing the reference count we tell Python that this object is still in use
 		                 // and therefore shouldn't be destroyed by the garbage collector.
 		UserData *pyObjectUserdataContainer = reinterpret_cast<UserData *>(lua->NewUserdata(sizeof(UserData)));
 		pyObjectUserdataContainer->data = reinterpret_cast<void *>(obj);
@@ -40,7 +40,7 @@ void pushPythonObj(ILuaBase *lua, PyObject *obj) {
 
 PyObject *getStackValAsPythonObj(ILuaBase *lua, int index) {
 	int type = lua->GetType(index);
-	PyObject *luaModule, *tableObject, *luaFuncObject, *tableFromStackTopFunc, *luaFuncFromStackTopFunc;
+	PyObject *luaModule, *tableObject, *luaFuncObject, *tableFromStackFunc, *luaFuncFromStackFunc;
 
 	switch (type) {
 	case Type::NIL:
@@ -55,9 +55,9 @@ PyObject *getStackValAsPythonObj(ILuaBase *lua, int index) {
 		luaModule = PyImport_ImportModule("pygmod.lua");
 		if (luaModule == NULL)
 			return NULL;
-		luaFuncFromStackTopFunc = PyObject_GetAttrString(luaModule, "_lua_func_from_stack_top");
-		luaFuncObject = PyObject_CallFunction(luaFuncFromStackTopFunc, "");
-		Py_DECREF(luaFuncFromStackTopFunc);
+		luaFuncFromStackFunc = PyObject_GetAttrString(luaModule, "_lua_func_from_stack");
+		luaFuncObject = PyObject_CallFunction(luaFuncFromStackFunc, "i", index);
+		Py_DECREF(luaFuncFromStackFunc);
 		Py_DECREF(luaModule);
 		return luaFuncObject;
 	case Type::TABLE:
@@ -65,9 +65,9 @@ PyObject *getStackValAsPythonObj(ILuaBase *lua, int index) {
 		luaModule = PyImport_ImportModule("pygmod.lua");
 		if (luaModule == NULL)
 			return NULL;
-		tableFromStackTopFunc = PyObject_GetAttrString(luaModule, "_table_from_stack_top");
-		tableObject = PyObject_CallFunction(tableFromStackTopFunc, "");
-		Py_DECREF(tableFromStackTopFunc);
+		tableFromStackFunc = PyObject_GetAttrString(luaModule, "_table_from_stack");
+		tableObject = PyObject_CallFunction(tableFromStackFunc, "i", index);
+		Py_DECREF(tableFromStackFunc);
 		Py_DECREF(luaModule);
 		return tableObject;
 		//const char *typeName = lua->GetTypeName(type);

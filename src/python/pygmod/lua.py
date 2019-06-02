@@ -365,23 +365,15 @@ class TableItemIterator(TableBaseIterator):
         return self._previous_key, _luastack.get_stack_val_as_python_obj()
 
 
-def _table_from_stack_top():
+def _table_from_stack(stack_index):
+    _luastack.push(stack_index)
     ref = _luastack.reference_create()
     table = Table(ref)
-    # This function is called from _luastack.get_stack_val_as_python_obj().
-    # _luastack.get_stack_val_as_python_obj() shouldn't modify the stack,
-    # but _luastack.reference_create() pops the referenced object.
-    # We have to manually push that object back.
-    _luastack.reference_push(ref)
     return table
 
 
-def _lua_func_from_stack_top():
+def _lua_func_from_stack(stack_index):
+    _luastack.push(stack_index)
     ref = _luastack.reference_create()
     func = Callable(ref)
-    # This function is called from _luastack.get_stack_val_as_python_obj().
-    # _luastack.get_stack_val_as_python_obj() shouldn't modify the stack,
-    # but _luastack.reference_create() pops the referenced object.
-    # We have to manually push that object back.
-    _luastack.reference_push(ref)
     return func

@@ -1,0 +1,198 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <link id="highlight-style" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/default.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+
+        <style>
+            html, body {
+                height: 100%;
+            }
+
+            .rounded-top-0 {
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+            }
+
+            pre {
+                margin: 0;
+                overflow: unset !important;
+            }
+
+            code {
+                overflow-x: unset !important;
+                min-height: 100%;
+            }
+
+            input {
+                font-family: monospace;
+                height: calc(1.5em + .75rem + 6px) !important;
+            }
+
+            #settings {
+                position: absolute;
+                top: 15px;
+                right: 30px;
+                cursor: pointer;
+                color: darkgray;
+                transition: color 0.5s ease;
+            }
+
+            #settings:hover {
+                color: black;
+            }
+        </style>
+    </head>
+    <body class="p-2 d-flex flex-column">
+        <div class="flex-grow-1 border border-bottom-0 rounded-top" style="overflow-x: auto; overflow-y: auto;">
+            <pre><code class="p-2 python"></code></pre>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span id="prompt" class="input-group-text rounded-top-0" style="font-family: monospace">&gt;&gt;&gt;</span>
+            </div>
+            <input type="text" class="form-control rounded-top-0">
+            <div class="input-group-append">
+                <button class="btn btn-primary rounded-top-0">
+                    <i class="material-icons">send</i>
+                </button>
+            </div>
+        </div>
+        <div id="settings">
+            <i class="material-icons" onclick="$('#settings-menu').toggle()" title="Settings">settings</i>
+            <div class="dropdown-menu dropdown-menu-right" id="settings-menu">
+                <span class="dropdown-item-text">
+                    Style
+                    <select id="style-select" onchange="setStyle(this.value)"></select>
+                </span>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script>
+            const STYLES = [
+                ["Default", "default"],
+                ["A 11 Y Dark", "a11y-dark"],
+                ["A 11 Y Light", "a11y-light"],
+                ["Agate", "agate"],
+                ["An Old Hope", "an-old-hope"],
+                ["Androidstudio", "androidstudio"],
+                ["Arduino Light", "arduino-light"],
+                ["Arta", "arta"],
+                ["Ascetic", "ascetic"],
+                ["Atelier Cave Dark", "atelier-cave-dark"],
+                ["Atelier Cave Light", "atelier-cave-light"],
+                ["Atelier Dune Dark", "atelier-dune-dark"],
+                ["Atelier Dune Light", "atelier-dune-light"],
+                ["Atelier Estuary Dark", "atelier-estuary-dark"],
+                ["Atelier Estuary Light", "atelier-estuary-light"],
+                ["Atelier Forest Dark", "atelier-forest-dark"],
+                ["Atelier Forest Light", "atelier-forest-light"],
+                ["Atelier Heath Dark", "atelier-heath-dark"],
+                ["Atelier Heath Light", "atelier-heath-light"],
+                ["Atelier Lakeside Dark", "atelier-lakeside-dark"],
+                ["Atelier Lakeside Light", "atelier-lakeside-light"],
+                ["Atelier Plateau Dark", "atelier-plateau-dark"],
+                ["Atelier Plateau Light", "atelier-plateau-light"],
+                ["Atelier Savanna Dark", "atelier-savanna-dark"],
+                ["Atelier Savanna Light", "atelier-savanna-light"],
+                ["Atelier Seaside Dark", "atelier-seaside-dark"],
+                ["Atelier Seaside Light", "atelier-seaside-light"],
+                ["Atelier Sulphurpool Dark", "atelier-sulphurpool-dark"],
+                ["Atelier Sulphurpool Light", "atelier-sulphurpool-light"],
+                ["Atom One Dark Reasonable", "atom-one-dark-reasonable"],
+                ["Atom One Dark", "atom-one-dark"],
+                ["Atom One Light", "atom-one-light"],
+                ["Brown Paper", "brown-paper"],
+                ["Codepen Embed", "codepen-embed"],
+                ["Color Brewer", "color-brewer"],
+                ["Darcula", "darcula"],
+                ["Dark", "dark"],
+                ["Darkula", "darkula"],
+                ["Docco", "docco"],
+                ["Dracula", "dracula"],
+                ["Far", "far"],
+                ["Foundation", "foundation"],
+                ["Github Gist", "github-gist"],
+                ["Github", "github"],
+                ["Gml", "gml"],
+                ["Googlecode", "googlecode"],
+                ["Grayscale", "grayscale"],
+                ["Gruvbox Dark", "gruvbox-dark"],
+                ["Gruvbox Light", "gruvbox-light"],
+                ["Hopscotch", "hopscotch"],
+                ["Hybrid", "hybrid"],
+                ["Idea", "idea"],
+                ["Ir Black", "ir-black"],
+                ["Isbl Editor Dark", "isbl-editor-dark"],
+                ["Isbl Editor Light", "isbl-editor-light"],
+                ["Kimbie Dark", "kimbie.dark"],
+                ["Kimbie Light", "kimbie.light"],
+                ["Lightfair", "lightfair"],
+                ["Magula", "magula"],
+                ["Mono Blue", "mono-blue"],
+                ["Monokai Sublime", "monokai-sublime"],
+                ["Monokai", "monokai"],
+                ["Nord", "nord"],
+                ["Obsidian", "obsidian"],
+                ["Ocean", "ocean"],
+                ["Paraiso Dark", "paraiso-dark"],
+                ["Paraiso Light", "paraiso-light"],
+                ["Pojoaque", "pojoaque"],
+                ["Purebasic", "purebasic"],
+                ["Qtcreator Dark", "qtcreator_dark"],
+                ["Qtcreator Light", "qtcreator_light"],
+                ["Railscasts", "railscasts"],
+                ["Rainbow", "rainbow"],
+                ["Routeros", "routeros"],
+                ["School Book", "school-book"],
+                ["Shades Of Purple", "shades-of-purple"],
+                ["Solarized Dark", "solarized-dark"],
+                ["Solarized Light", "solarized-light"],
+                ["Sunburst", "sunburst"],
+                ["Tomorrow Night Blue", "tomorrow-night-blue"],
+                ["Tomorrow Night Bright", "tomorrow-night-bright"],
+                ["Tomorrow Night Eighties", "tomorrow-night-eighties"],
+                ["Tomorrow Night", "tomorrow-night"],
+                ["Tomorrow", "tomorrow"],
+                ["Vs", "vs"],
+                ["Vs 2015", "vs2015"],
+                ["Xcode", "xcode"],
+                ["Xt 256", "xt256"],
+                ["Zenburn", "zenburn"]
+            ]
+
+            let styleSelect = $("#style-select");
+            for (let [styleName, styleCss] of STYLES) {
+                styleSelect.append(`<option value="${styleCss}">${styleName}</option>`);
+            }
+
+            function setStyle(style) {
+                $("#highlight-style").attr("href", `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/${style}.min.css`);
+            }
+
+            $("code").css("min-height", $("code").parent().parent().height());
+
+            let input = $("input");
+            input.on("keyup", event => {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    pygmodRepl.submit(input.val());
+                    input.val("");
+                }
+            });
+
+            function appendOutput(text) {
+                let output = $("code");
+                output.text(output.text() + text);
+                hljs.highlightBlock(output.get()[0]);
+            }
+        </script>
+    </body>
+</html>

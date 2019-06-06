@@ -1,38 +1,34 @@
 import traceback
 from code import InteractiveConsole
-from io import TextIOBase
 import sys
+from os import path
 
+from pygmod.lua import G
 from pygmod.gmodapi import vgui, ScrW, ScrH, CLIENT, concommand
 
 __all__ = ['setup']
 
 
-class PyGmodReplOut(TextIOBase):
-    def __init__(self, text_entry):
-        self.text_entry = text_entry
+class PyGmodReplOut:
+    def __init__(self, dhtml):
+        self._dhtml = dhtml
 
-    def write(self, s: str):
-        self.text_entry._.AppendText(s)
+    def write(self, s):
+        self._dhtml._.Call(f"appendOutput({s!r})")
         return len(s)
 
 
-class PyGmodREPL(InteractiveConsole):
-    def __init__(self, frame, text_entry):
-        super().__init__()
-        self.frame = frame
-        self.text_entry = text_entry
-
-    def write(self, data):
-        self.text_entry._.InsertColorChange(255, 64, 64, 255)
-        self.text_entry._.AppendText(data)
-        self.text_entry._.InsertColorChange(255, 255, 255, 255)
+class PyGmodREPL(PyGmodReplOut, InteractiveConsole):
+    def __init__(self, frame, dhtml):
+        InteractiveConsole.__init__(self)
+        PyGmodReplOut.__init__(self, dhtml)
+        self._frame = frame
 
     def runcode(self, code):
         try:
             super().runcode(code)
         except SystemExit:  # Closing the console on exit() call
-            self.frame._.Close()
+            self._frame._.Close()
 
     def showtraceback(self):
         self.write(traceback.format_exc())
@@ -68,22 +64,28 @@ def create_frame():
     return fr
 
 
-def create_output(fr):
-    text = vgui.Create('RichText', fr)
-    text._.SetPos(7, 25)
-    text._.SetSize(ScrW() // 2 - 15, ScrH() // 2 - 65)
-    text._.InsertColorChange(255, 255, 255, 255)
-    text._.AppendText(
-        'Python ' + sys.version + '\n' +
-        'Type "help", "copyright", "credits" or "license" for more information.\n'
-    )
+def create_dhtml(fr):
+    dhtml = vgui.Create("DHTML", fr)
+    dhtml._.Dock(G.FILL)
+    with open(path.join("garrysmod", "pygmod", "html", "repl.html")) as f:
+        dhtml._.SetHTML(f.read())
+    dhtml._.SetAllowLua(True)
 
-    return text
+    return dhtml
 
 
-def replace_stdout(fr, text):
+def add_submit_js_function(dhtml, console):
+    def submit(code):
+        input_complete = not console.push(code)
+        prompt = '>>>' if input_complete else '...'
+        dhtml._.Call(f"$('#prompt').text('{prompt}')")
+
+    dhtml._.AddFunction("pygmodRepl", "submit", submit)
+
+
+def replace_stdout(fr, dhtml):
     original_stdout = sys.stdout
-    sys.stdout = PyGmodReplOut(text)
+    sys.stdout = PyGmodReplOut(dhtml)
 
     def on_close(_):
         sys.stdout = original_stdout
@@ -91,56 +93,15 @@ def replace_stdout(fr, text):
     fr.OnClose = on_close
 
 
-def create_prompt_label(fr):
-    prompt_lbl = vgui.Create('DLabel', fr)
-    prompt_lbl._.SetText('>>>')
-    prompt_lbl._.SetPos(7, ScrH() // 2 - 30)
-
-    return prompt_lbl
-
-
-def create_input_field(fr):
-    inp = vgui.Create('DTextEntry', fr)
-    inp._.SetPos(35, ScrH() // 2 - 30)
-    inp._.SetSize(ScrW() // 2 - 80, 20)
-    inp._.SetFont('DebugFixed')
-    inp._.RequestFocus()
-
-    return inp
-
-
-def create_submit_button(fr):
-    submit = vgui.Create('DButton', fr)
-    submit._.SetPos(ScrW() // 2 - 45, ScrH() // 2 - 30)
-    submit._.SetSize(40, 20)
-    submit._.SetText('SUBMIT')
-
-    return submit
-
-
 def open_repl(*_):
     fr = create_frame()
-    text = create_output(fr)
-    prompt_lbl = create_prompt_label(fr)
-    inp = create_input_field(fr)
-    submit = create_submit_button(fr)
+    dhtml = create_dhtml(fr)
 
-    cons = PyGmodREPL(fr, text)
+    cons = PyGmodREPL(fr, dhtml)
     cons.runcode('from pygmod.gmodapi import *')
 
-    replace_stdout(fr, text)
-
-    def enter(*_):
-        text._.AppendText(
-            ('>>> ' if not cons.buffer else '. . .  ') + inp._.GetText() + '\n')
-
-        input_complete = not cons.push(inp._.GetText())
-        prompt_lbl._.SetText('>>>' if input_complete else '. . .')
-
-        inp._.SetText('')
-        inp._.RequestFocus()
-
-    inp.OnEnter = submit.DoClick = enter
+    add_submit_js_function(dhtml, cons)
+    replace_stdout(fr, dhtml)
 
 
 def setup():

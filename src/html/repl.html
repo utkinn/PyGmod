@@ -235,11 +235,6 @@
                 // Replacing href property of <link type="stylesheet"> of highlight.js style
                 const newCssHref = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/" + style + ".min.css";
                 $("#highlight-style").attr("href", newCssHref);
-
-                // Wait a bit for the style to load, then set the same background color of the body as the code output
-                // setTimeout(function() {
-                //     setBodyBgSameAsCode();
-                // }, 500);
             }
 
             function scrollOutputToBottom() {

@@ -242,21 +242,24 @@
                 // }, 500);
             }
 
-            // function setBodyBgSameAsCode() {
-            //     $("body").css("background-color", $("#code").css("background-color"));
-            // }
+            function scrollOutputToBottom() {
+                const outputDom = output.get()[0];
+                outputDom.scrollTop = outputDom.scrollHeight;
+            }
 
             /** Submits the input code. */
             function submit() {
                 inputEcho();
                 pygmodRepl.submit(input.val());  // See src\python\pygmod\_repl.py
                 input.val("");
+                scrollOutputToBottom();
             }
 
             /** Appends text to the output field. Called in src\python\pygmod\_repl.py. */
             function appendOutput(text) {
                 output.text(output.text() + text);
                 highlightOutput();
+                scrollOutputToBottom();
             }
 
             function inputEcho() {

@@ -2,6 +2,7 @@ import traceback
 from code import InteractiveConsole
 import sys
 from os import path
+from base64 import b64encode
 
 from pygmod.lua import G
 from pygmod.gmodapi import vgui, ScrW, ScrH, CLIENT, concommand
@@ -14,14 +15,26 @@ class PyGmodReplOut:
         self._dhtml = dhtml
 
     def write(self, s):
-        self._dhtml._.Call(f"appendOutput({s!r})")
+        # Encoding the output to Base64 to surely escape it.
+        b64_data = b64encode(s.encode()).decode()
+        self._dhtml._.Call(f"appendOutputBase64({b64_data!r}, HighlightMode.TEXT)")
         return len(s)
 
 
-class PyGmodREPL(PyGmodReplOut, InteractiveConsole):
-    def __init__(self, frame, dhtml):
+class PyGmodReplErr:
+    def __init__(self, dhtml):
+        self._dhtml = dhtml
+
+    def write(self, s):
+        # Encoding the output to Base64 to surely escape it.
+        b64_data = b64encode(s.encode()).decode()
+        self._dhtml._.Call(f"appendOutputBase64({b64_data!r}, HighlightMode.ERROR)")
+        return len(s)
+
+
+class PyGmodREPL(InteractiveConsole):
+    def __init__(self, frame):
         InteractiveConsole.__init__(self)
-        PyGmodReplOut.__init__(self, dhtml)
         self._frame = frame
 
     def runcode(self, code):
@@ -31,7 +44,8 @@ class PyGmodREPL(PyGmodReplOut, InteractiveConsole):
             self._frame._.Close()
 
     def showtraceback(self):
-        self.write(traceback.format_exc())
+        sys.stderr.write(traceback.format_exc())
+        # PyGmodReplErr.write(self, )
 
     def showsyntaxerror(self, filename=None):
         # Code copied from code.py
@@ -51,7 +65,8 @@ class PyGmodREPL(PyGmodReplOut, InteractiveConsole):
                 value = SyntaxError(msg, (filename, lineno, offset, line))
                 sys.last_value = value
         lines = traceback.format_exception_only(exc_type, value)
-        self.write(''.join(lines))
+        sys.stderr.write(''.join(lines))
+        # PyGmodReplErr.write(self, ''.join(lines))
 
 
 def create_frame():
@@ -84,11 +99,19 @@ def add_submit_js_function(dhtml, console):
 
 
 def replace_stdout(fr, dhtml):
-    original_stdout = sys.stdout
     sys.stdout = PyGmodReplOut(dhtml)
 
     def on_close(_):
-        sys.stdout = original_stdout
+        sys.stdout = sys.__stdout__
+
+    fr.OnClose = on_close
+
+
+def replace_stderr(fr, dhtml):
+    sys.stderr = PyGmodReplErr(dhtml)
+
+    def on_close(_):
+        sys.stderr = sys.__stderr__
 
     fr.OnClose = on_close
 
@@ -97,11 +120,12 @@ def open_repl(*_):
     fr = create_frame()
     dhtml = create_dhtml(fr)
 
-    cons = PyGmodREPL(fr, dhtml)
+    cons = PyGmodREPL(fr)
     cons.runcode('from pygmod.gmodapi import *')
 
     add_submit_js_function(dhtml, cons)
     replace_stdout(fr, dhtml)
+    replace_stderr(fr, dhtml)
 
 
 def setup():

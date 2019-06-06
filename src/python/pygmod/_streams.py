@@ -58,5 +58,5 @@ def setup():
     """
     sys.stdout.flush()
     sys.stderr.flush()
-    sys.stdout = GmodConsoleOut()
-    sys.stderr = GmodConsoleErr()
+    sys.stdout = sys.__stdout__ = GmodConsoleOut()
+    sys.stderr = sys.__stderr__ = GmodConsoleErr()

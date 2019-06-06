@@ -13,16 +13,16 @@
         <style>
             html, body {
                 height: 100%;
-                overflow-x: auto;
-                overflow-y: auto;
             }
 
-            #code {
+            #code-container {
                 position: absolute;
                 width: 100%;
-                height: 93%;
-                white-space: pre;
-                font-family: monospace;
+            }
+
+            pre, code {
+                display: inline !important;
+                padding: 0 !important;
             }
 
             #prompt {
@@ -66,7 +66,6 @@
                 height: 100%;
                 width: 100%;
                 text-align: center;
-                vertical-align: -webkit-baseline-middle;
             }
 
             #settings {
@@ -89,7 +88,9 @@
         </style>
     </head>
     <body>
-        <div id="code" class="p-2"></div>
+        <div id="code-container" class="p-2">
+            <pre><code></code></pre>
+        </div>
         <span id="prompt" class="input-group-text rounded-0" style="">&gt;&gt;&gt;</span>
         <input id="input" type="text" class="form-control rounded-0 border-left-0" onkeypress="keyPress(event)">
         <div id="send" onclick="submit()">
@@ -109,6 +110,9 @@
         <script>
             hljs.configure({
                 languages: ["python"]
+            });
+            hljs.registerLanguage("plaintext", function() {
+                return {};
             });
 
             // All available styles for highlight.js
@@ -207,10 +211,11 @@
 
             // JQuery selectors for code input and output
             const input = $("#input");
-            const output = $("#code");
+            const output = $("#code-container");
 
             function highlightOutput() {
-                hljs.highlightBlock(output.get()[0]);
+                hljs.initHighlighting.called = false;
+                hljs.initHighlighting();
             }
             highlightOutput();
 
@@ -235,11 +240,28 @@
                 // Replacing href property of <link type="stylesheet"> of highlight.js style
                 const newCssHref = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/" + style + ".min.css";
                 $("#highlight-style").attr("href", newCssHref);
+                // Waiting a bit for the style to load, then setting the body background to be same as the output
+                setTimeout(function() {
+                    $("body").css("background-color", $("code").css("background-color"));
+                }, 500);
+            }
+            setStyle("default");
+
+            /** Scrolls the output element to its bottom. */
+            function scrollOutputToBottom() {
+                const bodyDom = $("body").get()[0];
+                bodyDom.scrollTop = bodyDom.scrollHeight;
             }
 
-            function scrollOutputToBottom() {
-                const outputDom = output.get()[0];
-                outputDom.scrollTop = outputDom.scrollHeight;
+            /**
+             * Workaround over Awesomium bug: #code-container height CSS rule isn't working
+             * and bottom lines of output were getting hidden by the input element.
+             * This function adds 2 empty lines to bottom of the output, thus preventing the bottom
+             * lines from being hidden.
+             */
+            function addEmptySpaceToOutputBottom() {
+                $("#empty-space").remove();
+                output.append("<span id='empty-space'>&nbsp;<br>&nbsp;<br></span>")
             }
 
             /** Submits the input code. */
@@ -247,18 +269,45 @@
                 inputEcho();
                 pygmodRepl.submit(input.val());  // See src\python\pygmod\_repl.py
                 input.val("");
+            }
+
+            /** Highlighting rules for newly appended text blocks. */
+            const HighlightMode = Object.freeze({
+                /** Plain text: no highlighting */
+                TEXT: 1,
+                /** Python code: highlighting */
+                CODE: 2,
+                /** stderr or traceback: red color */
+                ERROR: 3
+            });
+
+            /** Appends text to the output field. Called in src\python\pygmod\_repl.py. */
+            function appendOutput(text, mode) {
+                var newTextBlockHtml;
+                switch (mode) {
+                    case HighlightMode.TEXT:
+                        newTextBlockHtml = "<code class='plaintext'></code>";
+                        break;
+                    case HighlightMode.CODE:
+                        newTextBlockHtml = "<code class='python'></code>";
+                        break;
+                    case HighlightMode.ERROR:
+                        newTextBlockHtml = "<code class='plaintext hljs-deletion'></code>";
+                        break;
+                }
+                $("<pre></pre>").append($(newTextBlockHtml).text(text)).appendTo(output);
+
+                highlightOutput();
+                addEmptySpaceToOutputBottom();
                 scrollOutputToBottom();
             }
 
-            /** Appends text to the output field. Called in src\python\pygmod\_repl.py. */
-            function appendOutput(text) {
-                output.text(output.text() + text);
-                highlightOutput();
-                scrollOutputToBottom();
+            function appendOutputBase64(text, mode) {
+                appendOutput(atob(text), mode)
             }
 
             function inputEcho() {
-                appendOutput($("#prompt").text() + " " + input.val() + "\n")
+                appendOutput($("#prompt").text() + " " + input.val() + "\n", HighlightMode.CODE);
             }
 
             /** Key press event handler for the code input field. */

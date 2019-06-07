@@ -257,24 +257,31 @@
                 var styleInputHtml = '<input type="radio" name="style" ';
                 styleInputHtml += 'id="' + styleCss + '" ';
                 styleInputHtml += 'value="' + styleCss + '" ';
-                styleInputHtml += 'onchange="setStyle($(this).val())">';
+                styleInputHtml += 'onchange="changeStyle($(this).val())">';
                 styleInputHtml += '<label for="' + styleCss + '">' + styleName + '</label><br>';
 
                 styleSelect.append(styleInputHtml);
             }
-            $("#style-select input:first").prop("checked", true);  // Checking the default style
-            setStyle("default");
 
-            function setStyle(style) {
+            function applyStyle(style) {
+                $("#" + style).prop("checked", true);  // Checking the style radio button
                 // Replacing href property of <link type="stylesheet"> of highlight.js style
                 const newCssHref = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/" + style + ".min.css";
                 $("#highlight-style").attr("href", newCssHref);
                 // Waiting a bit for the style to load, then setting the body background to be same as the output
                 setTimeout(function() {
                     $("body").css("background-color", $("code").css("background-color"));
-                }, 500);
+                }, 1000);
             }
-            setStyle("default");
+
+            function changeStyle(style) {
+                applyStyle(style);
+                pygmodRepl.saveStylePreferenceToFile(style);
+            }
+
+            function loadStyleFromPreference() {
+                applyStyle(pygmodRepl.loadStylePreferenceFromFile());
+            }
 
             /** Scrolls the output element to its bottom. */
             function scrollOutputToBottom() {

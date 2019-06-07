@@ -89,13 +89,30 @@ def create_dhtml(fr):
     return dhtml
 
 
-def add_submit_js_function(dhtml, console):
+def add_functions_to_js(dhtml, console):
     def submit(code):
         input_complete = not console.push(code)
         prompt = '>>>' if input_complete else '...'
         dhtml._.Call(f"$('#prompt').text('{prompt}')")
 
     dhtml._.AddFunction("pygmodRepl", "submit", submit)
+
+    def save_style_preference_to_file(style):
+        with open(path.join("garrysmod", "data", "pygmod_repl_style.txt"), "w") as f:
+            f.write(style)
+
+    dhtml._.AddFunction("pygmodRepl", "saveStylePreferenceToFile", save_style_preference_to_file)
+
+    def load_style_preference_from_file():
+        try:
+            with open(path.join("garrysmod", "data", "pygmod_repl_style.txt")) as f:
+                return f.read()
+        except OSError:
+            return "default"
+
+    dhtml._.AddFunction("pygmodRepl", "loadStylePreferenceFromFile", load_style_preference_from_file)
+
+    dhtml._.Call("loadStyleFromPreference()")
 
 
 def replace_stdout(fr, dhtml):
@@ -123,7 +140,7 @@ def open_repl(*_):
     cons = PyGmodREPL(fr)
     cons.runcode('from pygmod.gmodapi import *')
 
-    add_submit_js_function(dhtml, cons)
+    add_functions_to_js(dhtml, cons)
     replace_stdout(fr, dhtml)
     replace_stderr(fr, dhtml)
 

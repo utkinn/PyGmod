@@ -46,20 +46,20 @@
 <p>Custom I/O classes which redirect I/O to the Garry’s Mod console.</p>
 <dl class="class">
 <dt id="GmodConsoleOutStream">
-<em class="property">class </em><code class="descname">GmodConsoleOutStream</code><a class="headerlink" href="#GmodConsoleOutStream" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">GmodConsoleOutStream</code><a class="headerlink" href="#GmodConsoleOutStream" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for Garry’s Mod console output streams.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="GmodConsoleOut">
-<em class="property">class </em><code class="descname">GmodConsoleOut</code><a class="headerlink" href="#GmodConsoleOut" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">GmodConsoleOut</code><a class="headerlink" href="#GmodConsoleOut" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class which redirects the standard output (stdout) to the Garry’s Mod console.</p>
 <p>Messages from the <em>client</em> realm are printed with the yellow color
 and messages from the <em>server</em> realm are printed with the blue color,
 just like <code class="docutils literal notranslate"><span class="pre">print</span></code>, <code class="docutils literal notranslate"><span class="pre">Msg</span></code> and other Lua functions do.</p>
 <dl class="method">
 <dt id="GmodConsoleOut.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="headerlink" href="#GmodConsoleOut.write" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="headerlink" href="#GmodConsoleOut.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes string <code class="docutils literal notranslate"><span class="pre">s</span></code> to Garry’s Mod console with <code class="docutils literal notranslate"><span class="pre">Msg</span></code> Lua function.</p>
 </dd></dl>
 
@@ -67,12 +67,12 @@ just like <code class="docutils literal notranslate"><span class="pre">print</sp
 
 <dl class="class">
 <dt id="GmodConsoleErr">
-<em class="property">class </em><code class="descname">GmodConsoleErr</code><a class="headerlink" href="#GmodConsoleErr" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">GmodConsoleErr</code><a class="headerlink" href="#GmodConsoleErr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class which redirects the error output (stderr) to the Garry’s Mod console.</p>
 <p>All messages are printed with the red color.</p>
 <dl class="method">
 <dt id="GmodConsoleErr.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="headerlink" href="#GmodConsoleErr.write" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="headerlink" href="#GmodConsoleErr.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes string <code class="docutils literal notranslate"><span class="pre">s</span></code> to Garry’s Mod console with <code class="docutils literal notranslate"><span class="pre">MsgC</span></code> Lua function with red color.</p>
 </dd></dl>
 
@@ -80,7 +80,7 @@ just like <code class="docutils literal notranslate"><span class="pre">print</sp
 
 <dl class="function">
 <dt id="setup">
-<code class="descname">setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#setup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#setup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets <code class="docutils literal notranslate"><span class="pre">sys.stdout</span></code> to a new <a class="reference internal" href="#GmodConsoleOut" title="GmodConsoleOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">GmodConsoleOut</span></code></a> instance
 and <code class="docutils literal notranslate"><span class="pre">sys.stderr</span></code> to a new <a class="reference internal" href="#GmodConsoleErr" title="GmodConsoleErr"><code class="xref py py-class docutils literal notranslate"><span class="pre">GmodConsoleErr</span></code></a> instance.
 Being called in <code class="docutils literal notranslate"><span class="pre">redirectIOToGmod()</span></code> in <code class="docutils literal notranslate"><span class="pre">main.cpp</span></code> of the <em>C++</em> module.</p>
@@ -111,10 +111,10 @@ Being called in <code class="docutils literal notranslate"><span class="pre">red
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -143,7 +143,7 @@ Being called in <code class="docutils literal notranslate"><span class="pre">red
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
     </div>
   </body>
 </html>

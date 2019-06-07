@@ -61,14 +61,14 @@ and index <strong>-n</strong> represents the first element.
 We say that an index is valid if it lies between <strong>1</strong> and the stack top (that is, if <strong>1 ≤ abs(index) ≤ top</strong>).</p>
 <dl class="var">
 <dt id="_CPPv43lua">
-<span id="_CPPv33lua"></span><span id="_CPPv23lua"></span><span id="lua__ILuaBaseP"></span>ILuaBase *<code class="descname">lua</code><a class="headerlink" href="#_CPPv43lua" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv33lua"></span><span id="_CPPv23lua"></span><span id="lua__ILuaBaseP"></span>ILuaBase *<code class="sig-name descname">lua</code><a class="headerlink" href="#_CPPv43lua" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Pointer to Lua Stack C++ object. Not accessible from Python.</p>
 <p>Being set by <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">init()</span></code>.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="init">
-<code class="descname">init</code><span class="sig-paren">(</span><em>lua_base_ptr: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#init" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">init</code><span class="sig-paren">(</span><em class="sig-param">lua_base_ptr: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the internal Lua state pointer.</p>
 </dd></dl>
 
@@ -77,7 +77,7 @@ We say that an index is valid if it lies between <strong>1</strong> and the stac
 <h2>Stack manipulation<a class="headerlink" href="#stack-manipulation" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="top">
-<code class="descname">top</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#top" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">top</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#top" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the index of the top element in the stack.</p>
 <p>Because indices start at <strong>1</strong>,
 this result is equal to the number of elements in the stack (and so <strong>0</strong> means an empty stack).</p>
@@ -85,37 +85,37 @@ this result is equal to the number of elements in the stack (and so <strong>0</s
 
 <dl class="function">
 <dt id="create_table">
-<code class="descname">create_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#create_table" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">create_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#create_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new empty table and pushes it onto the stack.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="push_globals">
-<code class="descname">push_globals</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#push_globals" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">push_globals</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#push_globals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pushes the globals table (aka _G) to the stack.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="push_nil">
-<code class="descname">push_nil</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#push_nil" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">push_nil</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#push_nil" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pushes a <code class="docutils literal notranslate"><span class="pre">nil</span></code> value onto the stack.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pop">
-<code class="descname">pop</code><span class="sig-paren">(</span><em>amt=1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#pop" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pop</code><span class="sig-paren">(</span><em class="sig-param">amt=1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#pop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pops <code class="docutils literal notranslate"><span class="pre">amt</span></code> elements from the stack.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="get_field">
-<code class="descname">get_field</code><span class="sig-paren">(</span><em>stack_index: int</em>, <em>name: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#get_field" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_field</code><span class="sig-paren">(</span><em class="sig-param">stack_index: int</em>, <em class="sig-param">name: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#get_field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pushes onto the stack the value <code class="docutils literal notranslate"><span class="pre">t[name]</span></code>, where <code class="docutils literal notranslate"><span class="pre">t</span></code> is the value at the given valid index <code class="docutils literal notranslate"><span class="pre">stack_index</span></code>.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="set_field">
-<code class="descname">set_field</code><span class="sig-paren">(</span><em>stack_index: int</em>, <em>name: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#set_field" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_field</code><span class="sig-paren">(</span><em class="sig-param">stack_index: int</em>, <em class="sig-param">name: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#set_field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does the equivalent to <code class="docutils literal notranslate"><span class="pre">t[k]</span> <span class="pre">=</span> <span class="pre">v</span></code>,
 where <code class="docutils literal notranslate"><span class="pre">t</span></code> is the value at the given valid index <code class="docutils literal notranslate"><span class="pre">stack_index</span></code>
 and <code class="docutils literal notranslate"><span class="pre">v</span></code> is the value at the top of the stack.</p>
@@ -124,7 +124,7 @@ and <code class="docutils literal notranslate"><span class="pre">v</span></code>
 
 <dl class="function">
 <dt id="call">
-<code class="descname">call</code><span class="sig-paren">(</span><em>args: int</em>, <em>results: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#call" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param">args: int</em>, <em class="sig-param">results: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#call" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls a function.</p>
 <p>To call a function you must use the following protocol:</p>
 <ol class="arabic simple">
@@ -141,32 +141,32 @@ so that after the call the last result is on the top of the stack.</p>
 
 <dl class="function">
 <dt id="reference_create">
-<code class="descname">reference_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#reference_create" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reference_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#reference_create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new reference to an object on the top of the stack and pops that object.
 Returns the reference.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="reference_push">
-<code class="descname">reference_push</code><span class="sig-paren">(</span><em>ref: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#reference_push" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reference_push</code><span class="sig-paren">(</span><em class="sig-param">ref: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#reference_push" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pushes the object which the reference <code class="docutils literal notranslate"><span class="pre">ref</span></code> points to, to the top of the stack.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="reference_free">
-<code class="descname">reference_free</code><span class="sig-paren">(</span><em>ref: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#reference_free" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reference_free</code><span class="sig-paren">(</span><em class="sig-param">ref: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#reference_free" title="Permalink to this definition">¶</a></dt>
 <dd><p>Frees the reference <code class="docutils literal notranslate"><span class="pre">ref</span></code>.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="get_type">
-<code class="descname">get_type</code><span class="sig-paren">(</span><em>stack_pos: int</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#get_type" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_type</code><span class="sig-paren">(</span><em class="sig-param">stack_pos: int</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#get_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the name of the type of the Lua value at the given stack index.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="get_stack_val_as_python_obj">
-<code class="descname">get_stack_val_as_python_obj</code><span class="sig-paren">(</span><em>stack_index=-1</em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#get_stack_val_as_python_obj" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_stack_val_as_python_obj</code><span class="sig-paren">(</span><em class="sig-param">stack_index=-1</em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#get_stack_val_as_python_obj" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a Lua value on the given index of the stack to a Python value and returns it.</p>
 </dd></dl>
 
@@ -205,10 +205,10 @@ Returns the reference.</p>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -237,7 +237,7 @@ Returns the reference.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
     </div>
   </body>
 </html>

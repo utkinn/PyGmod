@@ -46,7 +46,7 @@
 calling Lua functions and manipulating tables and objects.</p>
 <dl class="data">
 <dt id="G">
-<code class="descname">G</code><a class="headerlink" href="#G" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">G</code><a class="headerlink" href="#G" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lua global namespace. Same as <code class="docutils literal notranslate"><span class="pre">_G</span></code> in Lua.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MsgN</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">MsgN</span>
 <span class="n">MsgN</span><span class="p">(</span><span class="s1">&#39;Hi there!&#39;</span><span class="p">)</span>
@@ -78,7 +78,7 @@ should be accessed with the subscription syntax:</p>
 
 <dl class="class">
 <dt id="Table">
-<em class="property">class </em><code class="descname">Table</code><a class="headerlink" href="#Table" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Table</code><a class="headerlink" href="#Table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for representing Lua tables.</p>
 <p><a class="reference internal" href="#Table" title="Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a> has a multifunctional constructor:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating an empty table</span>
@@ -143,13 +143,13 @@ should be accessed with the subscription syntax:</p>
 </div>
 <dl class="method">
 <dt id="Table.keys">
-<code class="descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Table.keys" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Table.keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a keys iterator for this table. Same as <code class="docutils literal notranslate"><span class="pre">iter(table)</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Table.values">
-<code class="descname">values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Table.values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Table.values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a values iterator for this table.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tbl</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tbl</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -164,7 +164,7 @@ should be accessed with the subscription syntax:</p>
 
 <dl class="method">
 <dt id="Table.items">
-<code class="descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Table.items" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Table.items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a key-value pairs iterator for this table.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tbl</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tbl</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -181,7 +181,7 @@ should be accessed with the subscription syntax:</p>
 
 <dl class="function">
 <dt id="exec_lua">
-<code class="descname">exec_lua</code><span class="sig-paren">(</span><em>code: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#exec_lua" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">exec_lua</code><span class="sig-paren">(</span><em class="sig-param">code: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#exec_lua" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs a string of Lua code.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exec_lua</span><span class="p">(</span><span class="s2">&quot;print(jit.version)&quot;</span><span class="p">)</span>
 <span class="c1"># &quot;LuaJIT 2.0.4&quot; will be printed to the console</span>
@@ -191,7 +191,7 @@ should be accessed with the subscription syntax:</p>
 
 <dl class="function">
 <dt id="eval_lua">
-<code class="descname">eval_lua</code><span class="sig-paren">(</span><em>code: str</em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#eval_lua" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">eval_lua</code><span class="sig-paren">(</span><em class="sig-param">code: str</em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#eval_lua" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluates a Lua expression and returns the result.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">eval_lua</span><span class="p">(</span><span class="s2">&quot;function() return 123 end&quot;</span><span class="p">)())</span>
 <span class="go">123</span>
@@ -201,7 +201,7 @@ should be accessed with the subscription syntax:</p>
 
 <dl class="exception">
 <dt id="LuaError">
-<em class="property">exception </em><code class="descname">LuaError</code><a class="headerlink" href="#LuaError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">LuaError</code><a class="headerlink" href="#LuaError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when a Lua error occurs while running some Lua code in Python.</p>
 </dd></dl>
 
@@ -230,10 +230,10 @@ should be accessed with the subscription syntax:</p>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -261,7 +261,7 @@ should be accessed with the subscription syntax:</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
     </div>
   </body>
 </html>

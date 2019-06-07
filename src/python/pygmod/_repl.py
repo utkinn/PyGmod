@@ -9,6 +9,9 @@ from pygmod.gmodapi import vgui, ScrW, ScrH, CLIENT, concommand
 
 __all__ = ['setup']
 
+# Flag of REPL being opened. Used to prevent opening multiple REPLs at once.
+repl_opened = False
+
 
 class PyGmodReplOut:
     def __init__(self, dhtml):
@@ -79,6 +82,17 @@ def create_frame():
     return fr
 
 
+def set_frame_close_handler(fr):
+    def on_close(*_):
+        global repl_opened
+        repl_opened = False
+
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+
+    fr.OnClose = on_close
+
+
 def create_dhtml(fr):
     dhtml = vgui.Create("DHTML", fr)
     dhtml._.Dock(G.FILL)
@@ -115,25 +129,20 @@ def add_functions_to_js(dhtml, console):
     dhtml._.Call("loadStyleFromPreference()")
 
 
-def replace_stdout(fr, dhtml):
+def replace_stdout(dhtml):
     sys.stdout = PyGmodReplOut(dhtml)
 
-    def on_close(_):
-        sys.stdout = sys.__stdout__
 
-    fr.OnClose = on_close
-
-
-def replace_stderr(fr, dhtml):
+def replace_stderr(dhtml):
     sys.stderr = PyGmodReplErr(dhtml)
-
-    def on_close(_):
-        sys.stderr = sys.__stderr__
-
-    fr.OnClose = on_close
 
 
 def open_repl(*_):
+    global repl_opened
+
+    if repl_opened:
+        return
+
     fr = create_frame()
     dhtml = create_dhtml(fr)
 
@@ -141,8 +150,11 @@ def open_repl(*_):
     cons.runcode('from pygmod.gmodapi import *')
 
     add_functions_to_js(dhtml, cons)
-    replace_stdout(fr, dhtml)
-    replace_stderr(fr, dhtml)
+    replace_stdout(dhtml)
+    replace_stderr(dhtml)
+    set_frame_close_handler(fr)
+
+    repl_opened = True
 
 
 def setup():

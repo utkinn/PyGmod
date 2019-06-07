@@ -213,34 +213,33 @@
             const input = $("#input");
             const output = $("#code-container");
 
-            // Input history
-            const inputHistory = [];
-            var currentHistoryEntry = 0;
-
-            function loadHistoryEntry() {
-                const historyEntry = inputHistory[currentHistoryEntry];
-                if (historyEntry !== undefined)
-                    input.val(historyEntry);
-            }
-
-            function resetCurrentHistoryEntry() {
-                currentHistoryEntry = inputHistory.length;
-            }
-
-            function pushHistoryEntry() {
-                inputHistory.push(input.val());
-                resetCurrentHistoryEntry();
-            }
-
-            function nextHistoryEntry() {
-                currentHistoryEntry = Math.min(currentHistoryEntry + 1, inputHistory.length - 1);
-                loadHistoryEntry();
-            }
-
-            function previousHistoryEntry() {
-                currentHistoryEntry = Math.max(currentHistoryEntry - 1, 0);
-                loadHistoryEntry();
-            }
+            // Input history control object
+            const inputHistory = {
+                historyEntries: [],
+                currentEntryIndex: 0,
+                loadEntry: function() {
+                    const historyEntry = this.historyEntries[this.currentEntryIndex];
+                    if (historyEntry !== undefined)
+                        input.val(historyEntry);
+                },
+                resetCurrentEntry: function () {
+                    this.currentEntryIndex = this.historyEntries.length;
+                },
+                pushEntry: function() {
+                    const newEntry = input.val();
+                    if (newEntry !== this.historyEntries[this.historyEntries.length - 1])
+                        this.historyEntries.push(newEntry);
+                    this.resetCurrentEntry();
+                },
+                nextEntry: function () {
+                    this.currentEntryIndex = Math.min(this.currentEntryIndex + 1, this.historyEntries.length - 1);
+                    this.loadEntry();
+                },
+                previousEntry: function() {
+                    this.currentEntryIndex = Math.max(this.currentEntryIndex - 1, 0);
+                    this.loadEntry();
+                }
+            };
 
             function highlightOutput() {
                 hljs.initHighlighting.called = false;
@@ -304,7 +303,7 @@
             function submit() {
                 inputEcho();
                 pygmodRepl.submit(input.val());  // See src\python\pygmod\_repl.py
-                pushHistoryEntry();
+                inputHistory.pushEntry();
                 input.val("");
             }
 
@@ -355,10 +354,10 @@
                         submit();
                         break;
                     case 38:  // Arrow up
-                        previousHistoryEntry();
+                        inputHistory.previousEntry();
                         break;
                     case 40:  // Arrow down
-                        nextHistoryEntry();
+                        inputHistory.nextEntry();
                         break;
                 }
             }

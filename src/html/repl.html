@@ -92,7 +92,7 @@
             <pre><code></code></pre>
         </div>
         <span id="prompt" class="input-group-text rounded-0" style="">&gt;&gt;&gt;</span>
-        <input id="input" type="text" class="form-control rounded-0 border-left-0" onkeypress="keyPress(event)">
+        <input id="input" type="text" class="form-control rounded-0 border-left-0" onkeyup="keyPress(event)">
         <div id="send" onclick="submit()">
             <i class="material-icons">send</i>
         </div>
@@ -213,6 +213,35 @@
             const input = $("#input");
             const output = $("#code-container");
 
+            // Input history
+            const inputHistory = [];
+            var currentHistoryEntry = 0;
+
+            function loadHistoryEntry() {
+                const historyEntry = inputHistory[currentHistoryEntry];
+                if (historyEntry !== undefined)
+                    input.val(historyEntry);
+            }
+
+            function resetCurrentHistoryEntry() {
+                currentHistoryEntry = inputHistory.length;
+            }
+
+            function pushHistoryEntry() {
+                inputHistory.push(input.val());
+                resetCurrentHistoryEntry();
+            }
+
+            function nextHistoryEntry() {
+                currentHistoryEntry = Math.min(currentHistoryEntry + 1, inputHistory.length - 1);
+                loadHistoryEntry();
+            }
+
+            function previousHistoryEntry() {
+                currentHistoryEntry = Math.max(currentHistoryEntry - 1, 0);
+                loadHistoryEntry();
+            }
+
             function highlightOutput() {
                 hljs.initHighlighting.called = false;
                 hljs.initHighlighting();
@@ -268,6 +297,7 @@
             function submit() {
                 inputEcho();
                 pygmodRepl.submit(input.val());  // See src\python\pygmod\_repl.py
+                pushHistoryEntry();
                 input.val("");
             }
 
@@ -312,9 +342,17 @@
 
             /** Key press event handler for the code input field. */
             function keyPress(event) {
-                if (event.keyCode === 13 /* Enter key */) {
-                    event.preventDefault();
-                    submit();
+                switch(event.keyCode) {
+                    case 13:  // Enter
+                        event.preventDefault();
+                        submit();
+                        break;
+                    case 38:  // Arrow up
+                        previousHistoryEntry();
+                        break;
+                    case 40:  // Arrow down
+                        nextHistoryEntry();
+                        break;
                 }
             }
         </script>

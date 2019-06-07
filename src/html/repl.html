@@ -49,6 +49,7 @@
                 bottom: 0;
                 width: 50px;
                 height: 7%;
+                padding: 5px;
 
                 color: #fff;
                 background-color: #007bff;
@@ -362,6 +363,9 @@
                         break;
                 }
             }
+
+            // Style tweaks: setting the paper plane font size same as the button's height
+            $("#send i").css("font-size", $("#send").height() + "px");
         </script>
     </body>
 </html>

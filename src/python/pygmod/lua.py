@@ -49,7 +49,7 @@ def exec_lua(lua_code):
 def eval_lua(lua_code):
     """Evaluates a Lua expression and returns the result."""
     exec_lua('_pygmod_eval_result = ' + lua_code)
-    return G._pygmod_eval_result
+    return G["_pygmod_eval_result"]
 
 
 class BaseGetNamespace(ABC):

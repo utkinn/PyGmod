@@ -299,6 +299,11 @@ class Table(Callable, LuaNamespace):
 
         super().__call__(*args)
 
+    def __len__(self):
+        # ILuaBase doesn't feature a C++ way to retrieve the length of a table,
+        # so we have to be creative.
+        return eval_lua("function(tbl) return #tbl end")(self)
+
     # Iteration
 
     def __iter__(self):

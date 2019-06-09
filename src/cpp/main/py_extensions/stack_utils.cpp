@@ -38,6 +38,10 @@ void pushPythonObj(ILuaBase *lua, PyObject *obj) {
 	}
 }
 
+bool isNumberFractional(double n) {
+    return n != (int) n;
+}
+
 PyObject *getStackValAsPythonObj(ILuaBase *lua, int index) {
 	int type = lua->GetType(index);
 	PyObject *luaModule, *tableObject, *luaFuncObject, *tableFromStackFunc, *luaFuncFromStackFunc;
@@ -48,7 +52,10 @@ PyObject *getStackValAsPythonObj(ILuaBase *lua, int index) {
 	case Type::BOOL:
 		return PyBool_FromLong(lua->GetBool(index));
 	case Type::NUMBER:
-		return PyFloat_FromDouble(lua->GetNumber(index));
+	    if (isNumberFractional(lua->GetNumber(index)))
+		    return PyFloat_FromDouble(lua->GetNumber(index));
+		else
+		    return PyLong_FromDouble(lua->GetNumber(index));
 	case Type::STRING:
 		return PyUnicode_FromString(lua->GetString(index, NULL));
 	case Type::FUNCTION:

@@ -114,18 +114,20 @@ class LuaNamespace(BaseGetNamespace):
     # Value getting
 
     @auto_pop
-    def _get(self, name):
+    def _get(self, index):
         self._push_namespace_object()
-        _luastack.get_field(-1, name)
+        _luastack.push_python_obj(index)
+        _luastack.get_table(-2)
         return _luastack.get_stack_val_as_python_obj()
 
     # Value setting
 
     @auto_pop
-    def _set(self, name, value):
+    def _set(self, index, value):
         self._push_namespace_object()
+        _luastack.push_python_obj(index)
         _luastack.push_python_obj(value)
-        _luastack.set_field(-2, name)
+        _luastack.set_table(-3)
 
     def __setitem__(self, index, value):
         self._set(index, value)
@@ -140,10 +142,11 @@ class LuaNamespace(BaseGetNamespace):
     # Value deleting
 
     @auto_pop
-    def _del(self, name):
+    def _del(self, index):
         self._push_namespace_object()
+        _luastack.push_python_obj(index)
         _luastack.push_nil()
-        _luastack.set_field(-2, name)
+        _luastack.set_table(-3)
 
     def __delitem__(self, key):
         self._del(key)

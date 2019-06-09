@@ -33,6 +33,16 @@ Py_MODULE_FUNC(pop) {
 
 	Py_RETURN_NONE;
 }
+Py_MODULE_FUNC(getTable) {
+	int stackIndex;
+
+	if (!PyArg_ParseTuple(args, "i", &stackIndex))
+		return NULL;
+
+	MS_LUA->GetTable(stackIndex);
+
+	Py_RETURN_NONE;
+}
 Py_MODULE_FUNC(getField) {
 	int stackIndex;
 	const char *name;
@@ -41,6 +51,16 @@ Py_MODULE_FUNC(getField) {
 		return NULL;
 
 	MS_LUA->GetField(stackIndex, name);
+
+	Py_RETURN_NONE;
+}
+Py_MODULE_FUNC(setTable) {
+	int stackIndex;
+
+	if (!PyArg_ParseTuple(args, "i", &stackIndex))
+		return NULL;
+
+	MS_LUA->SetTable(stackIndex);
 
 	Py_RETURN_NONE;
 }
@@ -198,10 +218,18 @@ static PyMethodDef methods[] = {
 	{"pop", pop, METH_VARARGS,
 	 PyDoc_STR("pop(amount: int = 1) -> None\n" \
 	 "Pops 'amount' elements from the stack.")},
+	{"get_table", getTable, METH_VARARGS,
+	 PyDoc_STR("get_table(stack_index: int) -> None\n" \
+	 "Pushes onto the stack the value t[k], where t is the value at the given valid index and k is the value at the top of the stack.\n\n" \
+     "This function pops the key from the stack (putting the resulting value in its place). As in Lua, this function may trigger a metamethod for the \"index\" event.")},
 	{"get_field", getField, METH_VARARGS,
 	 PyDoc_STR("get_field(stack_index: int, name: str) -> None\n" \
 	 "Pushes onto the stack the value t[name], where t is the value at the given valid stack index. " \
 	 "As in Lua, this function may trigger a metamethod for the \"index\" event.")},
+	{"set_table", setTable, METH_VARARGS,
+	 PyDoc_STR("set_table(stack_index: int) -> None\n" \
+	 "Does the equivalent to t[k] = v, where t is the value at the given valid index, v is the value at the top of the stack, and k is the value just below the top.\n\n" \
+     "This function pops both the key and the value from the stack. As in Lua, this function may trigger a metamethod for the \"newindex\" event.")},
 	{"set_field", setField, METH_VARARGS,
 	 PyDoc_STR("set_field(stack_index: int, name: str) -> None\n" \
 	 "Does the equivalent to t[k] = v, where t is the value at the given valid index and v is the value at the top of the stack.\n\n" \

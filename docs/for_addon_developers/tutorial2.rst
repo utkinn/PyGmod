@@ -5,10 +5,10 @@ Addon creation tutorial: part 2
 
 In this tutorial we will improve our "Hello, World" addon a bit.
 
-We will make it to print "Hello, X!" to our chat instead of the game console, and there will be our
+We will make it to print "Hello, X!" to our chat instead of the console, and there will be our
 nickname in place of "X".
 
-First, rename the ``__shared_autorun__`` folder to ``__server_autorun__``, because we don't need the client to
+First of all, rename the ``__shared_autorun__`` folder to ``__server_autorun__``, because we don't need the client to
 participate in the process anymore. The server will wait for new players and will print "Hello, X!" on
 their first spawn.
 
@@ -16,13 +16,13 @@ their first spawn.
 
 Then, open the ``__init__.py`` script again.
 
-We have to make two changes here: first, we need to print the text to the chat instead of the game console.
+We have to make two changes here: first, we need to print the text to the chat instead of the console.
 We need to access Garry's Mod Lua somehow. We can use :mod:`pygmod.gmodapi` module for this.
 Add this line to the top of the script::
 
     from pygmod.gmodapi import *
 
-Now we can use any Lua function right away.
+Now we can use any Lua function.
 
 We will set a ``PlayerInitialSpawn`` hook with a callback which will print the greeting.
 
@@ -53,7 +53,7 @@ which we can use to print text to their chat. In Lua, it would look like this::
     new_player:ChatPrint('Hello world!')
               ^
 
-Notice a colon here. In PyGmod, there is a ``._.`` construction which plays the same role as colon in Lua.
+Notice the colon. In PyGmod, there is a ``._.`` construction which plays the same role as colon in Lua.
 
 ::
 
@@ -78,11 +78,12 @@ Now we get the player's nick with `Nick() <http://wiki.garrysmod.com/page/Player
 
     hook.Add('PlayerInitialSpawn', 'greet', greet)
 
-We're done here. Save and close the script, launch the game, start a new game and look at the chat.
+Done. Save and close the script, launch the game, start a new game and look at the chat.
 
 .. image:: addon_tutorial_images/chat_msg.png
 
 =======
 
 You have finished the tutorial and, I hope, you have understood how to make addons with PyGmod.
+Check out the `reference <../reference>`_ for more information.
 If you have questions, you can always `get help at our Discord server <https://discord.gg/aAs4qrj>`_.

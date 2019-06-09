@@ -285,8 +285,9 @@ class Table(Callable, LuaNamespace):
     def _push_namespace_object(self):
         _luastack.reference_push(self._LuaObject__ref)
 
-    # def __iadd__(self, value):  # TODO
-    #     ...
+    def __iadd__(self, value):
+        G.table.insert(self, value)
+        return self
 
     def __call__(self, *args):
         if G.getmetatable(self)["__call"] is None:

@@ -4,7 +4,7 @@ Getting Started
 What is PyGmod?
 ---------------
 
-**PyGmod** is an experimental project which allows to create addons for sandbox game **Garry's Mod** with Python.
+**PyGmod** is an experimental project which allows to create addons for sandbox game **Garry's Mod** with Python 3.
 
 PyGmod is currently in the Alpha development stage. Many features are planned, but not implemented yet.
 
@@ -26,15 +26,16 @@ How PyGmod addons look like?
 ----------------------------
 
 PyGmod addons look pretty much the same like traditional Lua addons. The difference is the presence of ``python`` folder
-in addon root directory. This folder contains Python code. You can code addons completely with Python without any Lua
-code, or you can code them with both Python and Lua.
+in addon root directory. This folder contains Python code.
+You can fully program your addons using Python without Lua,
+or you can relatively simply combine Python and Lua in one addon.
 
 How to use it?
 --------------
 
 If you are a regular Garry's Mod player or addon developer, you have to
 `install the latest Python version <https://www.python.org/downloads/>`_, then
-`download the latest release <https://github.com/javabird25/PyGmod/releases/latest>`_, open the ZIP archive and
+`download the latest PyGmod release <https://github.com/javabird25/PyGmod/releases/latest>`_, open the downloaded ZIP archive and
 follow the instructions in ``install.txt``.
 
 If you are a player that want to try out addons that require PyGmod, copy your addons to ``addons`` folder in your

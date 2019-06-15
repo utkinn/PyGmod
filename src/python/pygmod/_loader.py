@@ -39,8 +39,15 @@ def try_import(addon_dir, pkg):
     try:
         __import__(addon_dir + '.python.' + pkg)
         return True
-    except ImportError:
-        pass
+    # If an optional autorun package is absent, ImportError
+    # will be raised. Here we handle it.
+    except ImportError as e:
+        # However, this ImportError may be unrelated to
+        # optional autorun packages and indicate a problem
+        # on the side of addon's programmer.
+        # These ImportErrors are reraised.
+        if not str(e).endswith("autorun__'"):
+            raise
     except BaseException:
         _error_notif.show()
         logger.exception("Exception in addon %r", addon_dir)

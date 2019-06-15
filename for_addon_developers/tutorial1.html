@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Addon creation tutorial: part 1 &#8212; PyGmod 0.12-alpha documentation</title>
+    <title>Addon creation tutorial: part 1 &#8212; PyGmod 0.13-alpha documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -25,12 +25,15 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="tutorial2.html" title="Addon creation tutorial: part 2"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="getting_started.html" title="Getting Started for Addon Developers"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.12-alpha documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.13-alpha documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -66,14 +69,14 @@
 <img alt="../_images/garrysmod_addons.png" src="../_images/garrysmod_addons.png" />
 <p>Create a new folder here. Let’s name it <code class="docutils literal notranslate"><span class="pre">hello_world</span></code>.</p>
 <img alt="../_images/hello_world_folder.png" src="../_images/hello_world_folder.png" />
-<p>Open it and create <code class="docutils literal notranslate"><span class="pre">python</span></code> folder. Then, in <code class="docutils literal notranslate"><span class="pre">python</span></code> folder, create <code class="docutils literal notranslate"><span class="pre">__shared_autorun__</span></code> folder.</p>
-<p>The folder structure should look like:</p>
+<p>Open the folder and create a <code class="docutils literal notranslate"><span class="pre">python</span></code> folder. Then, in the <code class="docutils literal notranslate"><span class="pre">python</span></code> folder, create a <code class="docutils literal notranslate"><span class="pre">__shared_autorun__</span></code> folder.</p>
+<p>The folder structure should look like this:</p>
 <img alt="../_images/addon_folder_structure.png" src="../_images/addon_folder_structure.png" />
 </div>
 </div>
 <div class="section" id="create-the-initialization-script">
 <h2>2. Create the initialization script<a class="headerlink" href="#create-the-initialization-script" title="Permalink to this headline">¶</a></h2>
-<p>When PyGmod sees your addon each time you start a new game in Garry’s Mod, PyGmod runs
+<p>When you start a new game in Garry’s Mod, PyGmod runs
 <code class="docutils literal notranslate"><span class="pre">(your</span> <span class="pre">addon</span> <span class="pre">folder</span> <span class="pre">name,</span> <span class="pre">&quot;hello_world&quot;</span> <span class="pre">in</span> <span class="pre">our</span> <span class="pre">case)\python\__shared_autorun__\__init__.py</span></code>.
 So, we have to create a file <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> in <code class="docutils literal notranslate"><span class="pre">__shared_autorun__</span></code> folder.</p>
 <div class="section" id="a-note-about-the-game-states">
@@ -90,12 +93,12 @@ This handles things like telling entities what to do, controlling weapons/player
 <code class="docutils literal notranslate"><span class="pre">__shared_autorun__.__init__</span></code> is ran two times: in the <strong>server</strong> and in the <strong>client</strong>.</p>
 <p>Realms are independent, so, for example, if you create a global variable in the client realm, you won’t be able
 to access it from the server realm. You can use Garry’s Mod’s
-<cite>net library &lt;http://wiki.garrysmod.com/page/Net_Library_Usage&gt;</cite> to establish communication between the realms.</p>
+<a class="reference external" href="http://wiki.garrysmod.com/page/Net_Library_Usage">net library</a> to establish communication between the realms.</p>
 <hr class="docutils" />
 <ol class="arabic">
 <li><p>Open <strong>Notepad</strong>.</p></li>
 <li><p>Paste this code:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>  <span class="c1"># This will print &quot;Hello World&quot; to the console</span>
 </pre></div>
 </div>
 </li>
@@ -107,23 +110,25 @@ to access it from the server realm. You can use Garry’s Mod’s
 <img alt="../_images/init_script.png" src="../_images/init_script.png" />
 </div>
 </div>
-<div class="section" id="see-it-works">
-<h2>3. See it works<a class="headerlink" href="#see-it-works" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="testing-it">
+<h2>3. Testing it<a class="headerlink" href="#testing-it" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Launch <strong>Garry’s Mod</strong>.</p></li>
 <li><p>Go to <strong>Settings</strong>, <strong>Keyboard</strong> tab. Click <strong>Advanced…</strong></p></li>
 </ol>
 <img alt="../_images/gmod_advanced.png" src="../_images/gmod_advanced.png" />
 <ol class="arabic simple" start="3">
-<li><p>Tick <strong>Enable developer console</strong> flag.</p></li>
-<li><p>Start a new game and wait for it to load.</p></li>
-<li><p>Press <code class="docutils literal notranslate"><span class="pre">~</span></code> key (just below <code class="docutils literal notranslate"><span class="pre">Esc</span></code>). You will see <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">world!</span></code> printed two times:
-first time with the blue color, second time with the yellow color.</p></li>
+<li><p>Enable the <strong>Enable developer console</strong> checkbox.</p></li>
+<li><p>Start a new game.</p></li>
+<li><p>When loading completes, press the <code class="docutils literal notranslate"><span class="pre">~</span></code> key (just below <code class="docutils literal notranslate"><span class="pre">Esc</span></code>). You will see <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">world!</span></code> printed two times:
+first time with the blue color, second time with the yellow color.
+That’s because our code is in the <code class="docutils literal notranslate"><span class="pre">__shared_autorun__</span></code> package, so it ran twice.
+The message was first printed by the server, then by the client.</p></li>
 </ol>
 <img alt="../_images/hello_world_msgs.png" src="../_images/hello_world_msgs.png" />
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Most likely you won’t see <code class="docutils literal notranslate"><span class="pre">Hello,</span> <span class="pre">world!</span></code> messages going one after another.
+<p>Most likely you won’t see <code class="docutils literal notranslate"><span class="pre">Hello,</span> <span class="pre">world!</span></code> messages going straight one after another.
 You might have to look closely to find them among other console messages.</p>
 </div>
 <hr class="docutils" />
@@ -152,7 +157,7 @@ Proceed to the <a class="reference internal" href="tutorial2.html"><span class="
 <li><a class="reference internal" href="#a-note-about-the-game-states">A note about the game states</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#see-it-works">3. See it works</a></li>
+<li><a class="reference internal" href="#testing-it">3. Testing it</a></li>
 </ul>
 </li>
 </ul>
@@ -191,12 +196,15 @@ Proceed to the <a class="reference internal" href="tutorial2.html"><span class="
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="tutorial2.html" title="Addon creation tutorial: part 2"
              >next</a> |</li>
         <li class="right" >
           <a href="getting_started.html" title="Getting Started for Addon Developers"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.12-alpha documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.13-alpha documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

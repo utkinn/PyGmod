@@ -35,16 +35,16 @@ Create a new folder here. Let's name it ``hello_world``.
 
 .. image:: addon_tutorial_images/hello_world_folder.png
 
-Open it and create ``python`` folder. Then, in ``python`` folder, create ``__shared_autorun__`` folder.
+Open the folder and create a ``python`` folder. Then, in the ``python`` folder, create a ``__shared_autorun__`` folder.
 
-The folder structure should look like:
+The folder structure should look like this:
 
 .. image:: addon_tutorial_images/addon_folder_structure.png
 
 2. Create the initialization script
 -----------------------------------
 
-When PyGmod sees your addon each time you start a new game in Garry's Mod, PyGmod runs
+When you start a new game in Garry's Mod, PyGmod runs
 ``(your addon folder name, "hello_world" in our case)\python\__shared_autorun__\__init__.py``.
 So, we have to create a file ``__init__.py`` in ``__shared_autorun__`` folder.
 
@@ -68,14 +68,14 @@ First, PyGmod runs ``__shared_autorun__.__init__`` and ``__server_autorun__.__in
 
 Realms are independent, so, for example, if you create a global variable in the client realm, you won't be able
 to access it from the server realm. You can use Garry's Mod's
-`net library <http://wiki.garrysmod.com/page/Net_Library_Usage>` to establish communication between the realms.
+`net library <http://wiki.garrysmod.com/page/Net_Library_Usage>`_ to establish communication between the realms.
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1. Open **Notepad**.
 2. Paste this code::
 
-    print('Hello world!')
+    print('Hello world!')  # This will print "Hello World" to the console
 
 3. Go to ``File -> Save as...`` and find ``hello_world\python\__shared_autorun__\`` folder.
 4. Open **File type** box and select **All files (\*.\*)** option instead of **Text document (\*.txt)**.
@@ -84,24 +84,26 @@ to access it from the server realm. You can use Garry's Mod's
 
 .. image:: addon_tutorial_images/init_script.png
 
-3. See it works
---------------------
+3. Testing it
+-------------
 
 1. Launch **Garry's Mod**.
 2. Go to **Settings**, **Keyboard** tab. Click **Advanced...**
 
 .. image:: addon_tutorial_images/gmod_advanced.png
 
-3. Tick **Enable developer console** flag.
-4. Start a new game and wait for it to load.
-5. Press ``~`` key (just below ``Esc``). You will see ``Hello world!`` printed two times:
+3. Enable the **Enable developer console** checkbox.
+4. Start a new game.
+5. When loading completes, press the ``~`` key (just below ``Esc``). You will see ``Hello world!`` printed two times:
    first time with the blue color, second time with the yellow color.
+   That's because our code is in the ``__shared_autorun__`` package, so it ran twice.
+   The message was first printed by the server, then by the client.
 
 .. image:: addon_tutorial_images/hello_world_msgs.png
 
 .. note::
 
-    Most likely you won't see ``Hello, world!`` messages going one after another.
+    Most likely you won't see ``Hello, world!`` messages going straight one after another.
     You might have to look closely to find them among other console messages.
 
 =============

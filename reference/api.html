@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pygmod.gmodapi - all Garry’s Mod Lua definitions &#8212; PyGmod 0.12-alpha documentation</title>
+    <title>pygmod.gmodapi - all Garry’s Mod Lua definitions &#8212; PyGmod 0.13-alpha documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -25,12 +25,15 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="internal.html" title="Internal modules"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="lua.html" title="pygmod.lua - Lua interoperability"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.12-alpha documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.13-alpha documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../reference.html" accesskey="U">Module Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -40,16 +43,16 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="pygmod-gmodapi-all-garry-s-mod-lua-definitions">
-<h1><code class="docutils literal notranslate"><span class="pre">pygmod.gmodapi</span></code> - all Garry’s Mod Lua definitions<a class="headerlink" href="#pygmod-gmodapi-all-garry-s-mod-lua-definitions" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-pygmod.gmodapi">
+<span id="pygmod-gmodapi-all-garry-s-mod-lua-definitions"></span><h1><code class="docutils literal notranslate"><span class="pre">pygmod.gmodapi</span></code> - all Garry’s Mod Lua definitions<a class="headerlink" href="#module-pygmod.gmodapi" title="Permalink to this headline">¶</a></h1>
 <p>Contains all variables, functions, libraries, classes, etc. that are listed in
 <a class="reference external" href="https://wiki.garrysmod.com">Garry’s Mod Wiki</a>.</p>
 <p>The simplest way to use this module is to import everything from it:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.api</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 <p>And now you can write code that looks similar to Lua:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.api</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="o">*</span>
 
 <span class="k">def</span> <span class="nf">init</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello world&#39;</span><span class="p">)</span>
@@ -64,15 +67,15 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Enums can not be accessed with this module. Use <code class="xref py py-data docutils literal notranslate"><span class="pre">pygmod.lua.G</span></code> instead.</p>
+<p>Enums can not be accessed with this module. Use <a class="reference internal" href="lua.html#pygmod.lua.G" title="pygmod.lua.G"><code class="xref py py-data docutils literal notranslate"><span class="pre">pygmod.lua.G</span></code></a> instead.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Creating variables in Python won’t make them visible in Lua. Use <code class="xref py py-data docutils literal notranslate"><span class="pre">pygmod.lua.G</span></code> to set values in Lua.</p>
+<p>Creating variables in Python won’t make them visible in Lua. Use <a class="reference internal" href="lua.html#pygmod.lua.G" title="pygmod.lua.G"><code class="xref py py-data docutils literal notranslate"><span class="pre">pygmod.lua.G</span></code></a> to set values in Lua.</p>
 </div>
 <div class="section" id="excluded-definitions">
 <h2>Excluded definitions<a class="headerlink" href="#excluded-definitions" title="Permalink to this headline">¶</a></h2>
-<p>Some definitions are not accessible from this module for various reasons. You can still access them with <code class="xref py py-data docutils literal notranslate"><span class="pre">pygmod.lua.G</span></code>.</p>
+<p>Some definitions are not accessible from this module for various reasons. You can still access them with <a class="reference internal" href="lua.html#pygmod.lua.G" title="pygmod.lua.G"><code class="xref py py-data docutils literal notranslate"><span class="pre">pygmod.lua.G</span></code></a>.</p>
 <div class="section" id="globals">
 <h3>Globals<a class="headerlink" href="#globals" title="Permalink to this headline">¶</a></h3>
 <table class="docutils align-default">
@@ -231,12 +234,15 @@ conflict</p></td>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="internal.html" title="Internal modules"
              >next</a> |</li>
         <li class="right" >
           <a href="lua.html" title="pygmod.lua - Lua interoperability"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.12-alpha documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.13-alpha documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../reference.html" >Module Reference</a> &#187;</li> 
       </ul>
     </div>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Getting Started for Addon Developers &#8212; PyGmod 0.12-alpha documentation</title>
+    <title>Getting Started for Addon Developers &#8212; PyGmod 0.13-alpha documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -25,12 +25,15 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="tutorial1.html" title="Addon creation tutorial: part 1"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../getting_started.html" title="Getting Started"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.12-alpha documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.13-alpha documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -41,8 +44,134 @@
             
   <div class="section" id="getting-started-for-addon-developers">
 <h1>Getting Started for Addon Developers<a class="headerlink" href="#getting-started-for-addon-developers" title="Permalink to this headline">¶</a></h1>
-<p>First, check out <a class="reference internal" href="tutorial1.html"><span class="doc">Addon development tutorial</span></a> to learn how to create simple addons.
+<p>Development of add-ons based on PyGmod looks almost the same as the development of conventional Lua-addons.
+You create a subfolder for your addon in the <code class="docutils literal notranslate"><span class="pre">addons</span></code> folder and put the code and resources there.
+The PyGmod addon structure is almost the same as a regular addon, except for the <code class="docutils literal notranslate"><span class="pre">python</span></code> folder,
+where the addon Python code is stored.</p>
+<div class="section" id="pygmod-addon-structure">
+<h2>PyGmod addon structure<a class="headerlink" href="#pygmod-addon-structure" title="Permalink to this headline">¶</a></h2>
+<p>Comparison of the structure of an usual addon and a PyGmod addon:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>my_lua_addon\ ─┬─ addon.json
+               ├─ lua\ ─────────┬─ autorun\ ─┬─ shared_init.lua
+               │                │            ├─ server\ ────┬─ init.lua
+               │                │            │              └─ ...
+               │                │            └─ client\ ────┬─ cl_init.lua
+               │                │                           └─ ...
+               │                │
+               │                ├─ entities\ ─┬─ myentity\ ─┬─ cl_init.lua
+               │                └─ ...        └─ ...        ├─ init.lua
+               │                                            └─ shared.lua
+               ├─ materials\ ─ ...
+               ├─ sound\ ───── ...
+               └─ ...
+
+my_pygmod_addon\ ─┬─ addon.json
+                  ├─ python\ ───────┬─ __shared_autorun__\ ───────┬─ __init__.py
+                  │                 │                             ├─ otherfile.py
+                  │                 │                             └─ ...
+                  │                 ├─ __client_autorun__\ ───────┬─ __init__.py
+                  │                 │                             └─ ...
+                  │                 ├─ __server_autorun__\ ───────┬─ __init__.py
+                  │                 │                             └─ ...
+                  │                 ├─ mypackage\ ────────────────┬─ __init__.py
+                  │                 │                             └─ ...
+                  │                 └─ folder_with_some_scripts\ ─┬─ spam.py
+                  │                                               ├─ eggs.py
+                  │                                               └─ ...
+                  ├─ lua\ (optional) ─ ...
+                  ├─ materials\ ────── ...
+                  ├─ sound\ ────────── ...
+                  └─ ...
+</pre></div>
+</div>
+<div class="section" id="the-python-folder">
+<h3>The <code class="docutils literal notranslate"><span class="pre">python</span></code> folder<a class="headerlink" href="#the-python-folder" title="Permalink to this headline">¶</a></h3>
+<p>Consider the structure of the <code class="docutils literal notranslate"><span class="pre">python</span></code> folder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>python\ ───────┬─ __shared_autorun__\ ───────┬─ __init__.py
+               │                             ├─ otherfile.py
+               │                             └─ ...
+               ├─ __client_autorun__\ ───────┬─ __init__.py
+               │                             └─ ...
+               ├─ __server_autorun__\ ───────┬─ __init__.py
+               │                             └─ ...
+               ├─ mypackage\ ────────────────┬─ __init__.py
+               │                             └─ ...
+               └─ folder_with_some_scripts\ ─┬─ spam.py
+                                             ├─ eggs.py
+                                             └─ ...
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">__*_autorun__</span></code> folders are Python packages, which are executed when a singleplayer game is being loaded,
+when a server is being launched or when connecting to a server.</p>
+<p>“Python packages” means that these folders should contain the file <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>,
+where should be the initialization code of these packages.
+It is <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> that is executed by the PyGmod addon loader.
+The remaining files of the package will be ignored unless you import them inside <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">otherfile</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">__shared_autorun__</span></code> package is initialized 2 times: the first time on the server side, the second on the client side.
+<code class="docutils literal notranslate"><span class="pre">__server_autorun__</span></code> and <code class="docutils literal notranslate"><span class="pre">__client_autorun__</span></code> are initialized on the server side and on the client side, respectively,
+after <code class="docutils literal notranslate"><span class="pre">__shared_autorun__</span></code>.</p>
+<p>Other packages and scripts can be imported relative to the <code class="docutils literal notranslate"><span class="pre">python</span></code> folder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mypackage</span>
+<span class="kn">from</span> <span class="nn">folder_with_some_scripts</span> <span class="k">import</span> <span class="n">spam</span><span class="p">,</span> <span class="n">eggs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="pygmod-code-appearance">
+<h2>PyGmod code appearance<a class="headerlink" href="#pygmod-code-appearance" title="Permalink to this headline">¶</a></h2>
+<p>The PyGmod addons code is plain Python code. For example, you can type something into the Garry’s Mod console
+with the function <a class="reference external" href="https://docs.python.org/3/library/functions.html#print" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">print()</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># python\__server_autorun__\__init__.py</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello from PyGmod!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/print_example.png" src="../_images/print_example.png" />
+<p>You can use any modules from the standard Python library, thanks to which PyGmod addons have much more
+freedom and potential than ordinary Lua addons.</p>
+<p>To interact with the game, you need two modules: <a class="reference internal" href="../reference/api.html#module-pygmod.gmodapi" title="pygmod.gmodapi: all Garry's Mod Lua definitions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygmod.gmodapi</span></code></a> and <a class="reference internal" href="../reference/lua.html#module-pygmod.lua" title="pygmod.lua: Lua interoperability"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygmod.lua</span></code></a>.</p>
+</div>
+<div class="section" id="game-interaction-pygmod-gmodapi-and-pygmod-lua">
+<h2>Game interaction: <code class="docutils literal notranslate"><span class="pre">pygmod.gmodapi</span></code> and <code class="docutils literal notranslate"><span class="pre">pygmod.lua</span></code><a class="headerlink" href="#game-interaction-pygmod-gmodapi-and-pygmod-lua" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pygmod-gmodapi">
+<h3><code class="docutils literal notranslate"><span class="pre">pygmod.gmodapi</span></code><a class="headerlink" href="#pygmod-gmodapi" title="Permalink to this headline">¶</a></h3>
+<p>Module <a class="reference internal" href="../reference/api.html#module-pygmod.gmodapi" title="pygmod.gmodapi: all Garry's Mod Lua definitions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygmod.gmodapi</span></code></a> gives access to almost all functions, classes and libraries that are
+described in <a class="reference external" href="wiki.garrysmod.com">Garry’s Mod Wiki</a>. To use the module, simply import from it what
+you need, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="n">LocalPlayer</span>
+</pre></div>
+</div>
+<p>You can also import everything:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Enum members have to be accessed with <a class="reference internal" href="../reference/lua.html#pygmod.lua.G" title="pygmod.lua.G"><code class="xref py py-data docutils literal notranslate"><span class="pre">pygmod.lua.G</span></code></a>.</p>
+</div>
+</div>
+<div class="section" id="pygmod-lua">
+<h3><code class="docutils literal notranslate"><span class="pre">pygmod.lua</span></code><a class="headerlink" href="#pygmod-lua" title="Permalink to this headline">¶</a></h3>
+<p>If your addon also contains Lua code and you need to connect Python code with it, you can use <a class="reference internal" href="../reference/lua.html#module-pygmod.lua" title="pygmod.lua: Lua interoperability"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygmod.lua</span></code></a> for this.
+It contains an object <a class="reference internal" href="../reference/lua.html#pygmod.lua.G" title="pygmod.lua.G"><code class="xref py py-data docutils literal notranslate"><span class="pre">G</span></code></a>, with which you can modify the Lua environment.
+For example, you can create a global variable that is accessible from Lua:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.lua</span> <span class="k">import</span> <span class="n">G</span>
+
+<span class="n">G</span><span class="o">.</span><span class="n">my_global_var</span> <span class="o">=</span> <span class="s2">&quot;My data&quot;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To refer to variables beginning with an underscore ( <code class="docutils literal notranslate"><span class="pre">_</span></code> ), use <code class="docutils literal notranslate"><span class="pre">G[&quot;_underscore_var&quot;]</span></code>
+instead of <code class="docutils literal notranslate"><span class="pre">G._underscore_var</span></code>. Variables beginning with <code class="docutils literal notranslate"><span class="pre">_</span></code> are reserved for internal use.</p>
+</div>
+<hr class="docutils" />
+<p>Check out <a class="reference internal" href="tutorial1.html"><span class="doc">Addon development tutorial</span></a> to learn how to create a simple “Hello world” addon.
 Then, see <a class="reference internal" href="../reference.html"><span class="doc">Module reference</span></a> to see the list of libraries PyGmod provides to you.</p>
+</div>
+</div>
 </div>
 
 
@@ -54,6 +183,23 @@ Then, see <a class="reference internal" href="../reference.html"><span class="do
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/docs-logo.png" alt="Logo"/>
             </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started for Addon Developers</a><ul>
+<li><a class="reference internal" href="#pygmod-addon-structure">PyGmod addon structure</a><ul>
+<li><a class="reference internal" href="#the-python-folder">The <code class="docutils literal notranslate"><span class="pre">python</span></code> folder</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pygmod-code-appearance">PyGmod code appearance</a></li>
+<li><a class="reference internal" href="#game-interaction-pygmod-gmodapi-and-pygmod-lua">Game interaction: <code class="docutils literal notranslate"><span class="pre">pygmod.gmodapi</span></code> and <code class="docutils literal notranslate"><span class="pre">pygmod.lua</span></code></a><ul>
+<li><a class="reference internal" href="#pygmod-gmodapi"><code class="docutils literal notranslate"><span class="pre">pygmod.gmodapi</span></code></a></li>
+<li><a class="reference internal" href="#pygmod-lua"><code class="docutils literal notranslate"><span class="pre">pygmod.lua</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="../getting_started.html"
                         title="previous chapter">Getting Started</a></p>
@@ -88,12 +234,15 @@ Then, see <a class="reference internal" href="../reference.html"><span class="do
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="tutorial1.html" title="Addon creation tutorial: part 1"
              >next</a> |</li>
         <li class="right" >
           <a href="../getting_started.html" title="Getting Started"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.12-alpha documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.13-alpha documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

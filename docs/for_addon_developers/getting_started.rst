@@ -89,7 +89,7 @@ with the function :func:`print()`::
     # python\__server_autorun__\__init__.py
     print("Hello from PyGmod!")
 
-.. image:: images/print_example.png
+.. image:: ../images/print_example.png
 
 You can use any modules from the standard Python library, thanks to which PyGmod addons have much more
 freedom and potential than ordinary Lua addons.

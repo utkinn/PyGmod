@@ -3,6 +3,9 @@
 
 Custom I/O classes which redirect I/O to the Garry's Mod console.
 
+.. module:: pygmod._streams
+    :synopsis: I/O to Garry's Mod
+
 .. class:: GmodConsoleOutStream
 
     Base class for Garry's Mod console output streams.

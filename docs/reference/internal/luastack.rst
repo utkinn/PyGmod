@@ -21,11 +21,8 @@ index **-1** also represents the last element (that is, the element at the top)
 and index **-n** represents the first element.
 We say that an index is valid if it lies between **1** and the stack top (that is, if **1 ≤ abs(index) ≤ top**).
 
-.. cpp:var:: ILuaBase *lua
-
-    Pointer to Lua Stack C++ object. Not accessible from Python.
-
-    Being set by :cpp:func:`init`.
+.. module:: _luastack
+    :synopsis: Lua stack manipulation
 
 .. function:: init(lua_base_ptr: int) -> None
 

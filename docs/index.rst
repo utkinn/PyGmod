@@ -35,6 +35,7 @@ the possibility to create addons for Garry's Mod with Python 3 programming langu
 
 ===================
 
+* :ref:`genindex`
 * :ref:`search`
 
 Useful links

@@ -1,16 +1,19 @@
 ``pygmod.gmodapi`` - all Garry's Mod Lua definitions
 ====================================================
 
+.. module:: pygmod.gmodapi
+    :synopsis: all Garry's Mod Lua definitions
+
 Contains all variables, functions, libraries, classes, etc. that are listed in
 `Garry's Mod Wiki <https://wiki.garrysmod.com>`_.
 
 The simplest way to use this module is to import everything from it::
 
-    from pygmod.api import *
+    from pygmod.gmodapi import *
 
 And now you can write code that looks similar to Lua::
 
-    from pygmod.api import *
+    from pygmod.gmodapi import *
 
     def init():
         print('Hello world')

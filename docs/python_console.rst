@@ -14,7 +14,7 @@ You can use up arrow and down arrow keys to search through the input history.
 Code styles
 -----------
 
-You can choose from 89 code styles provided by `highlight.js <https://highlightjs.org/>`_ library.
+You can choose from any of 89 code styles provided by `highlight.js <https://highlightjs.org/>`_ library.
 
 .. image:: images/repl_styles.png
 

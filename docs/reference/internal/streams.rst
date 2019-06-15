@@ -31,6 +31,6 @@ Custom I/O classes which redirect I/O to the Garry's Mod console.
 
 .. function:: setup()
 
-    Sets ``sys.stdout`` to a new :class:`GmodConsoleOut` instance
-    and ``sys.stderr`` to a new :class:`GmodConsoleErr` instance.
-    Being called in ``redirectIOToGmod()`` in ``main.cpp`` of the *C++* module.
+    Sets :data:`sys.stdout` and :data:`sys.__stdout__` to a new :class:`GmodConsoleOut` instance
+    and :data:`sys.stderr` and :data:`sys.__stderr__` to a new :class:`GmodConsoleErr` instance.
+    Being called in ``main.cpp`` of the *C++* module, during the setup process.

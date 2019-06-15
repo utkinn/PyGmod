@@ -1,12 +1,16 @@
 ``pygmod.lua`` - Lua interoperability
 =====================================
 
-Access to the Lua environment. Can be used for getting and setting arbitrary variables,
+This module provides the direct access to the Lua environment, such as getting and setting arbitrary variables,
 calling Lua functions and manipulating tables and objects.
+
+.. module:: pygmod.lua
+    :synopsis: Lua interoperability
 
 .. data:: G
 
-    Lua global namespace. Same as ``_G`` in Lua.
+    A singleton object that represents the Lua global namespace. Same as ``_G`` in Lua. You can use it to get and set
+    variables in the Lua environment.
 
     ::
 
@@ -27,7 +31,9 @@ calling Lua functions and manipulating tables and objects.
     .. note::
 
         Members which names start with ``_``
-        should be accessed with the subscription syntax::
+        should be accessed with the subscription syntax. These names are reserved for internal use.
+
+        ::
 
             # Won't work
             G._foo
@@ -36,37 +42,32 @@ calling Lua functions and manipulating tables and objects.
 
 .. class:: Table
 
-    Class for representing Lua tables.
+    Class which represents Lua tables.
 
-    :class:`Table` has a multifunctional constructor::
+    You can create an empty table by passing no arguments to the constructor::
 
-        # Creating an empty table
-        t = Table()
+        new = Table()
 
-        # Converting a dict to a table
-        d = {'a': 1, 'b': 2}
-        t = Table(d)
+    You can wrap Python mapping or iterable into a table by passing it to the constructor::
 
-        # Converting an iterable to a table
-        i = [1, 2, 3]
-        t = Table(i)
-
-    Constructor which takes :class:`int` as argument is intended for internal use.
-    More specifically, it wraps a table referenced by :func:`_luastack.reference_create`
+        Table([1, 2, 3])
+        Table({"a": 1})
 
     .. note::
 
         Members which names start with ``_``
-        should be accessed with the subscription syntax::
+        should be accessed with the subscription syntax. These names are reserved for internal use.
+
+        ::
 
             # Won't work
             Table({"_foo": 1})._foo
             # Will work
             Table({"_foo": 1})['_foo']
 
-    If the undelying table's metatable has ``__call`` function, this object can be called::
+    If the table's metatable has ``__call`` function, this object can be called::
 
-        from gmod.api import setmetatable
+        from pygmod.gmodapi import setmetatable
 
         tbl = Table()
 
@@ -103,6 +104,14 @@ calling Lua functions and manipulating tables and objects.
 
         Returns a keys iterator for this table. Same as ``iter(table)``.
 
+        >>> tbl = Table({'a': 1, 'b': 2, 'c': 3})
+        >>> for k in tbl.values():
+        ...    print(k)
+        ...
+        a
+        b
+        c
+
     .. method:: values()
 
         Returns a values iterator for this table.
@@ -130,7 +139,7 @@ calling Lua functions and manipulating tables and objects.
 
 .. function:: exec_lua(code: str) -> None
 
-    Runs a string of Lua code.
+    Runs a string of Lua code. Raises :exc:`LuaError` on failure.
 
     ::
 
@@ -139,7 +148,7 @@ calling Lua functions and manipulating tables and objects.
 
 .. function:: eval_lua(code: str) -> object
 
-    Evaluates a Lua expression and returns the result.
+    Evaluates a Lua expression and returns the result. Raises :exc:`LuaError` on failure.
 
     >>> print(eval_lua("function() return 123 end")())
     123

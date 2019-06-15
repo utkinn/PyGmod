@@ -249,7 +249,7 @@ static PyMethodDef methods[] = {
 	{"next", next, METH_VARARGS,
 	 PyDoc_STR("next(stack_index: int) -> int\n" \
 	 "Pops a key from the stack, and pushes a key-value pair from the table at the given index " \
-     "(the \"next\" pair after the given key). If there are no more elements in the table, then lua_next returns 0 (and pushes nothing).")},
+     "(the \"next\" pair after the given key). If there are no more elements in the table, then next() returns 0 (and pushes nothing).")},
 	{"get_type", getType, METH_VARARGS,
 	 PyDoc_STR("get_type(stack_index: int) -> str\n" \
 	 "Returns the name of the type of the Lua value at the given stack index.")},

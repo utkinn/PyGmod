@@ -2,5 +2,5 @@
 
 local success, errorMessage = pcall(require, 'pygmod')  -- See bin_modules\client\main.cpp, bin_modules\server\main.cpp
 if not success then
-    error('[PyGmod|init.lua|ERROR] PyGmod binary module is not installed or installed incorrectly. ('..errorMessage..')')
+    error('[PyGmod|init.lua|ERROR] Problems with loading PyGmod C++ module. Make sure PyGmod is installed correctly. ('..errorMessage..')')
 end

@@ -1,20 +1,23 @@
+"""Script that installs PyGmod from a ``.zip`` file."""
+
 from string import ascii_uppercase
 from ctypes import windll
 import os
+import sys
 import traceback
 import logging
+from tkinter import Tk, StringVar
+from tkinter.ttk import Label, Button
+from tkinter.filedialog import askdirectory
+from tkinter.messagebox import showerror, showinfo
 from zipimport import zipimporter
 from zipfile import ZipFile
 
-from tkinter import *
-from tkinter.filedialog import askdirectory
-from tkinter.messagebox import showerror, showinfo
-from tkinter.ttk import *
 
-
-def excepthook(exc_class, exc_val, tb):
+def excepthook(exc_class, exc_val, exc_tb):
+    """Custom excepthook which shows unhandled exceptions in error message boxes."""
     showerror("Installer error",
-              ''.join(traceback.format_exception(exc_class, exc_val, tb)))
+              ''.join(traceback.format_exception(exc_class, exc_val, exc_tb)))
 
 
 sys.excepthook = excepthook
@@ -44,12 +47,21 @@ def get_drives():
 
 
 def browse(dir_var):
+    """
+    Asks the user to pick a directory to install PyGmod to and puts the selected
+    directory path to :class:`~tkinter.StringVar` ``dir_var``.
+    """
     new_dir = askdirectory().replace("/", os.sep)
     if new_dir:
         dir_var.set(new_dir)
 
 
 def validate_path(path_var):
+    """
+    Checks whether the path in :class:`~tkinter.StringVar` ``path_var`` is valid.
+    If the path is invalid, an error message box is shown and ``False`` is returned.
+    If the path is valid, ``True`` is returned.
+    """
     valid = os.path.isdir(path_var.get())
     if not valid:
         showerror("Invalid path",
@@ -79,11 +91,15 @@ def extract_pygmod_files(zipfile, destination):
     logging.debug(files_to_extract)
     files_to_extract.remove(script_filename())
     for file in files_to_extract:
-        logging.info(f"Extracting {file}")
+        logging.info("Extracting %s", file)
         zipfile.extract(file, destination)
 
 
 def install(path_var):
+    """
+    Extracts PyGmod files to the directory contained in :class:`~tkinter.StringVar`
+    ``path_var``.
+    """
     if not validate_path(path_var):
         return
 
@@ -95,15 +111,19 @@ def install(path_var):
 
 
 def find_gmod_dir():
+    """
+    Attempts to detect the Garry's Mod installation path.
+    Returns the path on success and an empty string on failure.
+    """
     for drive in get_drives():
         assumed_path = os.path.join(drive, "Steam", "steamapps", "common", "GarrysMod")
-        logging.debug(f"Assuming {assumed_path}")
+        logging.debug("Assuming %s", assumed_path)
         if os.path.isdir(assumed_path):
             logging.debug("Guessed!")
             return assumed_path
         assumed_path = os.path.join(drive, "SteamApps", "steamapps", "common",
                                     "GarrysMod")
-        logging.debug(f"Assuming {assumed_path}")
+        logging.debug("Assuming %s", assumed_path)
         if os.path.isdir(assumed_path):
             logging.debug("Guessed!")
             return assumed_path
@@ -112,6 +132,7 @@ def find_gmod_dir():
 
 
 def main():
+    """Main installer function."""
     logging.basicConfig(level=logging.INFO)
 
     ensure_inside_zip()

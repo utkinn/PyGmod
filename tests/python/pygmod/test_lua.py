@@ -50,6 +50,15 @@ def test_exec_error(mocker):
         lua.exec_lua("")
 
 
+def test_eval(mocker):
+    mocker.patch("pygmod.lua.G")
+    mocker.patch("pygmod.lua.exec_lua")
+    lua.G.__getitem__.return_value = 1
+    result = lua.eval_lua("")  # Shouldn't raise LuaError
+    lua.G.__getitem__.assert_called_with("_pygmod_eval_result")
+    assert result == 1
+
+
 @pytest.fixture
 def base_get_namespace_instance():
     class A(lua.BaseGetNamespace):
@@ -97,6 +106,12 @@ def lua_namespace_instance(mocker):
             _luastack.push_nil()
 
     return A()
+
+
+def test_lua_namespace_getattr(lua_namespace_instance):
+    lua_namespace_instance.abc = 1
+    lua_namespace_instance._set.assert_called_with("abc", 1)
+    assert not hasattr(lua_namespace_instance, "_abc")
 
 
 def test_lua_namespace_setattr(lua_namespace_instance):

@@ -280,9 +280,9 @@
                 pygmodRepl.saveStylePreferenceToFile(style);
             }
 
-            function loadStyleFromPreference() {
-                applyStyle(pygmodRepl.loadStylePreferenceFromFile());
-            }
+            $(window).ready(function() {
+                pygmodRepl.loadStylePreferenceFromFile();
+            });
 
             /** Scrolls the output element to its bottom. */
             function scrollOutputToBottom() {

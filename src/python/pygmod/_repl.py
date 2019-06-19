@@ -159,6 +159,7 @@ def add_functions_to_js(dhtml, console):
         Returns the style name from ``garrysmod\\data\\pygmod_repl_style.txt``. If the file doesn't
         exist, returns ``"default"``.
     """
+
     def submit(code):
         input_complete = not console.push(code)
         prompt = '>>>' if input_complete else '...'
@@ -175,14 +176,13 @@ def add_functions_to_js(dhtml, console):
     def load_style_preference_from_file():
         try:
             with open(path.join("garrysmod", "data", "pygmod_repl_style.txt")) as style_file:
-                return style_file.read()
+                style = style_file.read()
         except OSError:
-            return "default"
+            style = "default"
+        dhtml._.Call(f"applyStyle({style!r})")
 
     dhtml._.AddFunction("pygmodRepl", "loadStylePreferenceFromFile",
                         load_style_preference_from_file)
-
-    dhtml._.Call("loadStyleFromPreference()")
 
 
 def replace_streams(dhtml):

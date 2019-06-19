@@ -19,20 +19,23 @@ from pygmod import _streams, _logging_config
 _streams.setup()
 _logging_config.configure()
 
-from pygmod import lua, _error_notif, _repl
+from pygmod import lua, _error_notif, _repl  # pylint: disable=wrong-import-position
 
 __all__ = ['main']
 
-logger = getLogger("pygmod.loader")
+LOGGER = getLogger("pygmod.loader")
 
 ADDONS_PATH = path.abspath('garrysmod\\addons')
 SHARED_PACKAGE_NAME = '__shared_autorun__'
 
 
-def handle_exception(exc_type, exc_value, tb):
+def handle_exception(exc_type, exc_value, exc_tb):
     """Hook for unhandled exceptions that indicate a problem with PyGmod itself."""
-    _error_notif.show()
-    logger.exception("Unhandled PyGmod exception", exc_info=(exc_type, exc_value, tb))
+    try:
+        _error_notif.show()
+    except lua.LuaError:
+        LOGGER.exception("Failed to display an error icon.")
+    LOGGER.exception("Unhandled PyGmod exception", exc_info=(exc_type, exc_value, exc_tb))
 
 
 sys.excepthook = handle_exception
@@ -44,7 +47,7 @@ def handle_addon_exception(addon_name):
     and logs the exception.
     """
     _error_notif.show()
-    logger.exception("Exception in addon %r", addon_name)
+    LOGGER.exception("Exception in addon %r", addon_name)
 
 
 def try_import(addon_dir, pkg):
@@ -109,7 +112,7 @@ def load_addons():
     """
     Scans the ``addons\\`` directory for PyGmod addons and runs their autorun code.
     """
-    logger.info('Loading addons...')
+    LOGGER.info('Loading addons...')
 
     sys.path.append(ADDONS_PATH)
     # All files and subdirs of addons\
@@ -122,9 +125,9 @@ def load_addons():
     for addon_dir in pygmod_addons:
         success = load_addon(addon_dir)
         if success:
-            logger.info('"' + addon_dir + '" successfully loaded.')
+            LOGGER.info('"%s" successfully loaded.', addon_dir)
 
-    logger.info('Loading finished')
+    LOGGER.info('Loading finished')
 
 
 def check_init_lua_patch():
@@ -137,9 +140,9 @@ def check_init_lua_patch():
     `hook.Add() <http://wiki.garrysmod.com/page/hook/Add>`_ in order to make it
     compatible with Python functions.
     """
-    with open(path.join("garrysmod", "lua", "includes", "init.lua")) as f:
-        if not f.read().startswith("-- PATCHED"):
-            logger.warning("garrysmod\\lua\\includes\\init.lua is not patched. "
+    with open(path.join("garrysmod", "lua", "includes", "init.lua")) as init_lua:
+        if not init_lua.read().startswith("-- PATCHED"):
+            LOGGER.warning("garrysmod\\lua\\includes\\init.lua is not patched. "
                            "hook.Add() and possibly some other functions which "
                            "take callbacks won't work in PyGmod. "
                            "Please reinstall PyGmod to make them working.")

@@ -52,7 +52,9 @@ enable=all
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
 
-#disable=
+disable=
+    no-name-in-module,
+    import-error
 #    exec-used
 #    attribute-defined-outside-init,
 #    duplicate-code,
@@ -172,7 +174,7 @@ expected-line-ending-format=
 bad-functions=map,filter,input
 
 # Good variable names which should always be accepted, separated by a comma
-good-names=i,j,k,ex,Run,_
+good-names=i,j,k,ex,Run,_,e
 
 # Bad variable names which should always be refused, separated by a comma
 bad-names=foo,bar,baz,toto,tutu,tata

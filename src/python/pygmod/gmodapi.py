@@ -4,19 +4,20 @@ that are listed in Garry's Mod Wiki (https://wiki.garrysmod.com).
 """
 
 import sys
+
 from pygmod import lua
 
 
 def _extend(names):
     """Puts all names from ``names`` to the module namespace."""
-    gl = sys.modules[__name__]
+    module_self = sys.modules[__name__]
     for name in names:
         value = lua.G[name]
-        setattr(gl, name, value)
+        setattr(module_self, name, value)
 
 
 # Global functions
-_global_funcs = [
+_GLOBAL_FUNCS = [
     'AccessorFunc',
     'Add_NPC_Class',
     'AddCSLuaFile',
@@ -239,10 +240,10 @@ _global_funcs = [
     'xpcall',
 ]
 
-_extend(_global_funcs)
-del _global_funcs
+_extend(_GLOBAL_FUNCS)
+del _GLOBAL_FUNCS
 
-_global_vars = [
+_GLOBAL_VARS = [
     'GAMEMODE',
     'GM',
     'ENT',
@@ -275,10 +276,10 @@ _global_vars = [
     'color_transparent',
 ]
 
-_extend(_global_vars)
-del _global_vars
+_extend(_GLOBAL_VARS)
+del _GLOBAL_VARS
 
-_libs = [
+_LIBS = [
     'GWEN',
     'achievements',
     'ai',
@@ -362,10 +363,10 @@ _libs = [
     'widgets',
 ]
 
-_extend(_libs)
-del _libs
+_extend(_LIBS)
+del _LIBS
 
-_classes = [
+_CLASSES = [
     'Angle',
     'CEffectData',
     'CLuaEmitter',
@@ -410,7 +411,7 @@ _classes = [
     'bf_read',
 ]
 
-_extend(_classes)
-del _classes
+_extend(_CLASSES)
+del _CLASSES
 
 del _extend

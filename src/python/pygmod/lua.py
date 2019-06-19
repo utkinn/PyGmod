@@ -81,8 +81,8 @@ class BaseGetNamespace(ABC):
     """
 
     @abstractmethod
-    def _get(self, name):
-        pass
+    def _get(self, key):
+        """Gets the value by key ``key``."""
 
     def __getitem__(self, index):
         return self._get(index)
@@ -109,23 +109,23 @@ class LuaNamespace(BaseGetNamespace):
     @abstractmethod
     def _push_namespace_object(self):
         """Should push a Lua object which members will be manipulated."""
-        pass
 
     # Value getting
 
     @auto_pop
-    def _get(self, index):
+    def _get(self, key):
         self._push_namespace_object()
-        _luastack.push_python_obj(index)
+        _luastack.push_python_obj(key)
         _luastack.get_table(-2)
         return _luastack.get_stack_val_as_python_obj()
 
     # Value setting
 
     @auto_pop
-    def _set(self, index, value):
+    def _set(self, key, value):
+        """Assigns the value ``value`` to the key ``key`` for the underlying table or userdata."""
         self._push_namespace_object()
-        _luastack.push_python_obj(index)
+        _luastack.push_python_obj(key)
         _luastack.push_python_obj(value)
         _luastack.set_table(-3)
 
@@ -142,9 +142,10 @@ class LuaNamespace(BaseGetNamespace):
     # Value deleting
 
     @auto_pop
-    def _del(self, index):
+    def _del(self, key):
+        """Same as ``LuaNamespace._set(key, None)``."""
         self._push_namespace_object()
-        _luastack.push_python_obj(index)
+        _luastack.push_python_obj(key)
         _luastack.push_nil()
         _luastack.set_table(-3)
 
@@ -172,6 +173,8 @@ class Globals(LuaNamespace):
             G['_foo']
     """
 
+    # pylint: disable=too-few-public-methods
+
     def _push_namespace_object(self):
         _luastack.push_globals()
 
@@ -182,18 +185,22 @@ G = Globals()
 class LuaObject:
     """Base class for all Lua object classes."""
 
+    # pylint: disable=too-few-public-methods
+
     def __init__(self, ref):
-        self.__ref = ref
+        self._ref = ref
 
     def __del__(self):
-        _luastack.reference_free(self.__ref)
+        _luastack.reference_free(self._ref)
 
 
-class Callable(LuaObject):
+class CallableLuaObject(LuaObject):
     """
-    Base class for callable Lua objects, such as functions and tables with
+    Class for callable Lua objects, such as functions and tables with
     ``__call`` metamethod.
     """
+
+    # pylint: disable=too-few-public-methods
 
     @auto_pop
     def __call__(self, *args):
@@ -201,7 +208,7 @@ class Callable(LuaObject):
         vals_in_stack_before_call = _luastack.top()
 
         # Pushing the function
-        _luastack.reference_push(self._LuaObject__ref)
+        _luastack.reference_push(self._ref)
         # Pushing the arguments
         for arg in args:
             _luastack.push_python_obj(arg)
@@ -214,10 +221,10 @@ class Callable(LuaObject):
             return None
         if values_returned == 1:  # One value - just returning it
             return _luastack.get_stack_val_as_python_obj()
-        else:  # Many values - putting them all in a tuple and returning it
-            return tuple(_luastack.get_stack_val_as_python_obj(i)
-                         for i in
-                         range(vals_in_stack_before_call + 1, _luastack.top() + 1))
+        # Many values - putting them all in a tuple and returning it
+        return tuple(_luastack.get_stack_val_as_python_obj(i)
+                     for i in
+                     range(vals_in_stack_before_call + 1, _luastack.top() + 1))
 
 
 class MethodCallNamespace(BaseGetNamespace):
@@ -230,14 +237,16 @@ class MethodCallNamespace(BaseGetNamespace):
     100
     """
 
+    # pylint: disable=too-few-public-methods
+
     def __init__(self, tbl):
         self._tbl = tbl
 
-    def _get(self, name):
-        return partial(self._tbl[name], self._tbl)
+    def _get(self, key):
+        return partial(self._tbl[key], self._tbl)
 
 
-class Table(Callable, LuaNamespace):
+class Table(CallableLuaObject, LuaNamespace):
     """Class for representing Lua tables.
 
     :class:`Table` has a multifunctional constructor::
@@ -266,27 +275,31 @@ class Table(Callable, LuaNamespace):
 
     def __init__(self, ref_or_iterable=None):
         if ref_or_iterable is None:  # Creating a new table
-            _luastack.create_table()
-            LuaObject.__init__(self, _luastack.reference_create())
+            self._init_empty_table()
         elif isinstance(ref_or_iterable, int):  # Wrapping a Lua table
-            LuaObject.__init__(self, ref_or_iterable)
+            CallableLuaObject.__init__(self, ref_or_iterable)
         elif isinstance(ref_or_iterable, Mapping):  # Converting a dict
-            self.__init__()
-            for k, v in ref_or_iterable.items():
-                self[k] = v
+            self._init_empty_table()
+            for key, value in ref_or_iterable.items():
+                self[key] = value
         elif isinstance(ref_or_iterable, Iterable):  # Converting an iterable
-            self.__init__()
-            for v in ref_or_iterable:
+            self._init_empty_table()
+            for value in ref_or_iterable:
                 # noinspection PyMethodFirstArgAssignment
-                self += v
+                self += value
         else:
             raise ValueError(f'unknown constructor argument type: '
                              '{type(ref_or_iterable).__name__}')
 
         self._ = MethodCallNamespace(self)
 
+    def _init_empty_table(self):
+        """Creates an empty table in the Lua stack and wraps it in this :class:`Table` instance."""
+        _luastack.create_table()
+        super().__init__(_luastack.reference_create())
+
     def _push_namespace_object(self):
-        _luastack.reference_push(self._LuaObject__ref)
+        _luastack.reference_push(self._ref)
 
     def __iadd__(self, value):
         G.table.insert(self, value)
@@ -314,6 +327,7 @@ class Table(Callable, LuaNamespace):
         return iter(self)
 
     def values(self):
+        """Returns a value iterator for this table."""
         return TableValueIterator(self)
 
     def items(self):
@@ -333,6 +347,8 @@ class Table(Callable, LuaNamespace):
 
 class TableBaseIterator(ABC):
     """Base class for table iterators."""
+
+    # pylint: disable=too-few-public-methods
 
     def __init__(self, table):
         self._table = table
@@ -354,6 +370,10 @@ class TableBaseIterator(ABC):
 
 
 class TableKeyIterator(TableBaseIterator):
+    """Iterator of table keys."""
+
+    # pylint: disable=too-few-public-methods
+
     @auto_pop
     def __next__(self):
         super().__next__()
@@ -361,6 +381,10 @@ class TableKeyIterator(TableBaseIterator):
 
 
 class TableValueIterator(TableBaseIterator):
+    """Iterator of table values."""
+
+    # pylint: disable=too-few-public-methods
+
     @auto_pop
     def __next__(self):
         super().__next__()
@@ -368,6 +392,10 @@ class TableValueIterator(TableBaseIterator):
 
 
 class TableItemIterator(TableBaseIterator):
+    """Iterator of table key-value pairs."""
+
+    # pylint: disable=too-few-public-methods
+
     @auto_pop
     def __next__(self):
         super().__next__()
@@ -375,6 +403,7 @@ class TableItemIterator(TableBaseIterator):
 
 
 def _table_from_stack(stack_index):
+    """Wraps a table at the Lua stack index ``stack_index`` in a :class:`Table` instance."""
     _luastack.push(stack_index)
     ref = _luastack.reference_create()
     table = Table(ref)
@@ -382,7 +411,11 @@ def _table_from_stack(stack_index):
 
 
 def _lua_func_from_stack(stack_index):
+    """
+    Wraps a function at the Lua stack index ``stack_index``
+    in a :class:`CallableLuaObject` instance.
+    """
     _luastack.push(stack_index)
     ref = _luastack.reference_create()
-    func = Callable(ref)
+    func = CallableLuaObject(ref)
     return func

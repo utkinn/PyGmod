@@ -15,8 +15,8 @@ void pushPythonObj(ILuaBase *lua, PyObject *obj) {
 		lua->PushString(PyBytes_AsString(obj));
 	else if (PyUnicode_Check(obj))
 		lua->PushString(PyUnicode_AsUTF8(obj));
-	else if (PyObject_HasAttrString(obj, "_LuaObject__ref")) {  // A reference wrapper: pushing the referenced object
-		PyObject *refPyInt = PyObject_GetAttrString(obj, "_LuaObject__ref");
+	else if (PyObject_HasAttrString(obj, "_ref")) {  // A reference wrapper: pushing the referenced object
+		PyObject *refPyInt = PyObject_GetAttrString(obj, "_ref");
 		int refCInt = PyLong_AsLong(refPyInt);
 		lua->ReferencePush(refCInt);
 		Py_DECREF(refPyInt);

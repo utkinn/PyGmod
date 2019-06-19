@@ -38,7 +38,7 @@ def configure():
     gmod_console_formatter = logging.Formatter("[PyGmod|%(name)s|%(levelname)s] %(message)s")
 
     gmod_console_stderr_handler = logging.StreamHandler()
-    gmod_console_stderr_handler.setLevel(GMOD_CONSOLE_LEVEL)
+    gmod_console_stderr_handler.setLevel(max(GMOD_CONSOLE_LEVEL, logging.ERROR))
     gmod_console_stderr_handler.setFormatter(gmod_console_formatter)
     pygmod_logger.addHandler(gmod_console_stderr_handler)
 

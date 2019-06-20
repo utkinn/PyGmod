@@ -173,7 +173,7 @@ class Globals(LuaNamespace):
     # pylint: disable=too-few-public-methods
 
     def _push_namespace_object(self):
-        _luastack.push_globals()
+        _luastack.push_globals()  # pragma: no cover (seriously, what could go wrong here?)
 
 
 G = Globals()
@@ -312,7 +312,7 @@ class Table(CallableLuaObject, LuaNamespace):
     def __len__(self):
         # ILuaBase doesn't feature a C++ way to retrieve the length of a table,
         # so we have to be creative.
-        return eval_lua("function(tbl) return #tbl end")(self)
+        return eval_lua("function(tbl) return #tbl end")(self)  # pylint: disable=not-callable
 
     # Iteration
 

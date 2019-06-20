@@ -33,6 +33,10 @@ def push_nil():
     stack.append(None)
 
 
+def push_globals():
+    create_table()
+
+
 def push_python_obj(o):
     stack.append(o)
 
@@ -102,9 +106,23 @@ def set_table(i):
     print()
 
 
-def call():
+def call(n_args, n_returns):
     """Stub. Always replaced with a mock by mocker.patch()."""
     raise NotImplementedError("call() should always be mocked")
+
+
+python_next = next
+
+
+def next(table_index):
+    pop()
+    try:
+        key, value = python_next(table_index)
+        stack.append(key)
+        stack.append(value)
+        return 1
+    except StopIteration:
+        return 0
 
 
 def reference_create():

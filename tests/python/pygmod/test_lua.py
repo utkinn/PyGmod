@@ -51,11 +51,11 @@ def test_exec_error(mocker):
 
 
 def test_eval(mocker):
-    mocker.patch("pygmod.lua.G")
     mocker.patch("pygmod.lua.exec_lua")
-    lua.G.__getitem__.return_value = 1
-    result = lua.eval_lua("")  # Shouldn't raise LuaError
-    lua.G.__getitem__.assert_called_with("_pygmod_eval_result")
+    mocker.patch.object(lua.G, "_get")
+    lua.G._get.return_value = 1
+    result = lua.eval_lua("smth")
+    lua.exec_lua.assert_called_with("_pygmod_eval_result = smth")
     assert result == 1
 
 

@@ -38,7 +38,7 @@ def get_stack_val_as_python_obj(i=-1):
 
 
 def set_field(i, name):
-    stack[i][name] = stack[i]
+    stack[i][name] = stack[-1]
     stack.pop()
 
 

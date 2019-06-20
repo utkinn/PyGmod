@@ -37,9 +37,34 @@ def get_stack_val_as_python_obj(i=-1):
     return stack[i]
 
 
+def get_field(i, name):
+    assert isinstance(i, int)
+    assert isinstance(name, str)
+
+    print("get_field", i, name, "\nBefore operation")
+    stack_dump()
+
+    val = stack[i][name]
+    stack.append(val)
+
+    print("After operation")
+    stack_dump()
+    print()
+
+
 def set_field(i, name):
+    assert isinstance(i, int)
+    assert isinstance(name, str)
+
+    print("set_field", i, name, "\nBefore operation")
+    stack_dump()
+
     stack[i][name] = stack[-1]
     stack.pop()
+
+    print("After operation")
+    stack_dump()
+    print()
 
 
 def call():

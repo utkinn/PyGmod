@@ -1,4 +1,5 @@
 import logging
+from collections import defaultdict
 
 import pytest
 
@@ -95,40 +96,56 @@ def test_base_get_namespace_getattr_underscore(base_get_namespace_instance):
 
 
 @pytest.fixture
-def lua_namespace_instance(mocker):
+def lua_namespace_instance():
     class A(lua.LuaNamespace):
         def __init__(self):
-            self._set = mocker.Mock()
-            self._del = mocker.Mock()
+            self._table = defaultdict(lambda: None, {"a": "1", 2: 3})
             self._to_delete = 1
 
         def _push_namespace_object(self):
-            _luastack.push_nil()
+            _luastack.stack.append(self._table)
 
     return A()
 
 
 def test_lua_namespace_getattr(lua_namespace_instance):
-    lua_namespace_instance.abc = 1
-    lua_namespace_instance._set.assert_called_with("abc", 1)
-    assert not hasattr(lua_namespace_instance, "_abc")
+    assert lua_namespace_instance.a == lua_namespace_instance["a"] == "1"
+
+
+def test_lua_namespace_getitem_int_key(lua_namespace_instance):
+    assert lua_namespace_instance[2] == 3
 
 
 def test_lua_namespace_setattr(lua_namespace_instance):
     lua_namespace_instance.abc = 1
-    lua_namespace_instance._set.assert_called_with("abc", 1)
-    assert not hasattr(lua_namespace_instance, "_abc")
+    assert lua_namespace_instance.abc == lua_namespace_instance["abc"] == 1
 
 
 def test_lua_namespace_setattr_underscore(lua_namespace_instance):
     lua_namespace_instance._abc = 1
-    lua_namespace_instance._set.assert_not_called()
+    assert lua_namespace_instance["_abc"] is None
     assert getattr(lua_namespace_instance, "_abc") == 1
 
 
+def test_lua_namespace_setattr_int_key(lua_namespace_instance):
+    lua_namespace_instance[4] = 1
+    assert lua_namespace_instance[4] == 1
+
+
 def test_lua_namespace_delattr(lua_namespace_instance):
-    del lua_namespace_instance.abc
-    lua_namespace_instance._del.assert_called_with("abc")
+    del lua_namespace_instance.a
+    del lua_namespace_instance.b
+    assert lua_namespace_instance.a is lua_namespace_instance["a"] is None
+    assert lua_namespace_instance.b is lua_namespace_instance["b"] is None
+
+
+def test_lua_namespace_delitem(lua_namespace_instance):
+    del lua_namespace_instance["a"]
+    del lua_namespace_instance["b"]
+    del lua_namespace_instance[2]
+    assert lua_namespace_instance.a is lua_namespace_instance["a"] is None
+    assert lua_namespace_instance.b is lua_namespace_instance["b"] is None
+    assert lua_namespace_instance[2] is None
 
 
 def test_lua_namespace_delattr_underscore(lua_namespace_instance):
@@ -207,3 +224,27 @@ def test_table_from_dict():
     d = {"a": 1, "_b": 2, "c": {"d": 0, "e": [1, 2, 3]}}
     tbl = lua.Table(d)
     assert _luastack.references[tbl._LuaObject__ref] == d
+
+
+def test_table_from_list(mocker):
+    mocker.patch("pygmod.lua.G")
+    i = [1, 2, [3, 4, {"a": "?"}]]
+    lua.Table(i)
+
+    table_insert_calls = lua.G.table.insert.call_args_list
+    table_insert_call_args = [call[0] for call in table_insert_calls]
+    assert table_insert_call_args == i
+
+
+def test_table_unknown_constructor_arg():
+    with pytest.raises(ValueError):
+        lua.Table(...)
+
+
+def test_table_call(mocker):
+    mocker.patch("pygmod.lua.G")
+    mocker.patch.object(lua.Table, "__call__")
+    lua.G.getmetatable.return_value = {"__call": 1}
+    t = lua.Table()
+    t(1, 2, 3)
+    t.__call__.assert_called_with(1, 2, 3)

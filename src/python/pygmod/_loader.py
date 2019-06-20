@@ -11,6 +11,7 @@ import sys
 from os import path, listdir
 from logging import getLogger
 from importlib import import_module
+import traceback
 
 from pygmod import _streams, _logging_config
 
@@ -41,13 +42,24 @@ def handle_exception(exc_type, exc_value, exc_tb):
 sys.excepthook = handle_exception
 
 
+def get_clean_traceback(exc_tb):
+    """Returns a formatted traceback without :mod:`importlib` and loader frames."""
+    tb_summary = traceback.extract_tb(exc_tb)
+    clean_frames_list = [frame for frame in tb_summary if "importlib" not in frame.filename
+                         and frame.filename != __file__]
+    clean_tb_summary = traceback.StackSummary.from_list(clean_frames_list)
+    return "".join(clean_tb_summary.format()).rstrip()
+
+
 def handle_addon_exception(addon_name):
     """
     Shows a PyGmod error icon with :func:`pygmod._error_notif.show`
     and logs the exception.
     """
     _error_notif.show()
-    LOGGER.exception("Exception in addon %r", addon_name)
+    exc_type, exc_value, exc_tb = sys.exc_info()
+    LOGGER.error("Exception in addon %r\n%s\n%s: %s", addon_name, get_clean_traceback(exc_tb),
+                 exc_type.__name__, exc_value)
 
 
 def try_import(addon_dir, pkg):

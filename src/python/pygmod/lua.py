@@ -144,10 +144,7 @@ class LuaNamespace(BaseGetNamespace):
     @auto_pop
     def _del(self, key):
         """Same as ``LuaNamespace._set(key, None)``."""
-        self._push_namespace_object()
-        _luastack.push_python_obj(key)
-        _luastack.push_nil()
-        _luastack.set_table(-3)
+        self._set(key, None)
 
     def __delitem__(self, key):
         self._del(key)

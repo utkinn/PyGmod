@@ -21,9 +21,9 @@ set(SOURCES ${TEST_DIR}/gtest_main.cc
 
     ${SRC_DIR}/main/Console.hpp
     ${SRC_DIR}/main/lua2py_interop.hpp
-    ${SRC_DIR}/py_extensions/luapyobject.hpp
-    ${SRC_DIR}/py_extensions/_luastack.hpp
-    ${SRC_DIR}/py_extensions/stack_utils.hpp
+    ${SRC_DIR}/main/py_extensions/luapyobject.hpp
+    ${SRC_DIR}/main/py_extensions/_luastack.hpp
+    ${SRC_DIR}/main/py_extensions/stack_utils.hpp
 )
 
 add_executable(run_gtests ${SOURCES})

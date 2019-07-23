@@ -1,5 +1,7 @@
 -- Exact copy of the original garrysmod\lua\includes\init.lua.
 
+AddCSLuaFile()
+
 --[[---------------------------------------------------------
 	Non-Module includes
 -----------------------------------------------------------]]
@@ -7,7 +9,7 @@
 include ( "util.lua" )			-- Misc Utilities
 include ( "util/sql.lua" )		-- Include sql here so it's
 								-- available at loadtime to modules.
-							
+
 include( "extensions/net.lua" )
 
 --[[---------------------------------------------------------

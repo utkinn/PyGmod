@@ -6,17 +6,6 @@
 
 #define LUA_FUNC(name) static int name(lua_State *state)
 
-// Switches the Python interpreter to the current realm.
-void switchToCurrentRealm(lua_State *state) {
-    LUA->PushSpecial(SPECIAL_GLOB);
-    LUA->GetField(-1, "py");
-
-    Realm currentRealm = getCurrentRealm(state);
-    LUA->GetField(-1, currentRealm == CLIENT ? "_SwitchToClient" : "_SwitchToServer");
-    LUA->Call(0, 0);
-    LUA->Pop(2);
-}
-
 LUA_FUNC(luapycallable_call) {
 	switchToCurrentRealm(state);
 

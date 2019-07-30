@@ -10,9 +10,13 @@
 #include "py_extensions/_luastack.hpp"
 #include "lua2py_interop.hpp"
 #include "realms.hpp"
+#include "interpreter_states.hpp"
 
 using namespace GarrysMod::Lua;
 using std::to_string;
+
+// Declaration of interpreter states in "interpreter_states.hpp"
+PyThreadState *clientInterp = nullptr, *serverInterp = nullptr;
 
 // Adds the _luastack Python extension module to builtins and initializes it.
 void addAndInitializeLuastackExtension() {

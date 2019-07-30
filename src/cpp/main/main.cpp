@@ -56,20 +56,20 @@ DLL_EXPORT int pygmod_run(lua_State *state) {
 
 	Realm currentRealm = getCurrentRealm(state);
 
+	if (serverInterp == nullptr && clientInterp == nullptr) {
+	    initPython();
+	}
 	if (currentRealm == SERVER) {
-		initPython();
 		serverInterp = PyThreadState_Get();  // Saving the server subinterpreter for later use
 	} else {  // Client
-		// In the singleplayer mode, Python is initialized by the server-side code above.
-		// However, if we're connecting to a server, server-side code won't be executed,
-		// so we have to initialize Python here.
-		if (serverInterp == nullptr) {
-			initPython();
-			// Server subinterpreter will be unused, but saving it anyway to prevent a crash during disconnecting
-			serverInterp = PyThreadState_Get();  
+	    // If we should have interpreters for both realms...
+        if (serverInterp != nullptr) {
+            // Creating a subinterpreter for client and immediately swapping to it
+            clientInterp = Py_NewInterpreter();
+            PyThreadState_Swap(clientInterp);
+		} else {
+		    clientInterp = PyThreadState_Get();
 		}
-		clientInterp = Py_NewInterpreter();  // Creating a subinterpreter for client and immediately swapping to it
-		PyThreadState_Swap(clientInterp);
 	}
 
 	PyRun_SimpleString("import sys, os.path; sys.path.append(os.path.abspath('garrysmod\\\\pygmod'))");
@@ -80,6 +80,7 @@ DLL_EXPORT int pygmod_run(lua_State *state) {
 
 	if (PyErr_Occurred()) {
 		cons.error("Setup failed");
+		PyErr_Print();
 		return 0;
 	}
 
@@ -103,13 +104,13 @@ DLL_EXPORT int pygmod_finalize(lua_State *state) {
 	Console cons(LUA);  // Creating a Console object for printing to the Garry's Mod console
 	cons.log("Binary module shutting down.");
 
-	Realm currentRealm = getCurrentRealm(state);
-	if (currentRealm == CLIENT && clientInterp != nullptr) {
-		Py_EndInterpreter(clientInterp);
-		clientInterp = nullptr;
-		PyThreadState_Swap(serverInterp);
+	bool lastInterpreter = serverInterp == nullptr || clientInterp == nullptr;
+	if (lastInterpreter) {
+	    Py_FinalizeEx();
 	} else {
-		Py_FinalizeEx();
+	    PyThreadState_Swap(clientInterp);
+        Py_EndInterpreter(clientInterp);
+		clientInterp = nullptr;
 	}
 
 	cons.log("Python finalized!");

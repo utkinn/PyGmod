@@ -15,7 +15,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('../python_extensions'))
+sys.path.insert(0, os.path.abspath('../src/python'))
 
 
 # -- Project information -----------------------------------------------------

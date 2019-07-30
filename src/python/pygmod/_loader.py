@@ -13,7 +13,7 @@ from logging import getLogger
 from importlib import import_module
 import traceback
 
-from pygmod import _streams, _logging_config
+from pygmod import _streams, _logging_config, addons
 
 # Redirecting the output to Garry's Mod as early as possible,
 # so all possible loader problems will be reported to the Garry's Mod console
@@ -106,9 +106,11 @@ def load_addon(addon_dir):
     Returns ``True`` if at least one autorun package was successfully imported,
     ``False`` otherwise.
     """
+
     realm_name = 'client' if lua.G.CLIENT else 'server'
     realm_package_name = f'__{realm_name}_autorun__'
-    python_dir_path = path.join(ADDONS_PATH, addon_dir, 'python')
+    addons.current_addon_path = path.join(ADDONS_PATH, addon_dir)
+    python_dir_path = path.join(addons.current_addon_path, 'python')
 
     # Temporarily adding the addon code directory to sys.path in order to
     # allow the autorun code to import stuff relative to the code directory (python\).

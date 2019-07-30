@@ -11,3 +11,13 @@ All functions are in the ``py`` global table.
     ::
 
         py.Exec('print("HELLO".capitalize())')  -- Will print "Hello" to the console
+
+.. function:: py.Import(module)
+
+    Imports a Python module and returns it.
+
+    ::
+
+        -- Print the Python version
+        local sys = py.Import("sys")
+        print(sys.version)

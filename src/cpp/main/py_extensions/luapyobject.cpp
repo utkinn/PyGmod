@@ -82,6 +82,8 @@ LUA_FUNC(luapyobject_newindex) {
 }
 
 LUA_FUNC(luapyobject_tostring) {
+    switchToCurrentRealm(state);
+
     PyObject *self = getStackValAsPythonObj(LUA, 1);
     PyObject *selfAsPyStr = PyObject_Str(self);
     if (selfAsPyStr == NULL) {
@@ -99,6 +101,8 @@ LUA_FUNC(luapyobject_tostring) {
 }
 
 LUA_FUNC(luapyobject_unaryMinus) {
+    switchToCurrentRealm(state);
+
     PyObject *self = getStackValAsPythonObj(LUA, 1);
 
     PyObject *negative = PyNumber_Negative(self);
@@ -118,6 +122,8 @@ LUA_FUNC(luapyobject_unaryMinus) {
 
 #define LUAPYOBJECT_BINARY_OP(LUA_OP_NAME, MAGIC_METHOD_NAME, PYTHON_API_OP_FUNC) \
     LUA_FUNC(luapyobject_ ## LUA_OP_NAME) { \
+        switchToCurrentRealm(state); \
+        \
         PyObject *self = getStackValAsPythonObj(LUA, 1); \
         PyObject *other = getStackValAsPythonObj(LUA, 2); \
         \
@@ -144,6 +150,8 @@ LUAPYOBJECT_BINARY_OP(mul, "__mul__", PyNumber_Multiply)
 LUAPYOBJECT_BINARY_OP(div, "__truediv__", PyNumber_TrueDivide)
 LUAPYOBJECT_BINARY_OP(mod, "__mod__", PyNumber_Remainder)
 LUA_FUNC(luapyobject_pow) {
+    switchToCurrentRealm(state);
+
     PyObject *self = getStackValAsPythonObj(LUA, 1);
     PyObject *other = getStackValAsPythonObj(LUA, 2);
 
@@ -166,6 +174,8 @@ LUA_FUNC(luapyobject_pow) {
 
 #define LUAPYOBJECT_COMPARISON_OP(LUA_OP_NAME, MAGIC_METHOD_NAME, COMPARISON_TYPE) \
     LUA_FUNC(luapyobject_ ## LUA_OP_NAME) { \
+        switchToCurrentRealm(state); \
+        \
         PyObject *self = getStackValAsPythonObj(LUA, 1); \
         PyObject *other = getStackValAsPythonObj(LUA, 2); \
         \
@@ -193,6 +203,8 @@ LUAPYOBJECT_COMPARISON_OP(gt, "__gt__", Py_GT)
 LUAPYOBJECT_COMPARISON_OP(ge, "__ge__", Py_GE)
 
 LUA_FUNC(luapyobject_gc) {
+    switchToCurrentRealm(state);
+
 	// Here we decrease the reference count, as we previously increased it in pushPythonObj()
 	UserData *ud = reinterpret_cast<UserData *>(LUA->GetUserdata(1));
 	PyObject *obj = reinterpret_cast<PyObject *>(ud->data);

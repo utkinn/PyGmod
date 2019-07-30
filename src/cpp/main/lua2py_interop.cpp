@@ -1,10 +1,13 @@
 #include "lua2py_interop.hpp"
 #include "py_extensions/_luastack.hpp"
+#include "realms.hpp"
 
 #define LUA_FUNC(name) int name(lua_State *state)
 
 // Eexcutes a string of Python code.
 LUA_FUNC(py_Exec) {
+    switchToCurrentRealm(state);
+
     const char *code = LUA->CheckString();
     PyRun_SimpleString(code);
 	LUA->Pop();

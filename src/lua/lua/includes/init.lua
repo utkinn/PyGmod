@@ -1,6 +1,7 @@
+-- PATCHED
+
 AddCSLuaFile()
 
--- PATCHED
 -- Patching isfunction() to treat Python functions and tables with __call metamethod as actual functions
 local oldIsfunction = isfunction
 function isfunction(o)

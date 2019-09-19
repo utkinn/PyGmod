@@ -14,4 +14,5 @@ void pushPythonObj(ILuaBase *lua, PyObject *obj);
 
 // Gets a Lua object from the given stack index,
 // converts it to a Python object and returns it.
+// Reference counter will be already increased.
 PyObject *getStackValAsPythonObj(ILuaBase *lua, int index = -1);

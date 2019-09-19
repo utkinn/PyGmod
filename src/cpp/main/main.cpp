@@ -52,6 +52,8 @@ void initPython(Console &cons) {
 
 int finalize(lua_State*);
 
+// Registers a hook which calls finalize() on game shutdown, so we have a chance to properly
+// finalize Python.
 void registerShutdownHook(lua_State *state) {
     LUA->PushSpecial(SPECIAL_GLOB);
     LUA->GetField(-1, "hook");
@@ -86,6 +88,7 @@ DLL_EXPORT int pygmod_run(lua_State *state) {
 		}
 	}
 
+    // Adding PyGmod's modules directory to sys.path
 	PyRun_SimpleString("import sys, os.path; sys.path.append(os.path.abspath('garrysmod\\\\pygmod'))");
 
 	cons.log("Python initialized!");
@@ -121,12 +124,14 @@ int finalize(lua_State *state) {
 	Console cons(LUA);  // Creating a Console object for printing to the Garry's Mod console
 	cons.log("Binary module shutting down.");
 
+    // Is only one interpreter left?
 	bool lastInterpreter = serverInterp == nullptr || clientInterp == nullptr;
+	// If so, just finalize Python
 	if (lastInterpreter) {
 		PyThreadState *thatLastInterpreter = serverInterp == nullptr ? clientInterp : serverInterp;
 		PyThreadState_Swap(thatLastInterpreter);
 	    Py_FinalizeEx();
-	} else {
+	} else {  // Otherwise, end that interpreter, and we know for sure that it's the client's interpreter
 	    PyThreadState_Swap(clientInterp);
         Py_EndInterpreter(clientInterp);
 		clientInterp = nullptr;

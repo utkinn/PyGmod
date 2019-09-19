@@ -135,7 +135,3 @@ int finalize(lua_State *state) {
 
     return 0;
 }
-
-DLL_EXPORT int pygmod_finalize(lua_State *state) {
-	return 0;
-}

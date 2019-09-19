@@ -27,7 +27,7 @@ def generate_stub(ent_cls, classname):
     stub_file_path = entity_stubs_path / Path(classname + ".lua")
     with open(stub_file_path, "w+") as f:
         f.write(generate_stub_source(ent_cls, classname))
-    atexit.register(os.remove, stub_file_path)
+    atexit.register(try_remove_stub, stub_file_path)
 
 
 def generate_stub_source(ent_cls, classname):
@@ -64,6 +64,13 @@ def generate_stub_source_for_callable(attr_name, classname, ent_hierarchy_class_
            f"return pygmod_entity.entity_registry" \
            f".__getitem__({classname!r}).{attr_name}(self, ...) " \
            f"end\n"
+
+
+def try_remove_stub(stub_path):
+    try:
+        os.remove(stub_path)
+    except FileNotFoundError:
+        pass
 
 
 def hierarchy_class_dict(cls):

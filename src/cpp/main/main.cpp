@@ -19,8 +19,9 @@ using std::to_string;
 PyThreadState *clientInterp = nullptr, *serverInterp = nullptr;
 
 // Adds the _luastack Python extension module to builtins and initializes it.
-void addAndInitializeLuastackExtension() {
-	PyImport_AppendInittab("_luastack", PyInit__luastack);
+void addAndInitializeLuastackExtension(Console &cons) {
+	if (PyImport_AppendInittab("_luastack", PyInit__luastack) == -1)
+        cons.error("Failed to append _luastack to inittab.");
 }
 
 // Initializes the _luastack module by calling its init() function.
@@ -44,8 +45,8 @@ bool isFileExists(const char *path) {
 	return file.good();
 }
 
-void initPython() {
-	addAndInitializeLuastackExtension();
+void initPython(Console &cons) {
+	addAndInitializeLuastackExtension(cons);
 	Py_Initialize();
 }
 
@@ -70,7 +71,7 @@ DLL_EXPORT int pygmod_run(lua_State *state) {
 	Realm currentRealm = getCurrentRealm(state);
 
 	if (serverInterp == nullptr && clientInterp == nullptr) {
-	    initPython();
+	    initPython(cons);
 	}
 	if (currentRealm == SERVER) {
 		serverInterp = PyThreadState_Get();  // Saving the server subinterpreter for later use

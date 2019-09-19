@@ -202,7 +202,8 @@ LUAPYOBJECT_COMPARISON_OP(gt, "__gt__", Py_GT)
 LUAPYOBJECT_COMPARISON_OP(ge, "__ge__", Py_GE)
 
 LUA_FUNC(luapyobject_gc) {
-    switchToCurrentRealm(state);
+	if (!switchToCurrentRealm(state))
+		return 0;
 
 	// Here we decrease the reference count, as we previously increased it in pushPythonObj()
 	UserData *ud = reinterpret_cast<UserData *>(LUA->GetUserdata(1));

@@ -9,9 +9,11 @@ Realm getCurrentRealm(lua_State* state) {
 	return client ? CLIENT : SERVER;
 }
 
-void switchToCurrentRealm(lua_State *state) {
+bool switchToCurrentRealm(lua_State *state) {
     Realm currentRealm = getCurrentRealm(state);
     PyThreadState *targetState = currentRealm == CLIENT ? clientInterp : serverInterp;
-    if (targetState != nullptr)
-        PyThreadState_Swap(targetState);
+	if (targetState == nullptr)
+		return false;
+    PyThreadState_Swap(targetState);
+	return true;
 }

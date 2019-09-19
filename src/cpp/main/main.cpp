@@ -49,6 +49,19 @@ void initPython() {
 	Py_Initialize();
 }
 
+int finalize(lua_State*);
+
+void registerShutdownHook(lua_State *state) {
+    LUA->PushSpecial(SPECIAL_GLOB);
+    LUA->GetField(-1, "hook");
+    LUA->GetField(-1, "Add");
+    LUA->PushString("ShutDown");
+    LUA->PushString("PyGmod early shutdown routine");
+    LUA->PushCFunction(finalize);
+    LUA->Call(3, 0);
+    LUA->Pop(2);  // "hook" table, _G
+}
+
 DLL_EXPORT int pygmod_run(lua_State *state) {
 	Console cons(LUA);  // Creating a Console object for printing to the Garry's Mod console
 
@@ -87,6 +100,9 @@ DLL_EXPORT int pygmod_run(lua_State *state) {
 	extendLua(LUA);
 	cons.log("Lua2Python Lua extensions loaded");
 
+    registerShutdownHook(state);
+    cons.log("Shutdown hook registered");
+
 	redirectIOToLogFile();
 
 	PyRun_SimpleString("from pygmod import _loader; _loader.main()");  // See python\loader.py
@@ -100,12 +116,14 @@ DLL_EXPORT int pygmod_run(lua_State *state) {
 	return 0;
 }
 
-DLL_EXPORT int pygmod_finalize(lua_State *state) {
+int finalize(lua_State *state) {
 	Console cons(LUA);  // Creating a Console object for printing to the Garry's Mod console
 	cons.log("Binary module shutting down.");
 
 	bool lastInterpreter = serverInterp == nullptr || clientInterp == nullptr;
 	if (lastInterpreter) {
+		PyThreadState *thatLastInterpreter = serverInterp == nullptr ? clientInterp : serverInterp;
+		PyThreadState_Swap(thatLastInterpreter);
 	    Py_FinalizeEx();
 	} else {
 	    PyThreadState_Swap(clientInterp);
@@ -115,5 +133,9 @@ DLL_EXPORT int pygmod_finalize(lua_State *state) {
 
 	cons.log("Python finalized!");
 
+    return 0;
+}
+
+DLL_EXPORT int pygmod_finalize(lua_State *state) {
 	return 0;
 }

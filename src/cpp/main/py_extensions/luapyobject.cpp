@@ -15,7 +15,6 @@ LUA_FUNC(luapycallable_call) {
 
 	if (!PyCallable_Check(func)) {
 		LUA->ArgError(1, "this Python object is not callable");
-		LUA->Pop(LUA->Top());
 		return 0;
 	}
 
@@ -49,10 +48,10 @@ LUA_FUNC(luapyobject_index) {
         PyObject *valReprPy = PyObject_Repr(val);
         std::string valRepr = PyUnicode_AsUTF8(valReprPy);
         PyErr_Print();
-        LUA->ThrowError(("__getattribute__ failed, probably there is no such item: " + valRepr).c_str());
         Py_DECREF(valReprPy);
         Py_DECREF(attr);
         Py_DECREF(self);
+        LUA->ThrowError(("__getattribute__ failed, probably there is no such item: " + valRepr).c_str());
         return 0;
     }
 
@@ -88,8 +87,8 @@ LUA_FUNC(luapyobject_tostring) {
     PyObject *selfAsPyStr = PyObject_Str(self);
     if (selfAsPyStr == NULL) {
         PyErr_Print();
-        LUA->ThrowError("__tostring failed");
         Py_DECREF(self);
+        LUA->ThrowError("__tostring failed");
         return 0;
     }
 
@@ -108,8 +107,8 @@ LUA_FUNC(luapyobject_unaryMinus) {
     PyObject *negative = PyNumber_Negative(self);
     if (negative == NULL) {
         PyErr_Print();
-        LUA->ThrowError("__neg__ failed or not supported by this object");
         Py_DECREF(self);
+        LUA->ThrowError("__neg__ failed or not supported by this object");
         return 0;
     }
 
@@ -130,9 +129,9 @@ LUA_FUNC(luapyobject_unaryMinus) {
         PyObject *result = PYTHON_API_OP_FUNC(self, other); \
         if (result == NULL) { \
             PyErr_Print(); \
-            LUA->ThrowError(MAGIC_METHOD_NAME " failed or not supported by this object"); \
             Py_DECREF(self); \
             Py_DECREF(other); \
+            LUA->ThrowError(MAGIC_METHOD_NAME " failed or not supported by this object"); \
             return 0; \
         } \
         \
@@ -158,9 +157,9 @@ LUA_FUNC(luapyobject_pow) {
     PyObject *result = PyNumber_Power(self, other, Py_None);
     if (result == NULL) {
         PyErr_Print();
-        LUA->ThrowError("__pow__ failed or not supported by this object");
         Py_DECREF(self);
         Py_DECREF(other);
+        LUA->ThrowError("__pow__ failed or not supported by this object");
         return 0;
     }
 
@@ -182,9 +181,9 @@ LUA_FUNC(luapyobject_pow) {
         PyObject *result = PyObject_RichCompare(self, other, COMPARISON_TYPE); \
         if (result == NULL) { \
             PyErr_Print(); \
-            LUA->ThrowError(MAGIC_METHOD_NAME " failed or not supported by this object"); \
             Py_DECREF(self); \
             Py_DECREF(other); \
+            LUA->ThrowError(MAGIC_METHOD_NAME " failed or not supported by this object"); \
             return 0; \
         } \
         \

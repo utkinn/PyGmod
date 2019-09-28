@@ -45,6 +45,8 @@ bool isNumberFractional(double n) {
 PyObject *getStackValAsPythonObj(ILuaBase *lua, int index) {
 	int type = lua->GetType(index);
 	PyObject *luaModule, *tableObject, *luaFuncObject, *tableFromStackFunc, *luaFuncFromStackFunc;
+	UserData *ud;
+	PyObject *obj;
 
 	switch (type) {
 	case Type::NIL:
@@ -67,6 +69,12 @@ PyObject *getStackValAsPythonObj(ILuaBase *lua, int index) {
 		Py_DECREF(luaFuncFromStackFunc);
 		Py_DECREF(luaModule);
 		return luaFuncObject;
+	case LUA_TYPE_PYOBJECT:
+	case LUA_TYPE_PYCALLABLE:
+	    ud = reinterpret_cast<UserData *>(lua->GetUserdata(index));
+	    obj = reinterpret_cast<PyObject *>(ud->data);
+	    Py_INCREF(obj);
+	    return obj;
 	case Type::TABLE:
 	default:
 		luaModule = PyImport_ImportModule("pygmod.lua");

@@ -9,3 +9,4 @@ enum Realm {
 
 // Retrieves the current realm.
 Realm getCurrentRealm(lua_State* state);
+bool switchToCurrentRealm(lua_State *state);

@@ -10,13 +10,18 @@
 #include "py_extensions/_luastack.hpp"
 #include "lua2py_interop.hpp"
 #include "realms.hpp"
+#include "interpreter_states.hpp"
 
 using namespace GarrysMod::Lua;
 using std::to_string;
 
+// Declaration of interpreter states in "interpreter_states.hpp"
+PyThreadState *clientInterp = nullptr, *serverInterp = nullptr;
+
 // Adds the _luastack Python extension module to builtins and initializes it.
-void addAndInitializeLuastackExtension() {
-	PyImport_AppendInittab("_luastack", PyInit__luastack);
+void addAndInitializeLuastackExtension(Console &cons) {
+	if (PyImport_AppendInittab("_luastack", PyInit__luastack) == -1)
+        cons.error("Failed to append _luastack to inittab.");
 }
 
 // Initializes the _luastack module by calling its init() function.
@@ -40,9 +45,24 @@ bool isFileExists(const char *path) {
 	return file.good();
 }
 
-void initPython() {
-	addAndInitializeLuastackExtension();
+void initPython(Console &cons) {
+	addAndInitializeLuastackExtension(cons);
 	Py_Initialize();
+}
+
+int finalize(lua_State*);
+
+// Registers a hook which calls finalize() on game shutdown, so we have a chance to properly
+// finalize Python.
+void registerShutdownHook(lua_State *state) {
+    LUA->PushSpecial(SPECIAL_GLOB);
+    LUA->GetField(-1, "hook");
+    LUA->GetField(-1, "Add");
+    LUA->PushString("ShutDown");
+    LUA->PushString("PyGmod early shutdown routine");
+    LUA->PushCFunction(finalize);
+    LUA->Call(3, 0);
+    LUA->Pop(2);  // "hook" table, _G
 }
 
 DLL_EXPORT int pygmod_run(lua_State *state) {
@@ -52,22 +72,23 @@ DLL_EXPORT int pygmod_run(lua_State *state) {
 
 	Realm currentRealm = getCurrentRealm(state);
 
+	if (serverInterp == nullptr && clientInterp == nullptr) {
+	    initPython(cons);
+	}
 	if (currentRealm == SERVER) {
-		initPython();
 		serverInterp = PyThreadState_Get();  // Saving the server subinterpreter for later use
 	} else {  // Client
-		// In the singleplayer mode, Python is initialized by the server-side code above.
-		// However, if we're connecting to a server, server-side code won't be executed,
-		// so we have to initialize Python here.
-		if (serverInterp == nullptr) {
-			initPython();
-			// Server subinterpreter will be unused, but saving it anyway to prevent a crash during disconnecting
-			serverInterp = PyThreadState_Get();  
+	    // If we should have interpreters for both realms...
+        if (serverInterp != nullptr) {
+            // Creating a subinterpreter for client and immediately swapping to it
+            clientInterp = Py_NewInterpreter();
+            PyThreadState_Swap(clientInterp);
+		} else {
+		    clientInterp = PyThreadState_Get();
 		}
-		clientInterp = Py_NewInterpreter();  // Creating a subinterpreter for client and immediately swapping to it
-		PyThreadState_Swap(clientInterp);
 	}
 
+    // Adding PyGmod's modules directory to sys.path
 	PyRun_SimpleString("import sys, os.path; sys.path.append(os.path.abspath('garrysmod\\\\pygmod'))");
 
 	cons.log("Python initialized!");
@@ -76,11 +97,15 @@ DLL_EXPORT int pygmod_run(lua_State *state) {
 
 	if (PyErr_Occurred()) {
 		cons.error("Setup failed");
+		PyErr_Print();
 		return 0;
 	}
 
 	extendLua(LUA);
 	cons.log("Lua2Python Lua extensions loaded");
+
+    registerShutdownHook(state);
+    cons.log("Shutdown hook registered");
 
 	redirectIOToLogFile();
 
@@ -95,20 +120,24 @@ DLL_EXPORT int pygmod_run(lua_State *state) {
 	return 0;
 }
 
-DLL_EXPORT int pygmod_finalize(lua_State *state) {
+int finalize(lua_State *state) {
 	Console cons(LUA);  // Creating a Console object for printing to the Garry's Mod console
 	cons.log("Binary module shutting down.");
 
-	Realm currentRealm = getCurrentRealm(state);
-	if (currentRealm == CLIENT && clientInterp != nullptr) {
-		Py_EndInterpreter(clientInterp);
+    // Is only one interpreter left?
+	bool lastInterpreter = serverInterp == nullptr || clientInterp == nullptr;
+	// If so, just finalize Python
+	if (lastInterpreter) {
+		PyThreadState *thatLastInterpreter = serverInterp == nullptr ? clientInterp : serverInterp;
+		PyThreadState_Swap(thatLastInterpreter);
+	    Py_FinalizeEx();
+	} else {  // Otherwise, end that interpreter, and we know for sure that it's the client's interpreter
+	    PyThreadState_Swap(clientInterp);
+        Py_EndInterpreter(clientInterp);
 		clientInterp = nullptr;
-		PyThreadState_Swap(serverInterp);
-	} else {
-		Py_FinalizeEx();
 	}
 
 	cons.log("Python finalized!");
 
-	return 0;
+    return 0;
 }

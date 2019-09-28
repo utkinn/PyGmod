@@ -106,7 +106,7 @@ def install(path_var):
     zipfile = this_zipfile()
     extract_pygmod_files(zipfile, path_var.get())
 
-    showinfo("Success", "PyGmod was installed successfully.")
+    showinfo("Success", "PyGmod has been installed successfully.")
     exit()
 
 
@@ -117,6 +117,12 @@ def find_gmod_dir():
     """
     for drive in get_drives():
         assumed_path = os.path.join(drive, "Steam", "steamapps", "common", "GarrysMod")
+        logging.debug("Assuming %s", assumed_path)
+        if os.path.isdir(assumed_path):
+            logging.debug("Guessed!")
+            return assumed_path
+        assumed_path = os.path.join(drive, "SteamLibrary", "steamapps", "common",
+                                    "GarrysMod")
         logging.debug("Assuming %s", assumed_path)
         if os.path.isdir(assumed_path):
             logging.debug("Guessed!")

@@ -55,18 +55,17 @@ All functions are in the <code class="docutils literal notranslate"><span class=
 </div>
 </dd></dl>
 
-<div class="section" id="internal-functions">
-<h2>Internal functions<a class="headerlink" href="#internal-functions" title="Permalink to this headline">¶</a></h2>
-<p>These functions are used by PyGmod internally and not intended to be used by the regular addon developers.</p>
 <dl class="function">
-<dt id="py._SwitchToClient">
-<code class="sig-prename descclassname">py.</code><code class="sig-name descname">_SwitchToClient</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py._SwitchToClient" title="Permalink to this definition">¶</a></dt>
-<dt id="py._SwitchToServer">
-<code class="sig-prename descclassname">py.</code><code class="sig-name descname">_SwitchToServer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py._SwitchToServer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switches to the PyGmod sub-interpreter which corresponds to the specified realm.</p>
+<dt id="py.Import">
+<code class="sig-prename descclassname">py.</code><code class="sig-name descname">Import</code><span class="sig-paren">(</span><em class="sig-param">module</em><span class="sig-paren">)</span><a class="headerlink" href="#py.Import" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imports a Python module and returns it.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span> <span class="n">Print</span> <span class="n">the</span> <span class="n">Python</span> <span class="n">version</span>
+<span class="n">local</span> <span class="n">sys</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">Import</span><span class="p">(</span><span class="s2">&quot;sys&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
-</div>
 </div>
 
 
@@ -78,14 +77,6 @@ All functions are in the <code class="docutils literal notranslate"><span class=
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/docs-logo.png" alt="Logo"/>
             </a></p>
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Lua Reference</a><ul>
-<li><a class="reference internal" href="#internal-functions">Internal functions</a></li>
-</ul>
-</li>
-</ul>
-
   <h4>Previous topic</h4>
   <p class="topless"><a href="reference/internal/streams.html"
                         title="previous chapter"><code class="docutils literal notranslate"><span class="pre">pygmod._streams</span></code> - I/O to Garry’s Mod</a></p>

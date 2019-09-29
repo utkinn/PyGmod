@@ -11,8 +11,8 @@ Everything from :mod:`pygmod.gmodapi` will be imported automatically.
 
 You can use up arrow and down arrow keys to search through the input history.
 
-Code styles
------------
+Styles
+------
 
 You can choose from any of 89 code styles provided by `highlight.js <https://highlightjs.org/>`_ library.
 

@@ -12,12 +12,12 @@ All functions are in the ``py`` global table.
 
         py.Exec('print("HELLO".capitalize())')  -- Will print "Hello" to the console
 
-Internal functions
-------------------
+.. function:: py.Import(module)
 
-These functions are used by PyGmod internally and not intended to be used by the regular addon developers.
+    Imports a Python module and returns it.
 
-.. function:: py._SwitchToClient()
-              py._SwitchToServer()
+    ::
 
-    Switches to the PyGmod sub-interpreter which corresponds to the specified realm.
+        -- Print the Python version
+        local sys = py.Import("sys")
+        print(sys.version)

@@ -10,4 +10,5 @@ This is the reference of the PyGmod libraries.
 
     reference/lua
     reference/api
+    reference/entity
     reference/internal

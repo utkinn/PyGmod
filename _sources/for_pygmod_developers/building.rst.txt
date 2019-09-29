@@ -36,8 +36,7 @@ Final directory structure should looks like this:
                               │              │                                └─ lua\ ───── init.lua
                               │              └─ lua\ ────┬─ bin\ ─────────────┬─ gmsv_pygmod_win32.dll
                               │                          │                    └─ gmcl_pygmod_win32.dll
-                              │                          └─ includes\ ────────┬─ init.lua (Modified)
-                              │                                               └─ original_init.lua
+                              │                          └─ includes\ ────────── init.lua (Modified)
                               └─ pygmod\ ────── pygmod\ ──────────────────────┬─ __init__.py
                                                                               ├─ _error_notif.py
                                                                               └─ ...

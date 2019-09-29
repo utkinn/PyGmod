@@ -134,9 +134,9 @@ class Entity:
 
         To initialize your entity, you should use ``Initialize`` instead of ``__init__()``::
 
-        class MyEnt(Entity):
-            def Initialize(self):
-                print(f"Hello, world from entity #{self._.EntIndex()}")
+            class MyEnt(Entity):
+                def Initialize(self):
+                    print(f"Hello, world from entity #{self._.EntIndex()}")
     """
 
     Base = "base_entity"

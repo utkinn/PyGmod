@@ -1,6 +1,7 @@
-# PyGmod
-
-![Logo](logos/logo128x128.png)
+<p align="center">
+  <img src="logos/logo128x128.png">
+  <h1 align="center">PyGmod</h1>
+</p>
 
 [![Build Status](https://travis-ci.com/javabird25/PyGmod.svg?branch=master)](https://travis-ci.com/javabird25/PyGmod)
 

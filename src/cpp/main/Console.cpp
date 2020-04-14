@@ -12,7 +12,7 @@ void Console::println(const char* message) {
     lua->Pop();  // Popping the global table from the stack
 }
 
-void Console::println(const char* message, Color& color) {
+void Console::println(const char* message, Color color) {
     lua->PushSpecial(SPECIAL_GLOB);  // Pushing global table to stack
 
     lua->GetField(-1, "MsgC");  // Getting "MsgC" field of the global table
@@ -50,7 +50,7 @@ void Console::println(string message) {
     println(message.c_str());
 }
 
-void Console::println(string message, Color& color) {
+void Console::println(string message, Color color) {
     println(message.c_str(), color);
 }
 
@@ -70,7 +70,7 @@ void Console::println(int message) {
     println(to_string(message));
 }
 
-void Console::println(int message, Color& color) {
+void Console::println(int message, Color color) {
     println(to_string(message), color);
 }
 

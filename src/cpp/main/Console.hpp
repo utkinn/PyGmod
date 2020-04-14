@@ -23,7 +23,7 @@ public:
     void println(string message);
 
     // Prints the message to the console with a color.
-    void println(string message, Color& color);
+    void println(string message, Color color);
 
     // Prints "[PyGmod] " + message to the console.
     void log(string message);
@@ -40,7 +40,7 @@ public:
     void println(const char* message);
 
     // Prints the message to the console with a color.
-    void println(const char* message, Color& color);
+    void println(const char* message, Color color);
 
     // Prints "[PyGmod] " + message to the console.
     void log(const char* message);
@@ -57,7 +57,7 @@ public:
     void println(int message);
 
     // Prints the message to the console with a color.
-    void println(int message, Color& color);
+    void println(int message, Color color);
 
     // Prints "[PyGmod] " + message to the console.
     void log(int message);

@@ -4,7 +4,7 @@
 Here is what it does:
 
 #. Redirects I/O to Garry's Mod console with :mod:`pygmod._streams` I/O classes.
-#. Scans ``addons\\`` directory for PyGmod addons and initializes them.
+#. Scans ``addons`` directory for PyGmod addons and initializes them.
 """
 
 import sys
@@ -26,7 +26,7 @@ __all__ = ['main']
 
 LOGGER = getLogger("pygmod.loader")
 
-ADDONS_PATH = path.abspath('garrysmod\\addons')
+ADDONS_PATH = path.abspath(path.join('garrysmod', 'addons'))
 SHARED_PACKAGE_NAME = '__shared_autorun__'
 
 
@@ -113,7 +113,7 @@ def load_addon(addon_dir):
     python_dir_path = path.join(addons.current_addon_path, 'python')
 
     # Temporarily adding the addon code directory to sys.path in order to
-    # allow the autorun code to import stuff relative to the code directory (python\).
+    # allow the autorun code to import stuff relative to the code directory (python/).
     sys.path.append(python_dir_path)
     success = any((try_import(addon_dir, SHARED_PACKAGE_NAME),
                    try_import(addon_dir, realm_package_name)))
@@ -124,14 +124,14 @@ def load_addon(addon_dir):
 
 def load_addons():
     """
-    Scans the ``addons\\`` directory for PyGmod addons and runs their autorun code.
+    Scans the ``addons`` directory for PyGmod addons and runs their autorun code.
     """
     LOGGER.info('Loading addons...')
 
     sys.path.append(ADDONS_PATH)
-    # All files and subdirs of addons\
+    # All files and subdirs of addons/
     addons_dir_listing = listdir(ADDONS_PATH)
-    # Subdirectories of addons\
+    # Subdirectories of addons/
     addons_subdirs = (entry for entry in addons_dir_listing
                       if path.isdir(path.join(ADDONS_PATH, entry)))
     pygmod_addons = (entry for entry in addons_subdirs if is_pygmod_addon(entry))
@@ -144,9 +144,9 @@ def load_addons():
     LOGGER.info('Loading finished')
 
 
-def check_init_lua_patch():
+def check_init_lua_patch():  # TODO: patch if not patched
     """
-    Checks whether ``garrysmod\\lua\\includes\\init.lua`` is patched.
+    Checks whether ``garrysmod/lua/includes/init.lua`` is patched.
     This is necessary because Steam may restore this file to the original version
     at any time. Patched version contains modified
     `isfunction() <http://wiki.garrysmod.com/page/Global/isfunction>`_
@@ -156,7 +156,7 @@ def check_init_lua_patch():
     """
     with open(path.join("garrysmod", "lua", "includes", "init.lua")) as init_lua:
         if not init_lua.read().startswith("-- PATCHED"):
-            LOGGER.warning("garrysmod\\lua\\includes\\init.lua is not patched. "
+            LOGGER.warning("garrysmod/lua/includes/init.lua is not patched. "
                            "hook.Add() and possibly some other functions which "
                            "take callbacks won't work in PyGmod. "
                            "Please reinstall PyGmod to make them working.")

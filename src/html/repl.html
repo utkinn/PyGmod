@@ -304,7 +304,7 @@
             /** Submits the input code. */
             function submit() {
                 inputEcho();
-                pygmodRepl.submit(input.val());  // See src\python\pygmod\_repl.py
+                pygmodRepl.submit(input.val());  // See src/python/pygmod/_repl.py
                 inputHistory.pushEntry();
                 input.val("");
             }
@@ -319,7 +319,7 @@
                 ERROR: 3
             });
 
-            /** Appends text to the output field. Called in src\python\pygmod\_repl.py. */
+            /** Appends text to the output field. Called in src/python/pygmod/_repl.py. */
             function appendOutput(text, mode) {
                 var newTextBlockHtml;
                 switch (mode) {

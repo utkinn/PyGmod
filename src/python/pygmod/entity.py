@@ -20,7 +20,7 @@ entity_registry = {}
 
 def generate_stub(ent_cls, classname):
     """
-    Generates a Lua source file ``<addon_path>\\lua\\entities\\<classname>.lua``
+    Generates a Lua source file ``<addon_path>/lua/entities/<classname>.lua``
     where entity attributes and methods are copied from ``ent_cls``.
     This file is required for Garry's Mod addon loader to detect the entity class.
     Also registers an ``atexit`` function which deletes the stub file on the game shutdown.

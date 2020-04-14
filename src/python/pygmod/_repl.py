@@ -147,16 +147,16 @@ def add_functions_to_js(dhtml, console):
     These functions are:
 
     #. ``pygmodRepl.submit(code)``
-        This function receives a ``code`` argument which is a Python code strin The code string
+        This function receives a ``code`` argument which is a Python code string. The code string
         is pushed to ``console``. The text of th HTML element with id ``prompt`` is changed to
         ``>>>`` or ``...``, depending on whether the Python expression is complete.
     #. ``pygmodRepl.saveStylePreferenceToFile(style)``
         Receives a string ``style`` which is a name of the CSS file of the highlight.js code style
         which was selected by the user. The style name is saved to
-        ``garrysmod\\data\\pygmod_repl_style.txt`` in order to keep the code style
+        ``garrysmod/data/pygmod_repl_style.txt`` in order to keep the code style
         across REPL sessions.
     #. ``pygmodRepl.loadStylePreferenceFromFile()``
-        Returns the style name from ``garrysmod\\data\\pygmod_repl_style.txt``. If the file doesn't
+        Returns the style name from ``garrysmod/data/pygmod_repl_style.txt``. If the file doesn't
         exist, returns ``"default"``.
     """
 

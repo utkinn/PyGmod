@@ -89,7 +89,7 @@ DLL_EXPORT int pygmod_run(lua_State *state) {
 	}
 
     // Adding PyGmod's modules directory to sys.path
-	PyRun_SimpleString("import sys, os.path; sys.path.append(os.path.abspath('garrysmod\\\\pygmod'))");
+	PyRun_SimpleString("import sys, os.path; sys.path.append(os.path.abspath(os.path.join('garrysmod', 'pygmod')))");
 
 	cons.log("Python initialized!");
 
@@ -109,7 +109,7 @@ DLL_EXPORT int pygmod_run(lua_State *state) {
 
 	redirectIOToLogFile();
 
-	PyRun_SimpleString("from pygmod import _loader; _loader.main()");  // See python\loader.py
+	PyRun_SimpleString("from pygmod import _loader; _loader.main()");  // See python/loader.py
 
 	if (PyErr_Occurred()) {
 		cons.error("Something went wrong");

@@ -6,7 +6,7 @@
 extern "C" int pygmod_run(lua_State *state);
 
 GMOD_MODULE_OPEN() {
-    return pygmod_run(state);  // See src\cpp\main\main.cpp
+    return pygmod_run(state);  // See src/cpp/main/main.cpp
 }
 
 GMOD_MODULE_CLOSE() {

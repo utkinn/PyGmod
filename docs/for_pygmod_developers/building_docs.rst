@@ -12,7 +12,6 @@ Instructions
 
 1. Make sure that Sphinx is properly installed and built.
 2. Make sure that CorLab theme is installed.
-3. Open ``make.bat`` and set the output directory (``BUILDDIR`` variable).
+3. Open ``make.bat`` (Windows) or ``Makefile`` (Linux) and set the output directory (``BUILDDIR`` variable).
 4. Just run ``make html`` in a command prompt in ``docs\`` directory.
 
-Output is in ``docs\_build\`` directory.

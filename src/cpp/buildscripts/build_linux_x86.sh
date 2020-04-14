@@ -1,10 +1,6 @@
 #!/bin/sh
 
-# This script is for compiling C++ part of PyGmod for Linux.
-# Main branch of Garry's Mod is still 32-bit.
-# Building is performed inside a 32-bit Linux Docker image.
-# DLLs will appear in this directory.
-
+# Abort on errors
 set -e
 
 echo 'Building image (this can take a while)...'

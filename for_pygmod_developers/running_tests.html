@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>Running Unit tests &#8212; PyGmod 0.13-alpha documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -46,9 +46,18 @@
 <h1>Running Unit tests<a class="headerlink" href="#running-unit-tests" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="windows">
+<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><p><a class="reference external" href="https://hub.docker.com/editions/community/docker-ce-desktop-windows">Docker Desktop for Windows</a></p></li>
 </ol>
+</div>
+<div class="section" id="linux">
+<h3>Linux<a class="headerlink" href="#linux" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Docker</strong> (<code class="docutils literal notranslate"><span class="pre">docker.io</span></code> package on Debian-based distributions, <code class="docutils literal notranslate"><span class="pre">docker</span></code> package on Arch-based distributions)</p></li>
+</ol>
+</div>
 </div>
 <div class="section" id="instructions">
 <h2>Instructions<a class="headerlink" href="#instructions" title="Permalink to this headline">¶</a></h2>
@@ -87,7 +96,11 @@
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Running Unit tests</a><ul>
-<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#requirements">Requirements</a><ul>
+<li><a class="reference internal" href="#windows">Windows</a></li>
+<li><a class="reference internal" href="#linux">Linux</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#instructions">Instructions</a><ul>
 <li><a class="reference internal" href="#python-tests">Python tests</a></li>
 <li><a class="reference internal" href="#c-tests">C++ tests</a></li>
@@ -119,7 +132,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -144,7 +157,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.
     </div>
   </body>
 </html>

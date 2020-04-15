@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>pygmod.lua - Lua interoperability &#8212; PyGmod 0.13-alpha documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -47,7 +47,7 @@
 <h1><code class="docutils literal notranslate"><span class="pre">pygmod.lua</span></code> - Lua interoperability<a class="headerlink" href="#pygmod-lua-lua-interoperability" title="Permalink to this headline">¶</a></h1>
 <p>This module provides the direct access to the Lua environment, such as getting and setting arbitrary variables,
 calling Lua functions and manipulating tables and objects.</p>
-<span class="target" id="module-pygmod.lua"></span><dl class="data">
+<span class="target" id="module-pygmod.lua"></span><dl class="py data">
 <dt id="pygmod.lua.G">
 <code class="sig-prename descclassname">pygmod.lua.</code><code class="sig-name descname">G</code><a class="headerlink" href="#pygmod.lua.G" title="Permalink to this definition">¶</a></dt>
 <dd><p>A singleton object that represents the Lua global namespace. Same as <code class="docutils literal notranslate"><span class="pre">_G</span></code> in Lua. You can use it to get and set
@@ -80,7 +80,7 @@ should be accessed with the subscription syntax. These names are reserved for in
 </div>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="pygmod.lua.Table">
 <em class="property">class </em><code class="sig-prename descclassname">pygmod.lua.</code><code class="sig-name descname">Table</code><a class="headerlink" href="#pygmod.lua.Table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class which represents Lua tables.</p>
@@ -105,7 +105,7 @@ should be accessed with the subscription syntax. These names are reserved for in
 </div>
 </div>
 <p>If the table’s metatable has <code class="docutils literal notranslate"><span class="pre">__call</span></code> function, this object can be called:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="n">setmetatable</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="kn">import</span> <span class="n">setmetatable</span>
 
 <span class="n">tbl</span> <span class="o">=</span> <span class="n">Table</span><span class="p">()</span>
 
@@ -133,17 +133,17 @@ should be accessed with the subscription syntax. These names are reserved for in
 </pre></div>
 </div>
 <p>A <a class="reference internal" href="#pygmod.lua.Table" title="pygmod.lua.Table"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a> object can be converted to a dictionary:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">lua</span> <span class="k">import</span> <span class="n">eval_lua</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">lua</span> <span class="kn">import</span> <span class="n">eval_lua</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tbl</span> <span class="o">=</span> <span class="n">eval_lua</span><span class="p">(</span><span class="s2">&quot;{a = 1, b = 2, c = 3}&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">tbl</span><span class="p">))</span>
 <span class="go">{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="pygmod.lua.Table.keys">
 <code class="sig-name descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygmod.lua.Table.keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a keys iterator for this table. Same as <code class="docutils literal notranslate"><span class="pre">iter(table)</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tbl</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tbl</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">tbl</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
 <span class="gp">... </span>   <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
 <span class="gp">...</span>
@@ -154,11 +154,11 @@ should be accessed with the subscription syntax. These names are reserved for in
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pygmod.lua.Table.values">
 <code class="sig-name descname">values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygmod.lua.Table.values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a values iterator for this table.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tbl</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tbl</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tbl</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
 <span class="gp">... </span>   <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 <span class="gp">...</span>
@@ -169,11 +169,11 @@ should be accessed with the subscription syntax. These names are reserved for in
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pygmod.lua.Table.items">
 <code class="sig-name descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygmod.lua.Table.items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a key-value pairs iterator for this table.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tbl</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tbl</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tbl</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 <span class="gp">... </span>   <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 <span class="gp">...</span>
@@ -186,9 +186,9 @@ should be accessed with the subscription syntax. These names are reserved for in
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pygmod.lua.exec_lua">
-<code class="sig-prename descclassname">pygmod.lua.</code><code class="sig-name descname">exec_lua</code><span class="sig-paren">(</span><em class="sig-param">code: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#pygmod.lua.exec_lua" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pygmod.lua.</code><code class="sig-name descname">exec_lua</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a><a class="headerlink" href="#pygmod.lua.exec_lua" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs a string of Lua code. Raises <a class="reference internal" href="#pygmod.lua.LuaError" title="pygmod.lua.LuaError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">LuaError</span></code></a> on failure.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exec_lua</span><span class="p">(</span><span class="s2">&quot;print(jit.version)&quot;</span><span class="p">)</span>
 <span class="c1"># &quot;LuaJIT 2.0.4&quot; will be printed to the console</span>
@@ -196,17 +196,17 @@ should be accessed with the subscription syntax. These names are reserved for in
 </div>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pygmod.lua.eval_lua">
-<code class="sig-prename descclassname">pygmod.lua.</code><code class="sig-name descname">eval_lua</code><span class="sig-paren">(</span><em class="sig-param">code: str</em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#pygmod.lua.eval_lua" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pygmod.lua.</code><code class="sig-name descname">eval_lua</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)">object</a><a class="headerlink" href="#pygmod.lua.eval_lua" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluates a Lua expression and returns the result. Raises <a class="reference internal" href="#pygmod.lua.LuaError" title="pygmod.lua.LuaError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">LuaError</span></code></a> on failure.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">eval_lua</span><span class="p">(</span><span class="s2">&quot;function() return 123 end&quot;</span><span class="p">)())</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">eval_lua</span><span class="p">(</span><span class="s2">&quot;function() return 123 end&quot;</span><span class="p">)())</span>
 <span class="go">123</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="exception">
+<dl class="py exception">
 <dt id="pygmod.lua.LuaError">
 <em class="property">exception </em><code class="sig-prename descclassname">pygmod.lua.</code><code class="sig-name descname">LuaError</code><a class="headerlink" href="#pygmod.lua.LuaError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when a Lua error occurs while running some Lua code in Python.</p>
@@ -245,7 +245,7 @@ should be accessed with the subscription syntax. These names are reserved for in
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -271,7 +271,7 @@ should be accessed with the subscription syntax. These names are reserved for in
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.
     </div>
   </body>
 </html>

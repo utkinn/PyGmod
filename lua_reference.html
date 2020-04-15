@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>Lua Reference &#8212; PyGmod 0.13-alpha documentation</title>
     <link rel="stylesheet" href="_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -46,18 +46,18 @@
 <h1>Lua Reference<a class="headerlink" href="#lua-reference" title="Permalink to this headline">¶</a></h1>
 <p>You can communicate with Python from Lua, for example, run arbitrary Python code.
 All functions are in the <code class="docutils literal notranslate"><span class="pre">py</span></code> global table.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="py.Exec">
-<code class="sig-prename descclassname">py.</code><code class="sig-name descname">Exec</code><span class="sig-paren">(</span><em class="sig-param">code</em><span class="sig-paren">)</span><a class="headerlink" href="#py.Exec" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py.</code><code class="sig-name descname">Exec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py.Exec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Executes a string of Python code.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="o">.</span><span class="n">Exec</span><span class="p">(</span><span class="s1">&#39;print(&quot;HELLO&quot;.capitalize())&#39;</span><span class="p">)</span>  <span class="o">--</span> <span class="n">Will</span> <span class="nb">print</span> <span class="s2">&quot;Hello&quot;</span> <span class="n">to</span> <span class="n">the</span> <span class="n">console</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="py.Import">
-<code class="sig-prename descclassname">py.</code><code class="sig-name descname">Import</code><span class="sig-paren">(</span><em class="sig-param">module</em><span class="sig-paren">)</span><a class="headerlink" href="#py.Import" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py.</code><code class="sig-name descname">Import</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py.Import" title="Permalink to this definition">¶</a></dt>
 <dd><p>Imports a Python module and returns it.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span> <span class="n">Print</span> <span class="n">the</span> <span class="n">Python</span> <span class="n">version</span>
 <span class="n">local</span> <span class="n">sys</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">Import</span><span class="p">(</span><span class="s2">&quot;sys&quot;</span><span class="p">)</span>
@@ -99,7 +99,7 @@ All functions are in the <code class="docutils literal notranslate"><span class=
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -124,7 +124,7 @@ All functions are in the <code class="docutils literal notranslate"><span class=
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.
     </div>
   </body>
 </html>

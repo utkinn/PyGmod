@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>Building &#8212; PyGmod 0.13-alpha documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -46,40 +46,185 @@
 <h1>Building<a class="headerlink" href="#building" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="requirements-for-building">
 <h2>Requirements for building<a class="headerlink" href="#requirements-for-building" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic simple">
-<li><p><a class="reference external" href="https://visualstudio.microsoft.com">Visual Studio 2017 or newer</a></p></li>
+<div class="section" id="windows">
+<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p><a class="reference external" href="https://visualstudio.microsoft.com">Visual Studio 2017 or newer</a>.</p></li>
 <li><p><a class="reference external" href="https://cmake.org">CMake</a></p></li>
-<li><p><a class="reference external" href="https://python.org">Python</a>, preferably the latest version</p></li>
+<li><p><a class="reference external" href="https://python.org">Python 3</a>, preferably the latest version.
+You will need a <strong>32-bit</strong> version for the stable Garry’s Mod branch (most likely the one you use),
+or a <strong>64-bit</strong> version for the x86-64 Garry’s Mod branch.</p>
+<p>Make sure you had “Download debugging symbols” and “Download debug binaries” checked when you were installing
+Python. If you’re not sure or want to enable them, go to Settings -&gt; Apps -&gt; Python -&gt; Modify.
+Otherwise, building may fail with an error about missing <code class="docutils literal notranslate"><span class="pre">python3.X_d.lib</span></code>.</p>
+</li>
 </ol>
 </div>
-<div class="section" id="instructions">
-<h2>Instructions<a class="headerlink" href="#instructions" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic">
-<li><p>Copy <code class="docutils literal notranslate"><span class="pre">src\lua\addons\pygmod_launcher</span></code> to <code class="docutils literal notranslate"><span class="pre">garrysmod\addons</span></code>.</p></li>
-<li><p>Copy the contents of <code class="docutils literal notranslate"><span class="pre">src\lua\lua\includes</span></code> to <code class="docutils literal notranslate"><span class="pre">garrysmod\lua\includes</span></code>. Confirm the overwriting of <code class="docutils literal notranslate"><span class="pre">init.lua</span></code>.</p></li>
-<li><p>Copy <code class="docutils literal notranslate"><span class="pre">src\python\pygmod</span></code> to <code class="docutils literal notranslate"><span class="pre">garrysmod\pygmod</span></code>.</p></li>
-<li><p>Open <strong>Developer Command Prompt for VS</strong> (most likely residing in your Start menu, folder <strong>Visual Studio</strong>),
-<code class="docutils literal notranslate"><span class="pre">cd</span></code> to <code class="docutils literal notranslate"><span class="pre">src\cpp</span></code>.</p></li>
-<li><p>Run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cmake</span> <span class="o">-</span><span class="n">G</span> <span class="s2">&quot;NMake Makefiles&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">nmake</span>
+<div class="section" id="linux">
+<h3>Linux<a class="headerlink" href="#linux" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>GCC</strong></p></li>
+<li><p><strong>CMake</strong></p></li>
+<li><p><strong>Python 3 (development version)</strong></p></li>
+</ol>
+<p>All dependencies can be installed with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Debian-based distributions (Debian, Ubuntu, Mint, Pop!_OS, etc.)</span>
+<span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">gcc</span> <span class="n">cmake</span> <span class="n">python3</span><span class="o">-</span><span class="n">dev</span>
+
+<span class="c1"># Arch Linux, Manjaro</span>
+<span class="n">sudo</span> <span class="n">pacman</span> <span class="o">-</span><span class="n">Suy</span> <span class="n">gcc</span> <span class="n">cmake</span> <span class="n">python</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="a-note-about-32-and-64-bits">
+<h2>A note about 32 and 64 bits<a class="headerlink" href="#a-note-about-32-and-64-bits" title="Permalink to this headline">¶</a></h2>
+<p>The regular version of Garry’s Mod (its stable branch) is still 32-bit.
+This makes compiling and using PyGmod tricky if you:</p>
+<ol class="arabic simple">
+<li><p>are on Windows and have 64-bit version of Python installed</p></li>
+<li><p>are on 64-bit version of Linux (most likely you are).</p></li>
+</ol>
+<p>This is because Garry’s Mod, PyGmod and Python should all have the same bitness for successful compilation and usage.</p>
+<p>There are two solutions for this problem: you can either install a 32-bit version of Python, or switch to “x86-64” branch of Garry’s Mod.</p>
+<ul>
+<li><p>You can switch to the x86-64 branch of Garry’s Mod and build a 64-bit version of PyGmod.
+In order to switch to the x86-64 branch, go to Steam -&gt; Library -&gt; Right click on Garry’s Mod -&gt; Properties -&gt; Betas -&gt; select “x86-64” in the first dropdown.</p>
+<p>To compile a 64-bit version of PyGmod, use:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Windows</span>
+cmake -DBITS<span class="o">=</span><span class="m">64</span> . <span class="o">&amp;&amp;</span> msbuild PyGmod.sln
+<span class="c1"># Linux</span>
+cmake -DBITS<span class="o">=</span><span class="m">64</span> . <span class="o">&amp;&amp;</span> make
 </pre></div>
 </div>
 </li>
-<li><p>Move <code class="docutils literal notranslate"><span class="pre">gmsv_pygmod_win32.dll</span></code> and <code class="docutils literal notranslate"><span class="pre">gmcl_pygmod_win32.dll</span></code>
+<li><p>If you don’t want to switch to “x86-64” branch and you’re on Windows, install a 32-bit version of Python from <a class="reference external" href="https://python.org">python.org</a>.
+You should download a “x86 installer”, not a “x86-64 installer”.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have both 32-bit and 64-bit versions of Python installed on your Windows system,
+you may encounter an error about incompatible x86 and x86-64 libraries during the compilation.
+This error could be resolved by specifying Python’s installation directory manually, like this:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>cmake -DCMAKE_FIND_ROOT_PATH<span class="o">=</span><span class="s2">&quot;C:\Program Files (x86)\Programs\Python38-32&quot;</span> .
+</pre></div>
+</div>
+<p>You will have to specify the correct folder for 32-bit or 64-bit version.
+By default, <code class="docutils literal notranslate"><span class="pre">cmake</span></code> will prepare the 32-bit version of PyGmod.</p>
+</div>
+</li>
+<li><p>If you’re on Linux and you don’t want to switch to “x86-64” branch, you can install a 32-bit version of Python for just <em>using</em> PyGmod:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Debian</span>
+
+<span class="c1"># Before installing, you have to enable the i386 repository if you haven&#39;t done that already.</span>
+<span class="c1"># Use the following command:</span>
+
+sudo dpkg --add-architecture i386 <span class="o">&amp;&amp;</span> sudo apt update
+
+<span class="c1"># Install 32-bit Python:</span>
+sudo apt install python3:i386
+
+<span class="c1"># Arch:</span>
+<span class="c1"># You&#39;ll have to install &quot;lib32-python&quot; from AUR: https://aur.archlinux.org/packages/lib32-python/</span>
+</pre></div>
+</div>
+<p>However, actually compiling 32-bit PyGmod on Linux is tricky, though possible. You’ll have to play with CMake variables to point it to 32-bit Python libraries (refer to <a class="reference external" href="https://cmake.org/cmake/help/latest/module/FindPython3.html">FindPython3 CMake module documentation</a> if you want to try to compile 32-bit PyGmod on a host 64-bit Linux).</p>
+<p>To make compiling 32-bit PyGmod simplier, there is a script called <code class="docutils literal notranslate"><span class="pre">build_linux_x86.sh</span></code> in <code class="docutils literal notranslate"><span class="pre">src/cpp/buildscripts</span></code>.
+It will compile 32-bit PyGmod inside a Docker container. Make sure you have Docker installed:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Debian:</span>
+sudo apt install docker.io
+
+<span class="c1"># Arch:</span>
+sudo pacman -Suy docker
+
+<span class="c1"># Additional possibly required actions (All distributions):</span>
+
+<span class="c1"># Add yourself to group &quot;docker&quot;.</span>
+<span class="c1"># Relogin is required for this to take effect.</span>
+sudo usermod -aG docker <span class="sb">`</span>whoami<span class="sb">`</span>
+
+<span class="c1"># Start docker daemon:</span>
+sudo systemctl start docker
+</pre></div>
+</div>
+<p>This script will build PyGmod to work with whatever newest version of Python available on Debian Stable.
+However, this won’t necessary be the latest version of Python available at all, thus you might have a version
+discrepancy between the container and your system
+(for example, at the time of writing, the latest version of Python at all was 3.8, while the latest version on Debian Stable
+was 3.7).</p>
+<p>This might present a problem if you use a rolling-release distribution, such as Arch.
+You can try switching the container base image to <code class="docutils literal notranslate"><span class="pre">i386/debian-testing</span></code> in this case.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="instructions">
+<h2>Instructions<a class="headerlink" href="#instructions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="common-steps-for-all-oses">
+<h3>Common steps for all OSes<a class="headerlink" href="#common-steps-for-all-oses" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">src/lua/addons/pygmod_launcher</span></code> to <code class="docutils literal notranslate"><span class="pre">garrysmod/addons</span></code>.</p></li>
+<li><p>Copy the contents of <code class="docutils literal notranslate"><span class="pre">src/lua/lua/includes</span></code> to <code class="docutils literal notranslate"><span class="pre">garrysmod/lua/includes</span></code>. Confirm the overwriting of <code class="docutils literal notranslate"><span class="pre">init.lua</span></code>.</p></li>
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">src/python/pygmod</span></code> to <code class="docutils literal notranslate"><span class="pre">garrysmod/pygmod</span></code>.</p></li>
+</ol>
+</div>
+<div class="section" id="compiling-binary-modules-for-windows">
+<h3>Compiling binary modules for Windows<a class="headerlink" href="#compiling-binary-modules-for-windows" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p>Open <strong>Developer Command Prompt for VS</strong> (most likely residing in your Start menu, folder <strong>Visual Studio</strong>),
+<code class="docutils literal notranslate"><span class="pre">cd</span></code> to <code class="docutils literal notranslate"><span class="pre">src\cpp</span></code>.</p></li>
+<li><p>Run:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>cmake . <span class="o">&amp;&amp;</span> msbuild PyGmod.sln
+</pre></div>
+</div>
+</li>
+<li><p>Move <code class="docutils literal notranslate"><span class="pre">gmsv_pygmod_win(32/64).dll</span></code> and <code class="docutils literal notranslate"><span class="pre">gmcl_pygmod_win(32/64).dll</span></code>
 from <code class="docutils literal notranslate"><span class="pre">src\cpp</span></code> to <code class="docutils literal notranslate"><span class="pre">garrysmod\lua\bin</span></code>.</p></li>
 <li><p>Move <code class="docutils literal notranslate"><span class="pre">pygmod.dll</span></code> from <code class="docutils literal notranslate"><span class="pre">src\cpp</span></code> to Garry’s Mod’s root directory (where <code class="docutils literal notranslate"><span class="pre">hl2.exe</span></code> resides).</p></li>
 </ol>
+</div>
+<div class="section" id="compiling-binary-modules-for-linux">
+<h3>Compiling binary modules for Linux<a class="headerlink" href="#compiling-binary-modules-for-linux" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p>Open a terminal if you haven’t done that already and change the directory to <code class="docutils literal notranslate"><span class="pre">src/cpp</span></code>.</p></li>
+<li><p>Run:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>cmake . <span class="o">&amp;&amp;</span> make
+</pre></div>
+</div>
+</li>
+<li><p>Move <code class="docutils literal notranslate"><span class="pre">gmsv_pygmod_linux(64).dll</span></code> and <code class="docutils literal notranslate"><span class="pre">gmcl_pygmod_linux(64).dll</span></code>
+from <code class="docutils literal notranslate"><span class="pre">src/cpp</span></code> to <code class="docutils literal notranslate"><span class="pre">garrysmod/lua/bin</span></code>.</p></li>
+<li><p>Move <code class="docutils literal notranslate"><span class="pre">libpygmod.so</span></code> from <code class="docutils literal notranslate"><span class="pre">src/cpp</span></code> to <code class="docutils literal notranslate"><span class="pre">.../SteamApps/common/GarrysMod/bin</span></code>.</p></li>
+</ol>
 <hr class="docutils" />
-<p>Final directory structure should looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>...\SteamApps\GarrysMod\ ─┬─ hl2.exe
+<p>Final directory structure should look like this:</p>
+</div>
+<div class="section" id="id1">
+<h3>Windows<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...\SteamApps\GarrysMod\ ─┬─ hl2.exe
                           ├─ ...
                           ├─ pygmod.dll
                           ├─ garrysmod\ ─┬─ addons\ ─── pygmod_launcher\ ─┬─ addon.json
                           │              │                                └─ lua\ ───── init.lua
-                          │              └─ lua\ ────┬─ bin\ ─────────────┬─ gmsv_pygmod_win32.dll
-                          │                          │                    └─ gmcl_pygmod_win32.dll
+                          │              └─ lua\ ────┬─ bin\ ─────────────┬─ gmsv_pygmod_win(32/64).dll
+                          │                          │                    └─ gmcl_pygmod_win(32/64).dll
                           │                          └─ includes\ ────────── init.lua (Modified)
                           └─ pygmod\ ────── pygmod\ ──────────────────────┬─ __init__.py
+                                                                          ├─ _error_notif.py
+                                                                          └─ ...
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h3>Linux<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.../SteamApps/GarrysMod/ ─┬─ hl2.sh
+                          ├─ ...
+                          ├─ bin/ ───────┬─ libpygmod.so
+                          │              └─ ...
+                          ├─ garrysmod/ ─┬─ addons/ ─── pygmod_launcher/ ─┬─ addon.json
+                          │              │                                └─ lua/ ───── init.lua
+                          │              └─ lua/ ────┬─ bin/ ─────────────┬─ gmsv_pygmod_linux(64).dll
+                          │                          │                    └─ gmcl_pygmod_linux(64).dll
+                          │                          └─ includes/ ────────── init.lua (Modified)
+                          └─ pygmod/ ────── pygmod/ ──────────────────────┬─ __init__.py
                                                                           ├─ _error_notif.py
                                                                           └─ ...
 </pre></div>
@@ -87,6 +232,7 @@ from <code class="docutils literal notranslate"><span class="pre">src\cpp</span>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="building_docs.html"><span class="doc">Building documentation</span></a></p>
+</div>
 </div>
 </div>
 </div>
@@ -103,8 +249,20 @@ from <code class="docutils literal notranslate"><span class="pre">src\cpp</span>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Building</a><ul>
-<li><a class="reference internal" href="#requirements-for-building">Requirements for building</a></li>
-<li><a class="reference internal" href="#instructions">Instructions</a></li>
+<li><a class="reference internal" href="#requirements-for-building">Requirements for building</a><ul>
+<li><a class="reference internal" href="#windows">Windows</a></li>
+<li><a class="reference internal" href="#linux">Linux</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#a-note-about-32-and-64-bits">A note about 32 and 64 bits</a></li>
+<li><a class="reference internal" href="#instructions">Instructions</a><ul>
+<li><a class="reference internal" href="#common-steps-for-all-oses">Common steps for all OSes</a></li>
+<li><a class="reference internal" href="#compiling-binary-modules-for-windows">Compiling binary modules for Windows</a></li>
+<li><a class="reference internal" href="#compiling-binary-modules-for-linux">Compiling binary modules for Linux</a></li>
+<li><a class="reference internal" href="#id1">Windows</a></li>
+<li><a class="reference internal" href="#id2">Linux</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -131,7 +289,7 @@ from <code class="docutils literal notranslate"><span class="pre">src\cpp</span>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -156,7 +314,7 @@ from <code class="docutils literal notranslate"><span class="pre">src\cpp</span>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.
     </div>
   </body>
 </html>

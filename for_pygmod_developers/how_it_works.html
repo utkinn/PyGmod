@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>How PyGmod works &#8212; PyGmod 0.13-alpha documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -52,7 +52,7 @@
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="k">if</span> <span class="n">SERVER</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">new_player</span><span class="p">):</span>
@@ -82,7 +82,7 @@ When it’s loaded by Garry’s Mod’s addon system, the launcher activates
 <ol class="arabic simple">
 <li><p>Adds <a class="reference internal" href="../reference/internal/luastack.html#module-_luastack" title="_luastack: Lua stack manipulation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">_luastack</span></code></a> module to the list of Python builtin modules.</p></li>
 <li><p>Initializes Python interpreter.</p></li>
-<li><p>Appends <code class="docutils literal notranslate"><span class="pre">garrysmod\pygmod\</span></code> to <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.path" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.path</span></code></a>.</p></li>
+<li><p>Appends <code class="docutils literal notranslate"><span class="pre">garrysmod\pygmod\</span></code> to <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.path" title="(in Python v3.8)"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.path</span></code></a>.</p></li>
 <li><p>Calls <code class="docutils literal notranslate"><span class="pre">init()</span></code> in <a class="reference internal" href="../reference/internal/luastack.html#module-_luastack" title="_luastack: Lua stack manipulation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">_luastack</span></code></a>, thus setting the internal Lua stack pointer.</p></li>
 <li><p>Adds <a class="reference internal" href="../lua_reference.html"><span class="doc">functions for manipulating Python from Lua</span></a>.</p></li>
 <li><p>Calls <code class="docutils literal notranslate"><span class="pre">main()</span></code> in <code class="docutils literal notranslate"><span class="pre">pygmod\_loader.py</span></code>.</p></li>
@@ -165,7 +165,7 @@ This is the most low-level way of interacting with Lua.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -187,7 +187,7 @@ This is the most low-level way of interacting with Lua.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.
     </div>
   </body>
 </html>

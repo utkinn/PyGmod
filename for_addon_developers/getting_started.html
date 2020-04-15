@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>Getting Started for Addon Developers &#8212; PyGmod 0.13-alpha documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -107,7 +107,7 @@ when a server is being launched or when connecting to a server.</p>
 where should be the initialization code of these packages.
 It is <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> that is executed by the PyGmod addon loader.
 The remaining files of the package will be ignored unless you import them inside <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">otherfile</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">otherfile</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">__shared_autorun__</span></code> package is initialized 2 times: the first time on the server side, the second on the client side.
@@ -115,7 +115,7 @@ The remaining files of the package will be ignored unless you import them inside
 after <code class="docutils literal notranslate"><span class="pre">__shared_autorun__</span></code>.</p>
 <p>Other packages and scripts can be imported relative to the <code class="docutils literal notranslate"><span class="pre">python</span></code> folder:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mypackage</span>
-<span class="kn">from</span> <span class="nn">folder_with_some_scripts</span> <span class="k">import</span> <span class="n">spam</span><span class="p">,</span> <span class="n">eggs</span>
+<span class="kn">from</span> <span class="nn">folder_with_some_scripts</span> <span class="kn">import</span> <span class="n">spam</span><span class="p">,</span> <span class="n">eggs</span>
 </pre></div>
 </div>
 </div>
@@ -123,7 +123,7 @@ after <code class="docutils literal notranslate"><span class="pre">__shared_auto
 <div class="section" id="pygmod-code-appearance">
 <h2>PyGmod code appearance<a class="headerlink" href="#pygmod-code-appearance" title="Permalink to this headline">¶</a></h2>
 <p>The PyGmod addons code is plain Python code. For example, you can type something into the Garry’s Mod console
-with the function <a class="reference external" href="https://docs.python.org/3/library/functions.html#print" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">print()</span></code></a>:</p>
+with the function <a class="reference external" href="https://docs.python.org/3/library/functions.html#print" title="(in Python v3.8)"><code class="xref py py-func docutils literal notranslate"><span class="pre">print()</span></code></a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># python\__server_autorun__\__init__.py</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello from PyGmod!&quot;</span><span class="p">)</span>
 </pre></div>
@@ -140,11 +140,11 @@ freedom and potential than ordinary Lua addons.</p>
 <p>Module <a class="reference internal" href="../reference/api.html#module-pygmod.gmodapi" title="pygmod.gmodapi: all Garry's Mod Lua definitions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygmod.gmodapi</span></code></a> gives access to almost all functions, classes and libraries that are
 described in <a class="reference external" href="wiki.garrysmod.com">Garry’s Mod Wiki</a>. To use the module, simply import from it what
 you need, for example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="n">LocalPlayer</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="kn">import</span> <span class="n">LocalPlayer</span>
 </pre></div>
 </div>
 <p>You can also import everything:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -157,7 +157,7 @@ you need, for example:</p>
 <p>If your addon also contains Lua code and you need to connect Python code with it, you can use <a class="reference internal" href="../reference/lua.html#module-pygmod.lua" title="pygmod.lua: Lua interoperability"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygmod.lua</span></code></a> for this.
 It contains an object <a class="reference internal" href="../reference/lua.html#pygmod.lua.G" title="pygmod.lua.G"><code class="xref py py-data docutils literal notranslate"><span class="pre">G</span></code></a>, with which you can modify the Lua environment.
 For example, you can create a global variable that is accessible from Lua:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.lua</span> <span class="k">import</span> <span class="n">G</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.lua</span> <span class="kn">import</span> <span class="n">G</span>
 
 <span class="n">G</span><span class="o">.</span><span class="n">my_global_var</span> <span class="o">=</span> <span class="s2">&quot;My data&quot;</span>
 </pre></div>
@@ -222,7 +222,7 @@ Then, see <a class="reference internal" href="../reference.html"><span class="do
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -247,7 +247,7 @@ Then, see <a class="reference internal" href="../reference.html"><span class="do
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.
     </div>
   </body>
 </html>

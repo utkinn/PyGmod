@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>pygmod.entity - Scripted Entity creation &#8212; PyGmod 0.13-alpha documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -47,7 +47,7 @@
 <span id="pygmod-entity-scripted-entity-creation"></span><h1><code class="docutils literal notranslate"><span class="pre">pygmod.entity</span></code> - Scripted Entity creation<a class="headerlink" href="#module-pygmod.entity" title="Permalink to this headline">¶</a></h1>
 <p>Provides the <a class="reference internal" href="#pygmod.entity.Entity" title="pygmod.entity.Entity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entity</span></code></a> class which allows creating scripted entities (a.k.a. SENTs)
 by the means of PyGmod.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="pygmod.entity.Entity">
 <em class="property">class </em><code class="sig-prename descclassname">pygmod.entity.</code><code class="sig-name descname">Entity</code><a class="headerlink" href="#pygmod.entity.Entity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for scripted entities. To create a scripted entity, simply inherit this class.</p>
@@ -86,7 +86,7 @@ Also, there is a default version of <code class="docutils literal notranslate"><
 <p>To initialize your entity, you should use <code class="docutils literal notranslate"><span class="pre">Initialize</span></code> instead of <code class="docutils literal notranslate"><span class="pre">__init__()</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyEnt</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">Initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Hello, world from entity #{self._.EntIndex()}&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hello, world from entity #</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_</span><span class="o">.</span><span class="n">EntIndex</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -125,7 +125,7 @@ Also, there is a default version of <code class="docutils literal notranslate"><
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -151,7 +151,7 @@ Also, there is a default version of <code class="docutils literal notranslate"><
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.
     </div>
   </body>
 </html>

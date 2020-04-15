@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>pygmod._streams - I/O to Garry’s Mod &#8212; PyGmod 0.13-alpha documentation</title>
     <link rel="stylesheet" href="../../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -47,45 +47,45 @@
   <div class="section" id="pygmod-streams-i-o-to-garry-s-mod">
 <h1><code class="docutils literal notranslate"><span class="pre">pygmod._streams</span></code> - I/O to Garry’s Mod<a class="headerlink" href="#pygmod-streams-i-o-to-garry-s-mod" title="Permalink to this headline">¶</a></h1>
 <p>Custom I/O classes which redirect I/O to the Garry’s Mod console.</p>
-<span class="target" id="module-pygmod._streams"></span><dl class="class">
+<span class="target" id="module-pygmod._streams"></span><dl class="py class">
 <dt id="pygmod._streams.GmodConsoleOutStream">
 <em class="property">class </em><code class="sig-prename descclassname">pygmod._streams.</code><code class="sig-name descname">GmodConsoleOutStream</code><a class="headerlink" href="#pygmod._streams.GmodConsoleOutStream" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for Garry’s Mod console output streams.</p>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="pygmod._streams.GmodConsoleOut">
 <em class="property">class </em><code class="sig-prename descclassname">pygmod._streams.</code><code class="sig-name descname">GmodConsoleOut</code><a class="headerlink" href="#pygmod._streams.GmodConsoleOut" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class which redirects the standard output (stdout) to the Garry’s Mod console.</p>
 <p>Messages from the <em>client</em> realm are printed with the yellow color
 and messages from the <em>server</em> realm are printed with the blue color,
 just like <code class="docutils literal notranslate"><span class="pre">print</span></code>, <code class="docutils literal notranslate"><span class="pre">Msg</span></code> and other Lua functions do.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="pygmod._streams.GmodConsoleOut.write">
-<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="headerlink" href="#pygmod._streams.GmodConsoleOut.write" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygmod._streams.GmodConsoleOut.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes string <code class="docutils literal notranslate"><span class="pre">s</span></code> to Garry’s Mod console with <code class="docutils literal notranslate"><span class="pre">Msg</span></code> Lua function.</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="pygmod._streams.GmodConsoleErr">
 <em class="property">class </em><code class="sig-prename descclassname">pygmod._streams.</code><code class="sig-name descname">GmodConsoleErr</code><a class="headerlink" href="#pygmod._streams.GmodConsoleErr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class which redirects the error output (stderr) to the Garry’s Mod console.</p>
 <p>All messages are printed with the red color.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="pygmod._streams.GmodConsoleErr.write">
-<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="headerlink" href="#pygmod._streams.GmodConsoleErr.write" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygmod._streams.GmodConsoleErr.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes string <code class="docutils literal notranslate"><span class="pre">s</span></code> to Garry’s Mod console with <code class="docutils literal notranslate"><span class="pre">MsgC</span></code> Lua function with red color.</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pygmod._streams.setup">
 <code class="sig-prename descclassname">pygmod._streams.</code><code class="sig-name descname">setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygmod._streams.setup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.stdout" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.stdout</span></code></a> and <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.__stdout__" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.__stdout__</span></code></a> to a new <a class="reference internal" href="#pygmod._streams.GmodConsoleOut" title="pygmod._streams.GmodConsoleOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">GmodConsoleOut</span></code></a> instance
-and <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.stderr" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.stderr</span></code></a> and <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.__stderr__" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.__stderr__</span></code></a> to a new <a class="reference internal" href="#pygmod._streams.GmodConsoleErr" title="pygmod._streams.GmodConsoleErr"><code class="xref py py-class docutils literal notranslate"><span class="pre">GmodConsoleErr</span></code></a> instance.
+<dd><p>Sets <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.stdout" title="(in Python v3.8)"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.stdout</span></code></a> and <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.__stdout__" title="(in Python v3.8)"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.__stdout__</span></code></a> to a new <a class="reference internal" href="#pygmod._streams.GmodConsoleOut" title="pygmod._streams.GmodConsoleOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">GmodConsoleOut</span></code></a> instance
+and <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.stderr" title="(in Python v3.8)"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.stderr</span></code></a> and <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.__stderr__" title="(in Python v3.8)"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.__stderr__</span></code></a> to a new <a class="reference internal" href="#pygmod._streams.GmodConsoleErr" title="pygmod._streams.GmodConsoleErr"><code class="xref py py-class docutils literal notranslate"><span class="pre">GmodConsoleErr</span></code></a> instance.
 Being called in <code class="docutils literal notranslate"><span class="pre">main.cpp</span></code> of the <em>C++</em> module, during the setup process.</p>
 </dd></dl>
 
@@ -122,7 +122,7 @@ Being called in <code class="docutils literal notranslate"><span class="pre">mai
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -149,7 +149,7 @@ Being called in <code class="docutils literal notranslate"><span class="pre">mai
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.
     </div>
   </body>
 </html>

@@ -4,7 +4,15 @@ Running Unit tests
 Requirements
 ------------
 
+Windows
+^^^^^^^
+
 1. `Docker Desktop for Windows <https://hub.docker.com/editions/community/docker-ce-desktop-windows>`_
+
+Linux
+^^^^^
+
+1. **Docker** (``docker.io`` package on Debian-based distributions, ``docker`` package on Arch-based distributions)
 
 Instructions
 ------------

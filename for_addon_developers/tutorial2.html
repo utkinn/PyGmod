@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>Addon creation tutorial: part 2 &#8212; PyGmod 0.13-alpha documentation</title>
     <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -56,7 +56,7 @@ their first spawn.</p>
 <p>We have to make two changes here: first, we need to print the text to the chat instead of the console.
 We need to access Garry’s Mod Lua somehow. We can use <a class="reference internal" href="../reference/api.html#module-pygmod.gmodapi" title="pygmod.gmodapi: all Garry's Mod Lua definitions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygmod.gmodapi</span></code></a> module for this.
 Add this line to the top of the script:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 <p>Now we can use any Lua function.</p>
@@ -65,14 +65,14 @@ Add this line to the top of the script:</p>
 the hook ID and the callback function - a function which is called when the specified event happens.</p>
 <p>In our case, the callback function receives one parameter - an object which represents a connected player.</p>
 <p>So, we define our callback function:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">new_player</span><span class="p">):</span>          <span class="c1"># &lt;--</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>       <span class="c1"># &lt;--</span>
 </pre></div>
 </div>
 <p>and create a hook:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">new_player</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>
@@ -87,7 +87,7 @@ which we can use to print text to their chat. In Lua, it would look like this:</
 </pre></div>
 </div>
 <p>Notice the colon. In PyGmod, there is a <code class="docutils literal notranslate"><span class="pre">._.</span></code> construction which plays the same role as colon in Lua.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">new_player</span><span class="p">):</span>
     <span class="n">new_player</span><span class="o">.</span><span class="n">_</span><span class="o">.</span><span class="n">ChatPrint</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>  <span class="c1"># &lt;--</span>
@@ -98,7 +98,7 @@ which we can use to print text to their chat. In Lua, it would look like this:</
 <p>Now <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">world!</span></code> will be printed to the chat. Let’s make this greeting personal now: we will greet the player
 instead of the world.</p>
 <p>Now we get the player’s nick with <a class="reference external" href="http://wiki.garrysmod.com/page/Player/Nick">Nick()</a> method.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygmod.gmodapi</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">new_player</span><span class="p">):</span>
     <span class="n">new_player</span><span class="o">.</span><span class="n">_</span><span class="o">.</span><span class="n">ChatPrint</span><span class="p">(</span><span class="s1">&#39;Hello, &#39;</span> <span class="o">+</span> <span class="n">new_player</span><span class="o">.</span><span class="n">_</span><span class="o">.</span><span class="n">Nick</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;!&#39;</span><span class="p">)</span>  <span class="c1"># &lt;--</span>
@@ -107,7 +107,7 @@ instead of the world.</p>
 </pre></div>
 </div>
 <p>Done. Save and close the script, launch the game, start a new game and look at the chat.</p>
-<img alt="../_images/chat_msg.png" src="../_images/chat_msg.png" />
+<img alt="for_addon_developers/addon_tutorial_images/chat_msg.png" src="for_addon_developers/addon_tutorial_images/chat_msg.png" />
 <hr class="docutils" />
 <p>You have finished the tutorial and, I hope, you have understood how to make addons with PyGmod.
 Check out the <a class="reference external" href="../reference">reference</a> for more information.
@@ -145,7 +145,7 @@ If you have questions, you can always <a class="reference external" href="https:
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -170,7 +170,7 @@ If you have questions, you can always <a class="reference external" href="https:
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.
     </div>
   </body>
 </html>

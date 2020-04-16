@@ -6,8 +6,8 @@
 using namespace GarrysMod::Lua;
 
 // Defining a custom Lua value type for Python objects in Lua
-#define LUA_TYPE_PYOBJECT (Type::COUNT + 11)
-#define LUA_TYPE_PYCALLABLE (Type::COUNT + 12)
+#define LUA_TYPE_PYOBJECT (Type::Type_Count + 11)
+#define LUA_TYPE_PYCALLABLE (Type::Type_Count + 12)
 
 // Converts a Python object to a Lua object and pushes it to the stack.
 void pushPythonObj(ILuaBase *lua, PyObject *obj);

@@ -49,18 +49,18 @@ PyObject *getStackValAsPythonObj(ILuaBase *lua, int index) {
 	PyObject *obj;
 
 	switch (type) {
-	case Type::NIL:
+	case Type::Nil:
 		Py_RETURN_NONE;
-	case Type::BOOL:
+	case Type::Bool:
 		return PyBool_FromLong(lua->GetBool(index));
-	case Type::NUMBER:
+	case Type::Number:
 	    if (isNumberFractional(lua->GetNumber(index)))
 		    return PyFloat_FromDouble(lua->GetNumber(index));
 		else
 		    return PyLong_FromDouble(lua->GetNumber(index));
-	case Type::STRING:
+	case Type::String:
 		return PyUnicode_FromString(lua->GetString(index, NULL));
-	case Type::FUNCTION:
+	case Type::Function:
 		luaModule = PyImport_ImportModule("pygmod.lua");
 		if (luaModule == NULL)
 			return NULL;
@@ -75,7 +75,7 @@ PyObject *getStackValAsPythonObj(ILuaBase *lua, int index) {
 	    obj = reinterpret_cast<PyObject *>(ud->data);
 	    Py_INCREF(obj);
 	    return obj;
-	case Type::TABLE:
+	case Type::Table:
 	default:
 		luaModule = PyImport_ImportModule("pygmod.lua");
 		if (luaModule == NULL)

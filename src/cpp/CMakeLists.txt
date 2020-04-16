@@ -8,6 +8,7 @@ set(BUILD_SHARED_LIBS ON)
 include(ExternalProject)
 ExternalProject_Add(gmod-module-base
     GIT_REPOSITORY https://github.com/Facepunch/gmod-module-base
+    GIT_TAG origin/development
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
@@ -55,7 +56,7 @@ else()
     unknown_os_error()
 endif()
 
-add_compile_definitions(GMMODULE)
+add_compile_definitions(GMMODULE GMOD_ALLOW_DEPRECATED)
 
 # Main module
 

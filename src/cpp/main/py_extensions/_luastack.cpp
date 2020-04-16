@@ -1,6 +1,8 @@
 ﻿#include <string>
-#include "_luastack.hpp"
+
 #include <GarrysMod/Lua/Interface.h>
+
+#include "_luastack.hpp"
 #include "stack_utils.hpp"
 
 using namespace GarrysMod::Lua;
@@ -188,13 +190,13 @@ Py_MODULE_FUNC(stackDump) {
 		const char *valTypeName = MS_LUA->GetTypeName(valType);
 		std::string repr;
 		switch (valType) {
-		case Type::NIL:
+		case Type::Nil:
 			repr = "nil";
 			break;
-		case Type::NUMBER:
+		case Type::Number:
 			repr = std::to_string(MS_LUA->GetNumber(i));
 			break;
-		case Type::STRING:
+		case Type::String:
 			repr = MS_LUA->GetString(i);
 			break;
 		}

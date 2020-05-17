@@ -1,29 +1,22 @@
-cmake_minimum_required(VERSION 3.10)
+# To compile PyGmod for Windows, stable 32-bit Garry's Mod branch, run in Developer Command Prompt for VS:
+# cmake -A Win32 . && msbuild -m BinaryModulesAndPythonStdlib.sln
+# To compile PyGmod for Linux, stable 32-bit Garry's Mod branch, run in terminal:
+# TODO
 
-project(PyGmod CXX)
+cmake_minimum_required(VERSION 3.13)
+
+# Defining Python version
+
+if(NOT DEFINED PYTHON_VERSION)
+    set(PYTHON_VERSION 3.8)
+endif()
+
+string(REPLACE "." "" PYTHON_VERSION_NO_DOT ${PYTHON_VERSION})
+
+project(BinaryModulesAndPythonStdlib CXX)
 
 set(BUILD_SHARED_LIBS ON)
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
-
-### 32 OR 64 BITS ###
-if(NOT DEFINED BITS)
-    set(BITS 32)
-    message("Using default BITS value: 32.")
-    message("Use \"cmake -DBITS=64 .\" to compile for x86-64 branch of Garry's Mod.")
-endif()
-if(NOT BITS MATCHES "32|64")
-    message(FATAL_ERROR "Invalid BITS value: \"${BITS}\". Please use one of \"32\" or \"64\".")
-endif()
-
-if(WIN32)
-    if(BITS EQUAL 32)
-        message("Building for win32 (stable Garry's Mod branch, 32-bit)")
-        set(CMAKE_GENERATOR_PLATFORM Win32)
-    else()
-        message("Building for x64 (x86-64 Garry's Mod branch, 64-bit)")
-        set(CMAKE_GENERATOR_PLATFORM x64)
-    endif()
-endif()
 
 # Setting up Garry's Mod module headers
 include(ExternalProject)
@@ -36,43 +29,60 @@ ExternalProject_Add(gmod-module-base
 ExternalProject_Get_Property(gmod-module-base SOURCE_DIR)
 include_directories(${SOURCE_DIR}/include)
 
-# Setting up Python
-find_package(Python REQUIRED COMPONENTS Development)
+# Download Python source
+ExternalProject_Add(cpython
+    URL https://github.com/python/cpython/archive/${PYTHON_VERSION}.zip
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND "${PROJECT_SOURCE_DIR}\\cpython-prefix\\src\\cpython\\PCbuild\\build.bat" -d --no-tkinter
+    INSTALL_COMMAND ""
+)
+ExternalProject_Get_Property(cpython SOURCE_DIR)
+set(PYTHON_SOURCE_DIR ${SOURCE_DIR})
+include_directories(${PYTHON_SOURCE_DIR}/Include ${PYTHON_SOURCE_DIR}/PC)
+
 add_compile_definitions(GMMODULE)
 
-### SHARED MODULE ###
+# Main module
 
-set(MAIN_DLL_SRC_DIR main)
-file(GLOB_RECURSE MAIN_DLL_SOURCES ${MAIN_DLL_SRC_DIR}/*.cpp ${MAIN_DLL_SRC_DIR}/*.hpp)
-add_library(main ${MAIN_DLL_SOURCES})
-add_dependencies(main gmod-module-base)
+file(GLOB_RECURSE MAIN_SOURCES main/*.cpp)
+add_library(main ${MAIN_SOURCES})
+add_dependencies(main gmod-module-base cpython)
 set_target_properties(main PROPERTIES
     COMPILE_DEFINITIONS PY_SSIZE_T_CLEAN
     OUTPUT_NAME pygmod
+    PREFIX ""
+    SUFFIX ".dll"  # Yes, binary modules have ".dll" extension even on Linux
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED ON
 )
-target_include_directories(main PRIVATE ${Python_INCLUDE_DIRS})
-target_link_libraries(main ${Python_LIBRARIES})
+target_link_libraries(main
+    ${PYTHON_SOURCE_DIR}/PCbuild/win32/python${PYTHON_VERSION_NO_DOT}_d.lib
+)
 
-### CLIENT AND SERVER MODULES ###
+# Client and server modules
 
 macro(realm_module realm gm_prefix)
-    file(GLOB DLL_SOURCES ${realm}/*.cpp ${realm}/*.hpp)
-    add_library(${realm} ${DLL_SOURCES})
+    file(GLOB REALM_DLL_SOURCES ${realm}/*.cpp)
+    add_library(${realm} ${REALM_DLL_SOURCES})
     add_dependencies(${realm} gmod-module-base)
-    if(UNIX)
-        if (BITS EQUAL 64)
-            set(output_name gm${gm_prefix}_pygmod_linux64)
-            set(cflags "")
-        else()
-            set(output_name gm${gm_prefix}_pygmod_linux)
-            set(cflags "-m32")
-        endif()
-        set_target_properties(${realm} PROPERTIES OUTPUT_NAME ${output_name} PREFIX "" SUFFIX ".dll" COMPILE_OPTIONS ${cflags})
-    else()
-        set_target_properties(${realm} PROPERTIES OUTPUT_NAME gm${gm_prefix}_pygmod_win32)
-    endif()
+    set_target_properties(${realm} PROPERTIES
+        OUTPUT_NAME gm${gm_prefix}_pygmod_win32
+        PREFIX ""
+        SUFFIX ".dll"
+    )
     target_link_libraries(${realm} main)
 endmacro()
 
 realm_module(client cl)
 realm_module(server sv)
+
+# Python standard library collection
+
+add_custom_command(OUTPUT stdlib.generated
+    COMMAND ${CMAKE_COMMAND} "-DPYTHON_SOURCE_DIR=${PYTHON_SOURCE_DIR}" -P buildscripts/python-stdlib-dir.cmake
+)
+add_custom_target(python-stdlib-dir ALL
+    DEPENDS stdlib.generated
+    COMMENT Python standard library directiory
+)
+add_dependencies(python-stdlib-dir cpython)

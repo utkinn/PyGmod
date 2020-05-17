@@ -2,6 +2,7 @@
 // This binary module initializes Python and creates subinterpreters for each realm.
 
 #include <fstream>
+#include <filesystem>
 
 #include <GarrysMod/Lua/Interface.h>
 
@@ -17,6 +18,23 @@ using std::to_string;
 
 // Declaration of interpreter states in "interpreter_states.hpp"
 PyThreadState *clientInterp = nullptr, *serverInterp = nullptr;
+
+bool isFileExists(const char *path) {
+	std::ifstream file(path);
+	return file.good();
+}
+
+void setPythonHome(Console &cons) {
+	std::filesystem::path pythonStdlibPath = std::filesystem::current_path() / "garrysmod" / "pygmod" / "stdlib";
+	if (!std::filesystem::exists(pythonStdlibPath)) {
+		cons.error("Python standard library directory (garrysmod/pygmod/stdlib) not found.");
+		return;
+	}
+
+	std::wstring pathWString = pythonStdlibPath.wstring();
+	const wchar_t* pathWChar = pathWString.c_str();
+	Py_SetPythonHome(pathWChar);
+}
 
 // Adds the _luastack Python extension module to builtins and initializes it.
 void addAndInitializeLuastackExtension(Console &cons) {
@@ -40,12 +58,8 @@ void redirectIOToLogFile() {
 	PyRun_SimpleString("import sys; sys.stdout = sys.stderr = sys.__stdout__ = sys.__stderr__ = open('pygmod.log', 'w+')");
 }
 
-bool isFileExists(const char *path) {
-	std::ifstream file(path);
-	return file.good();
-}
-
 void initPython(Console &cons) {
+	setPythonHome(cons);
 	addAndInitializeLuastackExtension(cons);
 	Py_Initialize();
 }

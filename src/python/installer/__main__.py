@@ -1,11 +1,35 @@
-"""Script that installs PyGmod from a ``.zip`` file."""
+"""This script drives the PyGmod installer, ``pygmod.pyz``.
+
+Installer format
+================
+
+Installer is a ``.zip`` archive with a following structure::
+
+    pygmod.pyz --- common.zip
+              |--- win32.zip
+              |--- linux32.zip
+              `--- __init__.py (this file)
+
+``common.zip``, ``win32.zip`` and ``linux32.zip`` are "bundles".
+
+``common.zip`` contains files which are the same for all platforms
+ and all bit-versions of Garry's Mod.
+``win32.zip`` contains files for Windows, 32-bit Garry's Mod.
+``linux32.zip`` contains files for Linux, 32-bit Garry's Mod.
+
+All files in each bundle are organized in a directory structure
+that is relative to the Garry's Mod root folder (``.../steamapps/common/GarrysMod/``).
+That is, the bundle root corresponds to ``GarrysMod``,
+``bundle_root/addons`` to ``GarrysMod/addons``, etc.
+"""
 
 from string import ascii_uppercase
-from ctypes import windll
 import os
 import sys
 import traceback
 import logging
+import itertools
+import tempfile
 from tkinter import Tk, StringVar
 from tkinter.ttk import Label, Button
 from tkinter.filedialog import askdirectory
@@ -13,6 +37,7 @@ from tkinter.messagebox import showerror, showinfo
 from zipimport import zipimporter
 from zipfile import ZipFile
 
+# Graphical exception handling
 
 def excepthook(exc_class, exc_val, exc_tb):
     """Custom excepthook which shows unhandled exceptions in error message boxes."""
@@ -35,7 +60,13 @@ def ensure_inside_zip():
 
 
 def get_drives():
-    """Returns a list of all drive root paths on this system."""
+    """Returns a list of all drive root paths on a Windows system."""
+
+    assert os.name == "nt"
+
+    # pylint: disable=import-outside-toplevel
+    from ctypes import windll
+
     drives = []
     drives_bitmask = windll.kernel32.GetLogicalDrives()
     for letter in ascii_uppercase:
@@ -69,7 +100,7 @@ def validate_path(path_var):
     return valid
 
 
-def this_zipfile():
+def get_installer_zip():
     """
     Returns :class:`zipfile.ZipFile` for an ``.zip`` file which contains this script.
     """
@@ -81,18 +112,34 @@ def script_filename():
     return __file__.split(os.sep)[-1]
 
 
-def extract_pygmod_files(zipfile, destination):
+def extract_bundle(destination, bundle):
     """
-    Extracts all contents of a ``.zip``
-    file represented by ``zipfile`` to path ``destination``, except this script.
+    Extracts the bundle with a name specified by ``bundle`` to path ``destination``.
+
+    ``bundle`` is one of:
+
+        - "common": files for all OSes and all Garry's Mod bitnesses
+        - "win32": files for Windows, 32-bit Garry's Mod
+        - "linux32": files for Linux, 32-bit Garry's Mod
     """
-    files_to_extract = zipfile.namelist()
-    logging.debug(script_filename())
-    logging.debug(files_to_extract)
-    files_to_extract.remove(script_filename())
-    for file in files_to_extract:
-        logging.info("Extracting %s", file)
-        zipfile.extract(file, destination)
+
+    installer_zip = get_installer_zip()
+    temp_dir = tempfile.TemporaryDirectory(suffix=bundle, prefix="pygmod")
+
+    bundle_zip = extract_bundle_to_temp(installer_zip, bundle, temp_dir)
+    logging.info("Extracting bundle %s", bundle)
+    bundle_zip.extractall(destination)
+
+
+def extract_bundle_to_temp(installer_zip, bundle, temp_dir):
+    """
+    Extract the bundle zip to a temporary folder
+    and return a :class:`zipfile.ZipFile` object for the bundle.
+    """
+    bundle_filename = bundle + ".zip"
+    logging.info("Extracting %s to a temp folder %s", bundle_filename, temp_dir.name)
+    installer_zip.extract(bundle_filename, temp_dir.name)
+    return ZipFile(os.path.join(temp_dir.name, bundle_filename))
 
 
 def install(path_var):
@@ -103,8 +150,11 @@ def install(path_var):
     if not validate_path(path_var):
         return
 
-    zipfile = this_zipfile()
-    extract_pygmod_files(zipfile, path_var.get())
+    extract_bundle(path_var.get(), "common")
+    if os.name == "nt":
+        extract_bundle(path_var.get(), "win32")
+    else:
+        extract_bundle(path_var.get(), "linux32")
 
     showinfo("Success", "PyGmod has been installed successfully.")
     exit()
@@ -115,26 +165,57 @@ def find_gmod_dir():
     Attempts to detect the Garry's Mod installation path.
     Returns the path on success and an empty string on failure.
     """
-    for drive in get_drives():
-        assumed_path = os.path.join(drive, "Steam", "steamapps", "common", "GarrysMod")
-        logging.debug("Assuming %s", assumed_path)
-        if os.path.isdir(assumed_path):
+
+    if os.name == "nt":  # Windows
+        guesses = find_gmod_dir_windows()
+    else:  # Linux
+        guesses = find_gmod_dir_linux()
+
+    for path in guesses:
+        logging.debug("Assuming %s", path)
+        if os.path.isdir(path):
             logging.debug("Guessed!")
-            return assumed_path
-        assumed_path = os.path.join(drive, "SteamLibrary", "steamapps", "common",
-                                    "GarrysMod")
-        logging.debug("Assuming %s", assumed_path)
-        if os.path.isdir(assumed_path):
-            logging.debug("Guessed!")
-            return assumed_path
-        assumed_path = os.path.join(drive, "SteamApps", "steamapps", "common",
-                                    "GarrysMod")
-        logging.debug("Assuming %s", assumed_path)
-        if os.path.isdir(assumed_path):
-            logging.debug("Guessed!")
-            return assumed_path
+            return path
+
     logging.info("Couldn't automatically detect Garry's Mod path.")
     return ""
+
+
+def find_gmod_dir_windows():
+    """
+    Attempts to detect the Garry's Mod installation path on Windows.
+
+    It tries following locations:
+
+        1. C:\\Program Files (x86)\\Steam\\steamapps\\common\\GarrysMod
+        2. <all drives>:\\Steam\\steamapps\\common\\GarrysMod
+        3. <all drives>:\\SteamLibrary\\steamapps\\common\\GarrysMod
+        4. <all drives>:\\SteamApps\\steamapps\\common\\GarrysMod
+    """
+
+    drives = get_drives()
+
+    # Trying to guess between common Garry's Mod installation paths
+    common_paths = [
+        "Steam\\steamapps\\common\\GarrysMod",
+        "SteamLibrary\\steamapps\\common\\GarrysMod",
+        "SteamApps\\steamapps\\common\\GarrysMod",
+    ]
+
+    guesses = ["C:\\Program Files (x86)\\Steam\\steamapps\\common\\GarrysMod"]
+    guesses += list(itertools.product(drives, common_paths))
+
+    return guesses
+
+
+def find_gmod_dir_linux():
+    """
+    Attempts to detect the Garry's Mod installation path on Linux.
+
+    There's only one possible path that comes to mind:
+    ``~/.steam/steam/steamapps/common/GarrysMod``.
+    """
+    return [os.path.expanduser("~/.steam/steam/steamapps/common/GarrysMod")]
 
 
 def main():

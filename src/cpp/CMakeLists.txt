@@ -54,6 +54,8 @@ else()
 endif()
 ExternalProject_Get_Property(cpython SOURCE_DIR)
 set(PYTHON_SOURCE_DIR ${SOURCE_DIR})
+ExternalProject_Get_Property(cpython BINARY_DIR)
+set(PYTHON_BUILD_DIR ${BINARY_DIR})
 
 # Python headers
 if(WIN32)
@@ -91,7 +93,7 @@ elseif(UNIX)
         LINK_OPTIONS -m32
     )
     target_link_libraries(main
-        ${PYTHON_SOURCE_DIR}/PCbuild/win32/python${PYTHON_VERSION_NO_DOT}_d.lib
+        ${PYTHON_BUILD_DIR}/libpython${PYTHON_VERSION}.a
     )
 else()
     unknown_os_error()

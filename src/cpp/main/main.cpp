@@ -100,7 +100,7 @@ void initLuastack(Console &cons, ILuaBase *ptr) {
 		throw SetupFailureException("Couldn't import or find _luastack module.");
 	}
 	PyObject *initFunc = PyObject_GetAttrString(luastackModule, "init");  // initFunc = _luastack.init
-	Py_DECREF(PyObject_CallFunction(initFunc, "l", reinterpret_cast<long>(ptr)));  // initFunc(ILuaBase memory address)
+	Py_DECREF(PyObject_CallFunction(initFunc, "n", reinterpret_cast<Py_ssize_t>(ptr)));  // initFunc(ILuaBase memory address)
 	Py_DECREF(initFunc);
 	Py_DECREF(luastackModule);
 }

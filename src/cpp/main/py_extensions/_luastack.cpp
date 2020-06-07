@@ -12,8 +12,8 @@ using namespace GarrysMod::Lua;
 // Function definitions
 
 Py_MODULE_FUNC(init) {
-	int iLuaBasePtr;
-	if (!PyArg_ParseTuple(args, "i", &iLuaBasePtr))
+	Py_ssize_t iLuaBasePtr;
+	if (!PyArg_ParseTuple(args, "n", &iLuaBasePtr))
 		return NULL;
 
     // Putting the pointer to ILuaBase to the module state

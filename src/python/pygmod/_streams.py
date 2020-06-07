@@ -2,6 +2,7 @@
 
 import sys
 from io import TextIOBase
+from logging import getLogger
 
 from pygmod import lua
 
@@ -60,3 +61,6 @@ def setup():
     sys.stderr.flush()
     sys.stdout = sys.__stdout__ = GmodConsoleOut()
     sys.stderr = sys.__stderr__ = GmodConsoleErr()
+    getLogger("pygmod._streams").debug(
+        "sys.stdout and sys.stderr was redirected to Garry's Mod console."
+    )

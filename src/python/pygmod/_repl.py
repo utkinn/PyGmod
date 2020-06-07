@@ -8,11 +8,14 @@ from code import InteractiveConsole
 import sys
 from os import path
 from base64 import b64encode
+from logging import getLogger
 
 from pygmod.lua import G
 from pygmod.gmodapi import vgui, ScrW, ScrH, CLIENT, concommand
 
 __all__ = ['setup']
+
+LOGGER = getLogger("pygmod._repl")
 
 # Ignore PyLint warnings about "repl_opened"
 # pylint: disable=invalid-name
@@ -218,3 +221,5 @@ def setup():
     """Registers the ``python`` console command."""
     if CLIENT:
         concommand.Add('python', open_repl)
+
+    LOGGER.debug("_repl.setup() complete")

@@ -48,6 +48,8 @@ def configure():
     gmod_console_stdout_handler.setFormatter(gmod_console_formatter)
     pygmod_logger.addHandler(gmod_console_stdout_handler)
 
+    logging.getLogger("pygmod._logging_config").debug("Logging levels configured")
+
 
 def test():
     """Function for testing the configuration."""

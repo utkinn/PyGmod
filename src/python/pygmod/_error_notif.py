@@ -4,10 +4,13 @@ when an uncaught exception in PyGmod itself or PyGmod addon happens.
 """
 
 import time
+from logging import getLogger
 
 from pygmod.gmodapi import Material, surface, hook
 
 __all__ = ['setup', 'show']
+
+LOGGER = getLogger("pygmod._error_notif")
 
 # pylint: disable=invalid-name
 
@@ -25,7 +28,7 @@ def show():
     global should_draw_icon, hide_icon_at  # pylint: disable=global-statement
 
     should_draw_icon = True
-    hide_icon_at = time.clock() + ICON_HIDE_DELAY
+    hide_icon_at = time.time() + ICON_HIDE_DELAY
 
 
 def setup():
@@ -45,7 +48,9 @@ def setup():
         surface.SetMaterial(error_icon)
         surface.DrawTexturedRect(20, 20, 32, 32)
 
-        if time.clock() > hide_icon_at:
+        if time.time() > hide_icon_at:
             should_draw_icon = False
 
     hook.Add('DrawOverlay', 'pygmod_show_error_icon', draw_pygmod_error_icon)
+
+    LOGGER.debug("_error_notif.setup() complete")

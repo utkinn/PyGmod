@@ -169,6 +169,7 @@ def main():
     #. Sets up packages :mod:`pygmod._error_notif` and :mod:`pygmod._repl`.
     #. Initializes PyGmod addons.
     """
+    LOGGER.debug("pygmod.main()")
     _error_notif.setup()
     _repl.setup()
     check_init_lua_patch()

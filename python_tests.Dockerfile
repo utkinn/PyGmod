@@ -1,11 +1,11 @@
-FROM python:3
+FROM python:alpine
 
 COPY ./src/python/requirements.txt ./
-RUN pip install --quiet --upgrade setuptools pip pytest pytest-cov pytest-pylint pytest-mock && \
-    pip install --quiet --no-cache-dir -r requirements.txt
-RUN rm requirements.txt
+RUN pip install --quiet --no-cache-dir --upgrade setuptools pip pytest pytest-cov pytest-pylint pytest-mock
+RUN pip install --quiet --no-cache-dir -r requirements.txt && \
+    rm requirements.txt
 
-WORKDIR /usr/src/app
+WORKDIR /python-tests
 COPY . .
 
 # Run tests

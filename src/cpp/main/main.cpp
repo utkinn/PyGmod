@@ -30,16 +30,47 @@ bool isFileExists(const char *path) {
 	return file.good();
 }
 
-void setPythonHome(Console &cons) {
-	std::filesystem::path pythonStdlibPath = std::filesystem::current_path() / "garrysmod" / "pygmod" / "stdlib";
-	if (!std::filesystem::exists(pythonStdlibPath)) {
-		cons.error("Python standard library directory (garrysmod/pygmod/stdlib) not found.");
-		return;
-	}
+class SetupFailureException : public std::exception {
+	const char *message;
 
-	std::wstring pathWString = pythonStdlibPath.wstring();
+public:
+	SetupFailureException(const char *message) : message(message) {}
+	SetupFailureException(string message) : message(message.c_str()) {}
+
+	const char *what() {
+		return this->message;
+	}
+};
+
+void setPythonHomeAndPath(Console &cons) {
+	std::filesystem::path pythonHome = std::filesystem::current_path() / "garrysmod" / "pygmod" / "stdlib";
+	if (!std::filesystem::exists(pythonHome))
+		throw SetupFailureException("Python standard library directory (garrysmod/pygmod/stdlib) not found.");
+
+	std::wstring homeWString = pythonHome.wstring();
+	const wchar_t* homeWChar = homeWString.c_str();
+	Py_SetPythonHome(homeWChar);
+
+	// Choosing an OS-specific symbol to separate paths in PYTHONPATH
+	#ifdef _WIN32
+		const std::wstring os_pathsep = L";";
+	#else
+		const std::wstring os_pathsep = L":";
+	#endif
+
+	// PYTHONPATH = PYTHONHOME (*.py modules)
+	//				+ PYTHONHOME/lib-dynload (binary modules)
+	//				+ PYTHONHOME/site-packages (pip packages)
+	//				+ ./garrysmod/pygmod (PyGmod modules)
+
+	std::filesystem::path libDynloadPath = pythonHome / "lib-dynload";
+	std::filesystem::path sitePackagesPath = pythonHome / "site-packages";
+	std::wstring pathWString = homeWString + os_pathsep
+								+ libDynloadPath.wstring() + os_pathsep
+								+ sitePackagesPath.wstring() + os_pathsep
+								+ (std::filesystem::current_path() / "garrysmod" / "pygmod").wstring();
 	const wchar_t* pathWChar = pathWString.c_str();
-	Py_SetPythonHome(pathWChar);
+	Py_SetPath(pathWChar);
 }
 
 // Preloads libpygmod.so to help Python binary modules find Py_* symbols on Linux.
@@ -53,17 +84,21 @@ void doDlopenWorkaround() {
 	#endif
 }
 
-// Adds the _luastack Python extension module to builtins and initializes it.
-void addAndInitializeLuastackExtension(Console &cons) {
+// Schedules the initialization of _luastack module.
+void appendLuastackToInittab() {
 	if (PyImport_AppendInittab("_luastack", PyInit__luastack) == -1)
-        cons.error("Failed to append _luastack to inittab.");
+		throw SetupFailureException("PyImport_AppendInittab(\"_luastack\") failed");
 }
 
 // Initializes the _luastack module by calling its init() function.
-void initLuastack(ILuaBase *ptr) {
+void initLuastack(Console &cons, ILuaBase *ptr) {
 	createLuaPyObjectMetatable(ptr);
 
 	PyObject *luastackModule = PyImport_ImportModule("_luastack");  // import _luastack
+	if (!luastackModule) {
+		PyErr_Print();
+		throw SetupFailureException("Couldn't import or find _luastack module.");
+	}
 	PyObject *initFunc = PyObject_GetAttrString(luastackModule, "init");  // initFunc = _luastack.init
 	Py_DECREF(PyObject_CallFunction(initFunc, "l", reinterpret_cast<long>(ptr)));  // initFunc(ILuaBase memory address)
 	Py_DECREF(initFunc);
@@ -76,9 +111,9 @@ void redirectIOToLogFile() {
 }
 
 void initPython(Console &cons) {
-	setPythonHome(cons);
-	addAndInitializeLuastackExtension(cons);
+	setPythonHomeAndPath(cons);
 	doDlopenWorkaround();
+	appendLuastackToInittab();
 	Py_Initialize();
 }
 
@@ -97,9 +132,9 @@ void registerShutdownHook(lua_State *state) {
     LUA->Pop(2);  // "hook" table, _G
 }
 
-DLL_EXPORT int pygmod_run(lua_State *state) {
-	Console cons(LUA);  // Creating a Console object for printing to the Garry's Mod console
-
+// PyGmod main init routine which may throw SetupFailureException.
+// This exception is handled at pygmod_run, the function just below.
+void pygmodRunThrowing(Console& cons, lua_State *state) {
 	cons.log("Binary module loaded");
 
 	Realm currentRealm = getCurrentRealm(state);
@@ -120,17 +155,15 @@ DLL_EXPORT int pygmod_run(lua_State *state) {
 		}
 	}
 
-    // Adding PyGmod's modules directory to sys.path
-	PyRun_SimpleString("import sys, os.path; sys.path.append(os.path.abspath(os.path.join('garrysmod', 'pygmod')))");
-
 	cons.log("Python initialized!");
 
-	initLuastack(LUA);
+	redirectIOToLogFile();
+
+	initLuastack(cons, LUA);
 
 	if (PyErr_Occurred()) {
-		cons.error("Setup failed");
 		PyErr_Print();
-		return 0;
+		throw SetupFailureException("Internal Python error occurred");
 	}
 
 	extendLua(LUA);
@@ -139,20 +172,28 @@ DLL_EXPORT int pygmod_run(lua_State *state) {
     registerShutdownHook(state);
     cons.log("Shutdown hook registered");
 
-	redirectIOToLogFile();
-
 	PyRun_SimpleString("from pygmod import _loader; _loader.main()");  // See python/loader.py
 
 	if (PyErr_Occurred()) {
-		cons.error("Something went wrong");
 		PyErr_Print();
-		return 0;
+		throw SetupFailureException("Exception occurred after an attempt to call _loader.main()");
+	}
+}
+
+// Main init routine.
+DLL_EXPORT int pygmod_run(lua_State *state) {
+	Console cons(LUA);  // Creating a Console object for printing to the Garry's Mod console
+
+	try {
+		pygmodRunThrowing(cons, state);
+	} catch (SetupFailureException e) {
+		cons.error(e.what());
 	}
 
 	return 0;
 }
 
-int finalize(lua_State *state) {
+int finalize(lua_State *state) {  // TODO: rewrite
 	Console cons(LUA);  // Creating a Console object for printing to the Garry's Mod console
 	cons.log("Binary module shutting down.");
 
@@ -163,6 +204,7 @@ int finalize(lua_State *state) {
 		PyThreadState *thatLastInterpreter = serverInterp == nullptr ? clientInterp : serverInterp;
 		PyThreadState_Swap(thatLastInterpreter);
 	    Py_FinalizeEx();
+		// BUG: interp's pointer is not set to nullptr causing a crash on reload
 	} else {  // Otherwise, end that interpreter, and we know for sure that it's the client's interpreter
 	    PyThreadState_Swap(clientInterp);
         Py_EndInterpreter(clientInterp);

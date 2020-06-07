@@ -3,15 +3,21 @@
 
 #include <fstream>
 #include <filesystem>
+#ifdef __linux__
+	#include <dlfcn.h>  // For dlopen workaround
+#endif
 
 #include <GarrysMod/Lua/Interface.h>
 
 #include "Console.hpp"
-#include "py_extensions/luapyobject.hpp"
 #include "py_extensions/_luastack.hpp"
+#include "py_extensions/luapyobject.hpp"
 #include "lua2py_interop.hpp"
 #include "realms.hpp"
 #include "interpreter_states.hpp"
+
+#define STRINGIFY(x) #x
+#define TO_STRING(x) STRINGIFY(x)
 
 using namespace GarrysMod::Lua;
 using std::to_string;
@@ -34,6 +40,17 @@ void setPythonHome(Console &cons) {
 	std::wstring pathWString = pythonStdlibPath.wstring();
 	const wchar_t* pathWChar = pathWString.c_str();
 	Py_SetPythonHome(pathWChar);
+}
+
+// Preloads libpygmod.so to help Python binary modules find Py_* symbols on Linux.
+// It's required because for some bizarre reason binary modules don't have
+// libpython3.X.so as their dynamic link dependency.
+void doDlopenWorkaround() {
+	#ifdef __linux__
+		const char *soName = "libpython" TO_STRING(PYTHON_VERSION) ".so.1.0";
+		if(!dlopen(soName, RTLD_LAZY | RTLD_GLOBAL))
+			throw SetupFailureException((string("Couldn't load ") + soName + ", which must be at GarrysMod/bin."));
+	#endif
 }
 
 // Adds the _luastack Python extension module to builtins and initializes it.
@@ -61,6 +78,7 @@ void redirectIOToLogFile() {
 void initPython(Console &cons) {
 	setPythonHome(cons);
 	addAndInitializeLuastackExtension(cons);
+	doDlopenWorkaround();
 	Py_Initialize();
 }
 

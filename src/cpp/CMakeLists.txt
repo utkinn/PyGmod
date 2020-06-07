@@ -45,7 +45,7 @@ elseif(UNIX)
     set(python_install_prefix ${PROJECT_SOURCE_DIR}/cpython-out)
     ExternalProject_Add(cpython
         URL https://github.com/python/cpython/archive/${PYTHON_VERSION}.zip
-        CONFIGURE_COMMAND CFLAGS=-m32 LDFLAGS=-m32 "${PROJECT_SOURCE_DIR}/cpython-prefix/src/cpython/configure" --config-cache "--prefix=${PROJECT_SOURCE_DIR}/cpython-out"
+        CONFIGURE_COMMAND CFLAGS=-m32 LDFLAGS=-m32 "${PROJECT_SOURCE_DIR}/cpython-prefix/src/cpython/configure" --config-cache "--prefix=${PROJECT_SOURCE_DIR}/cpython-out" --enable-shared
         BUILD_COMMAND make
         INSTALL_COMMAND make install
     )
@@ -85,7 +85,7 @@ if (WIN32)
     )
 elseif(UNIX)
     set_target_properties(main PROPERTIES
-        COMPILE_DEFINITIONS PY_SSIZE_T_CLEAN
+        COMPILE_DEFINITIONS "PY_SSIZE_T_CLEAN;PYTHON_VERSION=${PYTHON_VERSION}"
         OUTPUT_NAME pygmod
         CXX_STANDARD 20
         CXX_STANDARD_REQUIRED ON
@@ -93,7 +93,8 @@ elseif(UNIX)
         LINK_OPTIONS -m32
     )
     target_link_libraries(main
-        ${PYTHON_BUILD_DIR}/libpython${PYTHON_VERSION}.a
+        ${PYTHON_BUILD_DIR}/libpython${PYTHON_VERSION}.so.1.0
+        libutil.a  # Requires libc6-dev:i386 on Debian, lib32-glibc on Arch Linux
     )
 else()
     unknown_os_error()

@@ -285,8 +285,8 @@ class Table(CallableLuaObject, LuaNamespace):
                 # noinspection PyMethodFirstArgAssignment
                 self += value
         else:
-            raise ValueError(f'unknown constructor argument type: '
-                             '{type(ref_or_iterable).__name__}')
+            raise ValueError('unknown constructor argument type: '
+                             f'{type(ref_or_iterable).__name__}')
 
         self._ = MethodCallNamespace(self)
 

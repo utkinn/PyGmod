@@ -29,8 +29,8 @@ def generate_stub(ent_cls, classname):
     entity_stubs_path.mkdir(parents=True, exist_ok=True)
     stub_file_path = entity_stubs_path / Path(classname + ".lua")
 
-    with open(stub_file_path, "w+") as f:
-        f.write(generate_stub_source(ent_cls, classname))
+    with open(stub_file_path, "w+") as stub_file:
+        stub_file.write(generate_stub_source(ent_cls, classname))
     atexit.register(try_remove_stub, stub_file_path)
 
 
@@ -96,6 +96,7 @@ def hierarchy_class_dict(cls):
     return attrs_dict
 
 
+# pylint: disable=too-few-public-methods
 class Entity:
     """Base class for scripted entities. To create a scripted entity, simply inherit this class.
 
@@ -149,5 +150,7 @@ class Entity:
         generate_stub(cls, classname)
         entity_registry[classname] = cls
 
+    # pylint: disable=invalid-name
     def Draw(self, _):
+        """Draws the entity's model by default."""
         self._.DrawModel()

@@ -2,6 +2,7 @@
 
 from argparse import ArgumentParser
 from os import path
+import sys
 from pathlib import Path
 from itertools import chain
 from zipfile import ZipFile
@@ -40,21 +41,25 @@ def generate_win32(build_path, args):
             win32_zip.write(file, Path('garrysmod', 'pygmod') / Path(file).relative_to('cpp'))
 
 
-def generate_linux32(build_path, args):
+def generate_linux(build_path, args):
     ...
 
 
-def generate_pyz(build_path):
-    with ZipFile(build_path / 'pygmod.pyz', 'w') as pyz:
-        for zip_file in ['common', 'win32']:
-            pyz.write(build_path / f'{zip_file}.zip', f'{zip_file}.zip')
+def generate_pyz(build_path, args):
+    with ZipFile(args.out, 'w') as pyz:
+        pyz.write(build_path / 'common.zip', 'common.zip')
+        if sys.platform.startswith('win32'):
+            pyz.write(build_path / 'win32.zip', 'win32.zip')
+        elif sys.platform.startswith('linux'):
+            pyz.write(build_path / 'linux32.zip', 'linux32.zip')
         pyz.write(Path('python', 'installer', '__main__.py'), '__main__.py')
 
 
 def main():
-    argp = ArgumentParser(description='Builds `pygmod.pyz` to `installer-build`.')
+    argp = ArgumentParser(description='Builds the PyGmod installer.')
     argp.add_argument('-d', '--debug', action='store_true', help='look for files produced by debug build')
     argp.add_argument('python_version', help='embedded Python version without a dot (i. e. 38 for Python 3.8)')
+    argp.add_argument('out', help='installer path')
     args = argp.parse_args()
 
     # installer-build/tree/{common,linux32,win32} is where the files
@@ -62,8 +67,11 @@ def main():
     build_path = Path('installer-build')
     build_path.mkdir(exist_ok=True)
     generate_common(build_path)
-    generate_win32(build_path, args)
-    generate_pyz(build_path)
+    if sys.platform.startswith('win32'):
+        generate_win32(build_path, args)
+    elif sys.platform.startswith('linux'):
+        generate_linux(build_path, args)
+    generate_pyz(build_path, args)
 
 
 if __name__ == "__main__":

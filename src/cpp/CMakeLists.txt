@@ -1,9 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 
-macro(unknown_os_error)
-    message(FATAL_ERROR "Unknown OS. PyGmod is supported only on Windows and Linux.")
-endmacro()
-
 project(BinaryModulesAndPythonStdlib CXX)
 
 set(BUILD_SHARED_LIBS ON)
@@ -22,8 +18,8 @@ include_directories(${SOURCE_DIR}/include)
 # Download Python source
 if(WIN32)
     set(python_build_flags --no-tkinter)
-    if(CMAKE_BUILD_TYPE EQUAL Debug)
-        set(python_build_flags ${python_build_flags} -d)
+    if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+        list(APPEND python_build_flags -d)
     endif()
     ExternalProject_Add(cpython
         URL https://github.com/python/cpython/archive/${PYTHON_VERSION}.zip
@@ -70,7 +66,7 @@ if (WIN32)
         CXX_STANDARD 20
         CXX_STANDARD_REQUIRED ON
     )
-    if(CMAKE_BUILD_TYPE EQUAL Debug)
+    if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
         target_link_libraries(main
             ${PYTHON_SOURCE_DIR}/PCbuild/win32/python${PYTHON_VERSION_NO_DOT}_d.lib
         )

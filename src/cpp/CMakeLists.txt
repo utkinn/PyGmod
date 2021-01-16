@@ -1,5 +1,9 @@
 # To compile PyGmod for Windows, stable 32-bit Garry's Mod branch, run in Developer Command Prompt for VS:
-# cmake -A Win32 . && msbuild -m BinaryModulesAndPythonStdlib.sln
+# Debug build:
+#   cmake -A Win32 -DCMAKE_BUILD_TYPE=Debug . && msbuild -m BinaryModulesAndPythonStdlib.sln
+# Release build:
+#   cmake -A Win32 . && msbuild -m BinaryModulesAndPythonStdlib.sln -p:Configuration=Release
+#
 # To compile PyGmod for Linux, stable 32-bit Garry's Mod branch, run in terminal:
 # cmake . && make
 
@@ -20,7 +24,9 @@ string(REPLACE "." "" PYTHON_VERSION_NO_DOT ${PYTHON_VERSION})
 project(BinaryModulesAndPythonStdlib CXX)
 
 set(BUILD_SHARED_LIBS ON)
-set(CMAKE_BUILD_TYPE RelWithDebInfo)
+if(NOT DEFINED CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
 
 # Setting up Garry's Mod module headers
 include(ExternalProject)
@@ -35,10 +41,14 @@ include_directories(${SOURCE_DIR}/include)
 
 # Download Python source
 if(WIN32)
+    set(python_build_flags --no-tkinter)
+    if(CMAKE_BUILD_TYPE EQUAL Debug)
+        set(python_build_flags ${python_build_flags} -d)
+    endif()
     ExternalProject_Add(cpython
         URL https://github.com/python/cpython/archive/${PYTHON_VERSION}.zip
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND "${PROJECT_SOURCE_DIR}\\cpython-prefix\\src\\cpython\\PCbuild\\build.bat" -d --no-tkinter
+        BUILD_COMMAND "${PROJECT_SOURCE_DIR}\\cpython-prefix\\src\\cpython\\PCbuild\\build.bat" ${python_build_flags}
         INSTALL_COMMAND ""
     )
 elseif(UNIX)
@@ -80,9 +90,15 @@ if (WIN32)
         CXX_STANDARD 20
         CXX_STANDARD_REQUIRED ON
     )
-    target_link_libraries(main
-        ${PYTHON_SOURCE_DIR}/PCbuild/win32/python${PYTHON_VERSION_NO_DOT}_d.lib
-    )
+    if(CMAKE_BUILD_TYPE EQUAL Debug)
+        target_link_libraries(main
+            ${PYTHON_SOURCE_DIR}/PCbuild/win32/python${PYTHON_VERSION_NO_DOT}_d.lib
+        )
+    else()
+        target_link_libraries(main
+            ${PYTHON_SOURCE_DIR}/PCbuild/win32/python${PYTHON_VERSION_NO_DOT}.lib
+        )
+    endif()
 elseif(UNIX)
     set_target_properties(main PROPERTIES
         COMPILE_DEFINITIONS "PY_SSIZE_T_CLEAN;PYTHON_VERSION=${PYTHON_VERSION}"

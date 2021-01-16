@@ -1,7 +1,8 @@
+installer-build
+
 # CMake cache
 CMakeFiles
 CMakeCache.txt
-gmod-module-base-prefix
 cmake_install.cmake
 Makefile
 
@@ -21,3 +22,6 @@ Win32
 *.vcxproj*
 *.sln
 *.generated
+cpp/Debug
+cpp/Release
+cpp/gmod-module-base-prefix

@@ -1,32 +1,12 @@
-# To compile PyGmod for Windows, stable 32-bit Garry's Mod branch, run in Developer Command Prompt for VS:
-# Debug build:
-#   cmake -A Win32 -DCMAKE_BUILD_TYPE=Debug . && msbuild -m BinaryModulesAndPythonStdlib.sln
-# Release build:
-#   cmake -A Win32 . && msbuild -m BinaryModulesAndPythonStdlib.sln -p:Configuration=Release
-#
-# To compile PyGmod for Linux, stable 32-bit Garry's Mod branch, run in terminal:
-# cmake . && make
-
 cmake_minimum_required(VERSION 3.13)
 
 macro(unknown_os_error)
     message(FATAL_ERROR "Unknown OS. PyGmod is supported only on Windows and Linux.")
 endmacro()
 
-# Defining Python version
-
-if(NOT DEFINED PYTHON_VERSION)
-    set(PYTHON_VERSION 3.8)
-endif()
-
-string(REPLACE "." "" PYTHON_VERSION_NO_DOT ${PYTHON_VERSION})
-
 project(BinaryModulesAndPythonStdlib CXX)
 
 set(BUILD_SHARED_LIBS ON)
-if(NOT DEFINED CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
-endif()
 
 # Setting up Garry's Mod module headers
 include(ExternalProject)

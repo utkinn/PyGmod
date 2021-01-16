@@ -12,3 +12,12 @@ Makefile
 *.pdb
 *.exp
 *.cbp
+
+# Windows build dirs
+*.dir
+*-prefix
+stdlib
+Win32
+*.vcxproj*
+*.sln
+*.generated

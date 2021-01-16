@@ -203,7 +203,7 @@ def find_gmod_dir_windows():
     ]
 
     guesses = ["C:\\Program Files (x86)\\Steam\\steamapps\\common\\GarrysMod"]
-    guesses += list(itertools.product(drives, common_paths))
+    guesses += ["".join(path) for path in itertools.product(drives, common_paths)]
 
     return guesses
 

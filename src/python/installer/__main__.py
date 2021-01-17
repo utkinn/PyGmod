@@ -6,16 +6,16 @@ Installer format
 Installer is a ``.zip`` archive with a following structure::
 
     pygmod.pyz --- common.zip
-              |--- win32.zip
-              |--- linux32.zip
+              |--- winXX.zip
+              |--- linuxXX.zip
               `--- __init__.py (this file)
 
-``common.zip``, ``win32.zip`` and ``linux32.zip`` are "bundles".
+``common.zip``, ``winXX.zip`` and ``linuxXX.zip`` are "bundles".
 
 ``common.zip`` contains files which are the same for all platforms
  and all bit-versions of Garry's Mod.
-``win32.zip`` contains files for Windows, 32-bit Garry's Mod.
-``linux32.zip`` contains files for Linux, 32-bit Garry's Mod.
+``winXX.zip`` contains files for Windows, XX-bit Garry's Mod.
+``linuxXX.zip`` contains files for Linux, XX-bit Garry's Mod.
 
 All files in each bundle are organized in a directory structure
 that is relative to the Garry's Mod root folder (``.../steamapps/common/GarrysMod/``).
@@ -112,6 +112,11 @@ def script_filename():
     return __file__.split(os.sep)[-1]
 
 
+def get_bitness():
+    """Returns intended "bitness" of this installer, that is, 32 or 64."""
+    return 32 if '32' in ''.join(get_installer_zip().namelist()) else 64
+
+
 def extract_bundle(destination, bundle):
     """
     Extracts the bundle with a name specified by ``bundle`` to path ``destination``.
@@ -119,8 +124,8 @@ def extract_bundle(destination, bundle):
     ``bundle`` is one of:
 
         - "common": files for all OSes and all Garry's Mod bitnesses
-        - "win32": files for Windows, 32-bit Garry's Mod
-        - "linux32": files for Linux, 32-bit Garry's Mod
+        - "winXX": files for Windows, XX-bit Garry's Mod
+        - "linuxXX": files for Linux, XX-bit Garry's Mod
     """
 
     installer_zip = get_installer_zip()
@@ -151,10 +156,12 @@ def install(path_var):
         return
 
     extract_bundle(path_var.get(), "common")
+
+    bitness = get_bitness()
     if os.name == "nt":
-        extract_bundle(path_var.get(), "win32")
+        extract_bundle(path_var.get(), f"win{bitness}")
     else:
-        extract_bundle(path_var.get(), "linux32")
+        extract_bundle(path_var.get(), f"linux{bitness}")
 
     showinfo("Success", "PyGmod has been installed successfully.")
     exit()

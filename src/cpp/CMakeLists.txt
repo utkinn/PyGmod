@@ -22,6 +22,9 @@ if(WIN32)
     if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
         list(APPEND python_build_flags -d)
     endif()
+    if(BITS EQUAL 64)
+        list(APPEND python_build_flags -p x64)
+    endif()
     ExternalProject_Add(cpython
         URL https://github.com/python/cpython/archive/${PYTHON_VERSION}.zip
         CONFIGURE_COMMAND ""
@@ -30,12 +33,15 @@ if(WIN32)
     )
 elseif(UNIX)
     set(python_install_prefix ${PROJECT_SOURCE_DIR}/cpython-out)
+    if(BITS EQUAL 32)
+        set(python_toolchain_flags CFLAGS=-m32 LDFLAGS=-m32)
+    endif()
     if(${CMAKE_BUILD_TYPE} STREQUAL Release)
         set(python_configure_flags --enable-optimizations)
     endif()
     ExternalProject_Add(cpython
         URL https://github.com/python/cpython/archive/${PYTHON_VERSION}.zip
-        CONFIGURE_COMMAND CFLAGS=-m32 LDFLAGS=-m32 "${PROJECT_SOURCE_DIR}/cpython-prefix/src/cpython/configure" --config-cache "--prefix=${PROJECT_SOURCE_DIR}/cpython-out" --enable-shared ${python_configure_flags}
+        CONFIGURE_COMMAND ${python_toolchain_flags} "${PROJECT_SOURCE_DIR}/cpython-prefix/src/cpython/configure" --config-cache "--prefix=${PROJECT_SOURCE_DIR}/cpython-out" --enable-shared ${python_configure_flags}
         BUILD_COMMAND make -j
         INSTALL_COMMAND make -j install
     )
@@ -70,13 +76,18 @@ if (WIN32)
         CXX_STANDARD 20
         CXX_STANDARD_REQUIRED ON
     )
+    if(BITS EQUAL 32)
+        set(pcbuild_dir win32)
+    else()
+        set(pcbuild_dir amd64)
+    endif()
     if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
         target_link_libraries(main
-            ${PYTHON_SOURCE_DIR}/PCbuild/win32/python${PYTHON_VERSION_NO_DOT}_d.lib
+            ${PYTHON_SOURCE_DIR}/PCbuild/${pcbuild_dir}/python${PYTHON_VERSION_NO_DOT}_d.lib
         )
     else()
         target_link_libraries(main
-            ${PYTHON_SOURCE_DIR}/PCbuild/win32/python${PYTHON_VERSION_NO_DOT}.lib
+            ${PYTHON_SOURCE_DIR}/PCbuild/${pcbuild_dir}/python${PYTHON_VERSION_NO_DOT}.lib
         )
     endif()
 elseif(UNIX)
@@ -85,9 +96,13 @@ elseif(UNIX)
         OUTPUT_NAME pygmod
         CXX_STANDARD 20
         CXX_STANDARD_REQUIRED ON
-        COMPILE_OPTIONS -m32
-        LINK_OPTIONS -m32
     )
+    if(BITS EQUAL 32)
+        set_target_properties(main PROPERTIES
+            COMPILE_OPTIONS -m32
+            LINK_OPTIONS -m32
+        )
+    endif()
     target_link_libraries(main
         ${PYTHON_BUILD_DIR}/libpython${PYTHON_VERSION}.so.1.0
         libutil.a  # Requires libc6-dev:i386 on Debian, lib32-glibc on Arch Linux
@@ -104,18 +119,30 @@ macro(realm_module realm gm_prefix)
     add_dependencies(${realm} gmod-module-base)
     if (WIN32)
         set_target_properties(${realm} PROPERTIES
-            OUTPUT_NAME gm${gm_prefix}_pygmod_win32
             PREFIX ""
             SUFFIX ".dll"
         )
+        if(BITS EQUAL 32)
+            set_target_properties(${realm} PROPERTIES
+                OUTPUT_NAME gm${gm_prefix}_pygmod_win32
+            )
+        else()
+            set_target_properties(${realm} PROPERTIES
+                OUTPUT_NAME gm${gm_prefix}_pygmod_win64
+            )
+        endif()
     elseif(UNIX)
         set_target_properties(${realm} PROPERTIES
             OUTPUT_NAME gm${gm_prefix}_pygmod_linux
             PREFIX ""
             SUFFIX ".dll"
-            COMPILE_OPTIONS -m32
-            LINK_OPTIONS -m32
         )
+        if(BITS EQUAL 32)
+            set_target_properties(${realm} PROPERTIES
+                COMPILE_OPTIONS -m32
+                LINK_OPTIONS -m32
+            )
+        endif()
     else()
         unknown_os_error()
     endif()

@@ -1,14 +1,22 @@
-# To compile PyGmod for Windows, stable 32-bit Garry's Mod branch, run in Developer Command Prompt for VS:
-# Debug build:
+# To compile PyGmod for Windows, run in Developer Command Prompt for VS:
+# Debug build for stable 32-bit Garry's Mod branch:
 #   cmake -A Win32 -DCMAKE_BUILD_TYPE=Debug . && msbuild -m PyGmod.sln -p:Configuration=Debug
-# Release build:
+# Debug build for x86-64 Garry's Mod branch:
+#   cmake -A x64 -DCMAKE_BUILD_TYPE=Debug . && msbuild -m PyGmod.sln -p:Configuration=Debug
+# Release build for 32-bit stable 32-bit Garry's Mod branch:
 #   cmake -A Win32 . && msbuild -m PyGmod.sln -p:Configuration=Release
+# Release build for x86-64 Garry's Mod branch:
+#   cmake -A x64 . && msbuild -m PyGmod.sln -p:Configuration=Release
 #
-# To compile version of PyGmod for Linux, stable 32-bit Garry's Mod branch, run in terminal:
-# Debug build:
+# To compile version of PyGmod for Linux, run in terminal:
+# Debug build for stable 32-bit Garry's Mod branch:
 #   cmake -DCMAKE_BUILD_TYPE=Debug . && make
-# Release build:
+# Debug build for x86-64 Garry's Mod branch:
+#   cmake -DCMAKE_BUILD_TYPE=Debug -DBITS=64 . && make
+# Release build for 32-bit stable 32-bit Garry's Mod branch:
 #   cmake . && make
+# Release build for x86-64 Garry's Mod branch:
+#   cmake -DBITS=64 . && make
 
 cmake_minimum_required(VERSION 3.13)
 
@@ -28,18 +36,30 @@ endif()
 
 string(REPLACE "." "" PYTHON_VERSION_NO_DOT ${PYTHON_VERSION})
 
+if(NOT BITS)
+    if(CMAKE_GENERATOR_PLATFORM STREQUAL x64)
+        set(BITS 64)
+    else()
+        set(BITS 32)
+    endif()
+endif()
+
 add_subdirectory(cpp)
 
 if(WIN32)
-    set(installer_suffix win32)
+    set(installer_suffix win${BITS})
 elseif(UNIX)
-    set(installer_suffix linux32)
+    set(installer_suffix linux${BITS})
 else()
     unknown_os_error()
 endif()
 
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
     set(installer_generator_args -d)
+endif()
+
+if(BITS EQUAL 64)
+    list(APPEND installer_generator_args -b 64)
 endif()
 
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)

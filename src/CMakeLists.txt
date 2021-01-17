@@ -4,7 +4,10 @@
 # Release build:
 #   cmake -A Win32 . && msbuild -m PyGmod.sln -p:Configuration=Release
 #
-# To compile PyGmod for Linux, stable 32-bit Garry's Mod branch, run in terminal:
+# To compile version of PyGmod for Linux, stable 32-bit Garry's Mod branch, run in terminal:
+# Debug build:
+#   cmake -DCMAKE_BUILD_TYPE=Debug . && make
+# Release build:
 #   cmake . && make
 
 cmake_minimum_required(VERSION 3.13)

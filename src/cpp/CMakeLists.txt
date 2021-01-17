@@ -34,9 +34,9 @@ elseif(UNIX)
     endif()
     ExternalProject_Add(cpython
         URL https://github.com/python/cpython/archive/${PYTHON_VERSION}.zip
-        CONFIGURE_COMMAND CFLAGS=-m32 LDFLAGS=-m32 "${PROJECT_SOURCE_DIR}/cpython-prefix/src/cpython/configure" --config-cache "--prefix=${PROJECT_SOURCE_DIR}/cpython-out" --enable-shared
-        BUILD_COMMAND make
-        INSTALL_COMMAND make install
+        CONFIGURE_COMMAND CFLAGS=-m32 LDFLAGS=-m32 "${PROJECT_SOURCE_DIR}/cpython-prefix/src/cpython/configure" --config-cache "--prefix=${PROJECT_SOURCE_DIR}/cpython-out" --enable-shared ${python_configure_flags}
+        BUILD_COMMAND make -j
+        INSTALL_COMMAND make -j install
     )
 else()
     unknown_os_error()

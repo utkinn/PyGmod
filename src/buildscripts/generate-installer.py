@@ -54,7 +54,8 @@ def generate_linux(build_path, args):
 
         linux_zip.write(build_path / Path('libpygmod.so'), Path('bin', 'libpygmod.so'))
 
-        for realm_dll in build_path.glob('gm*_pygmod_linux.dll'):
+        realm_dll_glob = 'gm*_pygmod_linux.dll' if args.bits == 32 else 'gm*_pygmod_linux64.dll'
+        for realm_dll in build_path.glob(realm_dll_glob):
             linux_zip.write(realm_dll, Path('garrysmod', 'lua', 'bin') / realm_dll.relative_to(build_path))
 
         stdlib_path = build_path / Path('cpython-out', 'lib', 'python' + args.python_version, 'lib-dynload')

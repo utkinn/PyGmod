@@ -133,14 +133,18 @@ macro(realm_module realm gm_prefix)
         endif()
     elseif(UNIX)
         set_target_properties(${realm} PROPERTIES
-            OUTPUT_NAME gm${gm_prefix}_pygmod_linux
             PREFIX ""
             SUFFIX ".dll"
         )
         if(BITS EQUAL 32)
             set_target_properties(${realm} PROPERTIES
+                OUTPUT_NAME gm${gm_prefix}_pygmod_linux
                 COMPILE_OPTIONS -m32
                 LINK_OPTIONS -m32
+            )
+        else()
+            set_target_properties(${realm} PROPERTIES
+                OUTPUT_NAME gm${gm_prefix}_pygmod_linux64
             )
         endif()
     else()

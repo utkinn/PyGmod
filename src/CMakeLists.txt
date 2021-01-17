@@ -45,7 +45,7 @@ endif()
 
 set(installer_file installer-build/pygmod-${installer_suffix}.pyz)
 add_custom_command(OUTPUT ${installer_file}
-    COMMAND buildscripts/generate-installer.py ${installer_generator_args} ${PYTHON_VERSION_NO_DOT} ${installer_file}
+    COMMAND buildscripts/generate-installer.py ${installer_generator_args} ${PYTHON_VERSION} ${installer_file}
 )
 add_custom_target(installer ALL
     DEPENDS ${installer_file}

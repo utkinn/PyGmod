@@ -13,8 +13,9 @@ Makefile
 *.pdb
 *.exp
 *.cbp
+*.so
+*.pyc
 
-# Windows build dirs
 *.dir
 *-prefix
 stdlib
@@ -25,3 +26,4 @@ Win32
 cpp/Debug
 cpp/Release
 cpp/gmod-module-base-prefix
+cpp/cpython-out

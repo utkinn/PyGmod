@@ -29,6 +29,9 @@ if(WIN32)
     )
 elseif(UNIX)
     set(python_install_prefix ${PROJECT_SOURCE_DIR}/cpython-out)
+    if(${CMAKE_BUILD_TYPE} STREQUAL Release)
+        set(python_configure_flags --enable-optimizations)
+    endif()
     ExternalProject_Add(cpython
         URL https://github.com/python/cpython/archive/${PYTHON_VERSION}.zip
         CONFIGURE_COMMAND CFLAGS=-m32 LDFLAGS=-m32 "${PROJECT_SOURCE_DIR}/cpython-prefix/src/cpython/configure" --config-cache "--prefix=${PROJECT_SOURCE_DIR}/cpython-out" --enable-shared

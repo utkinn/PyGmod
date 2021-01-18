@@ -197,19 +197,20 @@ int finalize(lua_State *state) {  // TODO: rewrite
 	Console cons(LUA);  // Creating a Console object for printing to the Garry's Mod console
 	cons.log("Binary module shutting down.");
 
-    // Is only one interpreter left?
-	bool lastInterpreter = serverInterp == nullptr || clientInterp == nullptr;
-	// If so, just finalize Python
-	if (lastInterpreter) {
-		PyThreadState *thatLastInterpreter = serverInterp == nullptr ? clientInterp : serverInterp;
-		PyThreadState_Swap(thatLastInterpreter);
-	    Py_FinalizeEx();
-		// BUG: interp's pointer is not set to nullptr causing a crash on reload
-	} else {  // Otherwise, end that interpreter, and we know for sure that it's the client's interpreter
-	    PyThreadState_Swap(clientInterp);
-        Py_EndInterpreter(clientInterp);
+	Realm currentRealm = getCurrentRealm(state);
+
+	auto currentInterp = currentRealm == CLIENT ? clientInterp : serverInterp;
+	PyThreadState_Swap(currentInterp);
+
+	if (currentRealm == CLIENT && serverInterp == nullptr || currentRealm == SERVER && clientInterp == nullptr)
+		Py_FinalizeEx();
+	else
+		Py_EndInterpreter(currentInterp);
+
+	if (currentRealm == CLIENT)
 		clientInterp = nullptr;
-	}
+	else
+		serverInterp = nullptr;
 
 	cons.log("Python finalized!");
 

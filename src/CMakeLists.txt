@@ -3,7 +3,7 @@
 #   cmake -A Win32 -DCMAKE_BUILD_TYPE=Debug . && msbuild -m PyGmod.sln -p:Configuration=Debug
 # Debug build for x86-64 Garry's Mod branch:
 #   cmake -A x64 -DCMAKE_BUILD_TYPE=Debug . && msbuild -m PyGmod.sln -p:Configuration=Debug
-# Release build for 32-bit stable 32-bit Garry's Mod branch:
+# Release build for stable 32-bit Garry's Mod branch:
 #   cmake -A Win32 . && msbuild -m PyGmod.sln -p:Configuration=Release
 # Release build for x86-64 Garry's Mod branch:
 #   cmake -A x64 . && msbuild -m PyGmod.sln -p:Configuration=Release
@@ -13,7 +13,7 @@
 #   cmake -DCMAKE_BUILD_TYPE=Debug . && make
 # Debug build for x86-64 Garry's Mod branch:
 #   cmake -DCMAKE_BUILD_TYPE=Debug -DBITS=64 . && make
-# Release build for 32-bit stable 32-bit Garry's Mod branch:
+# Release build for stable 32-bit Garry's Mod branch:
 #   cmake . && make
 # Release build for x86-64 Garry's Mod branch:
 #   cmake -DBITS=64 . && make

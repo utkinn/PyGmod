@@ -27,7 +27,8 @@ Linux requirements
 
     .. note::
 
-        You'll need to get 32-bit (aka i386) version of dependencies, which is a bit tricky if you're using a 64-bit version of your Linux distribution.
+        If you're going to build a 32-bit version, you'll need to get 32-bit (aka i386) version of dependencies,
+        which is a bit tricky if you're using a 64-bit version of your Linux distribution.
 
         On Debian-based distributions (Ubuntu, Linux Mint), follow `this guide on Debian Wiki <https://wiki.debian.org/Multiarch/HOWTO>`_
         to install i386 packages.
@@ -50,35 +51,51 @@ Building on Windows
 
     substituting *pygmod_dir* with the full path to PyGmod source tree, for example, ``C:\Users\user\Downloads\PyGmod``.
 
-#. Run:
+#. Depending on what version of PyGmod you want to build, run:
 
     .. code-block:: doscon
 
-        For release build
+        Release build for stable 32-bit Garry's Mod branch:
         > cmake -A Win32 . && msbuild -m PyGmod.sln -p:Configuration=Release
-        -- or --
-        For debug build
+
+        Debug build for stable 32-bit Garry's Mod branch:
         > cmake -A Win32 -DCMAKE_BUILD_TYPE=Debug . && msbuild -m PyGmod.sln -p:Configuration=Debug
 
+        Release build for x86-64 Garry's Mod branch:
+        > cmake -A x64 . && msbuild -m PyGmod.sln -p:Configuration=Release
+
+        Debug build for x86-64 Garry's Mod branch:
+        > cmake -A x64 -DCMAKE_BUILD_TYPE=Debug . && msbuild -m PyGmod.sln -p:Configuration=Debug
+
     Debug builds are intended for aiding to track down bugs in the C++ part of PyGmod.
-    These build are generally less optimized and not distributable as they're linked against debug versions of Visual C++ runtime
+    These builds are generally less optimized and not distributable as they're linked against debug versions of Visual C++ runtime
     which ship with Visual Studio only.
 
-#. After a few minutes, ``pygmod-win32.pyz`` should appear in ``src\installer-build`` directory. This is the PyGmod installer.
+#. After a few minutes, a ``.pyz`` file should appear in ``src\installer-build`` directory. This is the PyGmod installer.
    You can run it to install the freshly compiled version of PyGmod.
 
 Building on Linux
 ~~~~~~~~~~~~~~~~~
 
 #. Open a terminal in ``pygmod_dir/src``, where ``pygmod_dir`` being the PyGmod source tree root.
-#. Run:
+#. Depending on what version of PyGmod you want to build, run:
 
     .. code-block:: console
 
+        Release build for stable 32-bit Garry's Mod branch:
         $ cmake . && make
 
-#. After a few minutes, ``pygmod-linux32.pyz`` should appear in ``src\installer-build`` directory. This is the PyGmod installer.
-   You can run ``python3 pygmod-linux32.pyz`` to install the freshly compiled version of PyGmod.
+        Debug build for stable 32-bit Garry's Mod branch:
+        $ cmake -DCMAKE_BUILD_TYPE=Debug . && make
+
+        Release build for x86-64 Garry's Mod branch:
+        $ cmake -DBITS=64 . && make
+
+        Debug build for x86-64 Garry's Mod branch:
+        $ cmake -DCMAKE_BUILD_TYPE=Debug -DBITS=64 . && make
+
+#. After a few minutes, a ``.pyz`` file should appear in ``src\installer-build`` directory. This is the PyGmod installer.
+   You can run ``python3 pygmod-linuxXX.pyz`` to install the freshly compiled version of PyGmod.
 
 .. seealso::
 

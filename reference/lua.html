@@ -4,14 +4,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>pygmod.lua - Lua interoperability &#8212; PyGmod 0.13-alpha documentation</title>
-    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pygmod.lua - Lua interoperability &#8212; PyGmod 0.17-alpha documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,8 +33,9 @@
         <li class="right" >
           <a href="../reference.html" title="Module Reference"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.13-alpha documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../reference.html" accesskey="U">Module Reference</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.17-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../reference.html" accesskey="U">Module Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pygmod.lua</span></code> - Lua interoperability</a></li> 
       </ul>
     </div>  
 
@@ -188,7 +189,7 @@ should be accessed with the subscription syntax. These names are reserved for in
 
 <dl class="py function">
 <dt id="pygmod.lua.exec_lua">
-<code class="sig-prename descclassname">pygmod.lua.</code><code class="sig-name descname">exec_lua</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a><a class="headerlink" href="#pygmod.lua.exec_lua" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pygmod.lua.</code><code class="sig-name descname">exec_lua</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><a class="headerlink" href="#pygmod.lua.exec_lua" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs a string of Lua code. Raises <a class="reference internal" href="#pygmod.lua.LuaError" title="pygmod.lua.LuaError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">LuaError</span></code></a> on failure.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exec_lua</span><span class="p">(</span><span class="s2">&quot;print(jit.version)&quot;</span><span class="p">)</span>
 <span class="c1"># &quot;LuaJIT 2.0.4&quot; will be printed to the console</span>
@@ -198,7 +199,7 @@ should be accessed with the subscription syntax. These names are reserved for in
 
 <dl class="py function">
 <dt id="pygmod.lua.eval_lua">
-<code class="sig-prename descclassname">pygmod.lua.</code><code class="sig-name descname">eval_lua</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)">object</a><a class="headerlink" href="#pygmod.lua.eval_lua" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pygmod.lua.</code><code class="sig-name descname">eval_lua</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)">object</a><a class="headerlink" href="#pygmod.lua.eval_lua" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluates a Lua expression and returns the result. Raises <a class="reference internal" href="#pygmod.lua.LuaError" title="pygmod.lua.LuaError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">LuaError</span></code></a> on failure.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">eval_lua</span><span class="p">(</span><span class="s2">&quot;function() return 123 end&quot;</span><span class="p">)())</span>
 <span class="go">123</span>
@@ -215,6 +216,7 @@ should be accessed with the subscription syntax. These names are reserved for in
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -265,13 +267,14 @@ should be accessed with the subscription syntax. These names are reserved for in
         <li class="right" >
           <a href="../reference.html" title="Module Reference"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.13-alpha documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../reference.html" >Module Reference</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">PyGmod 0.17-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../reference.html" >Module Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pygmod.lua</span></code> - Lua interoperability</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2019, javabird25 (Protocs).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.
+        &#169; Copyright 2021, javabird25 (Protocs).
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>
 </html>

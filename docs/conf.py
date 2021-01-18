@@ -22,10 +22,10 @@ sys.path.insert(0, os.path.abspath('../src/python'))
 
 project = 'PyGmod'
 author = 'javabird25 (Protocs)'
-copyright = '2019, ' + author
+copyright = '2021, ' + author
 
 # The short X.Y version
-version = '0.13'
+version = '0.17'
 # The full version, including alpha/beta/rc tags
 release = version + '-alpha'
 

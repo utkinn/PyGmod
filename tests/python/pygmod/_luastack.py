@@ -37,11 +37,11 @@ def push_globals():
     create_table()
 
 
-def push_python_obj(o):
+def convert_py_to_lua(o):
     stack.append(o)
 
 
-def get_stack_val_as_python_obj(i=-1):
+def convert_lua_to_py(i=-1):
     return stack[i]
 
 

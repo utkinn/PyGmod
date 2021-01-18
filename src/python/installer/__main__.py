@@ -56,7 +56,7 @@ def ensure_inside_zip():
         showerror("Installer error", "This script is intended to be ran inside the "
                                      "pyz file, without being extracted. "
                                      "Please run pygmod.pyz directly.")
-        exit(1)
+        sys.exit(1)
 
 
 def get_drives():
@@ -164,7 +164,7 @@ def install(path_var):
         extract_bundle(path_var.get(), f"linux{bitness}")
 
     showinfo("Success", "PyGmod has been installed successfully.")
-    exit()
+    sys.exit()
 
 
 def find_gmod_dir():

@@ -3,7 +3,7 @@
 #include <GarrysMod/Lua/Interface.h>
 
 #include "_luastack.hpp"
-#include "stack_utils.hpp"
+#include "valueconv.hpp"
 
 using namespace GarrysMod::Lua;
 
@@ -160,22 +160,22 @@ Py_MODULE_FUNC(referenceFree) {
 	Py_RETURN_NONE;
 }
 
-Py_MODULE_FUNC(getStackValAsPythonObj) {
+Py_MODULE_FUNC(convertLuaToPy) {
 	int stackIndex = -1;
 
 	if (!PyArg_ParseTuple(args, "|i", &stackIndex))
 		return NULL;
 
-	return getStackValAsPythonObj(MS_LUA, stackIndex);
+	return convertLuaToPy(MS_LUA, stackIndex);
 }
-Py_MODULE_FUNC(pushPythonObj) {
+Py_MODULE_FUNC(convertPyToLua) {
 	PyObject *obj;
 
 	if (!PyArg_ParseTuple(args, "O", &obj))
 		return NULL;
 
 	Py_INCREF(obj);
-	pushPythonObj(MS_LUA, obj);
+	convertPyToLua(MS_LUA, obj);
 	Py_DECREF(obj);
 	Py_RETURN_NONE;
 }
@@ -278,12 +278,12 @@ static PyMethodDef methods[] = {
 	 PyDoc_STR("reference_free(ref: int) -> None\n" \
 	 "Frees the reference ref.")},
 
-	{"get_stack_val_as_python_obj", getStackValAsPythonObj, METH_VARARGS,
-	 PyDoc_STR("get_stack_val_as_python_obj(stack_index: int = -1) -> object\n" \
+	{"convert_lua_to_py", convertLuaToPy, METH_VARARGS,
+	 PyDoc_STR("convert_lua_to_py(stack_index: int = -1) -> object\n" \
 	 "Converts a Lua value on the given index of the stack to a Python value and returns it.\n" \
      "Raises NotImplementedError if Lua to Python conversion for this value type is not supported yet.")},
-	{"push_python_obj", pushPythonObj, METH_VARARGS,
-	 PyDoc_STR("push_python_obj(o) -> None\n" \
+	{"convert_py_to_lua", convertPyToLua, METH_VARARGS,
+	 PyDoc_STR("convert_py_to_lua(o) -> None\n" \
 	 "Converts a Python object to a Lua object and pushes it to the stack.")},
 
 	{"stack_dump", stackDump, METH_NOARGS,

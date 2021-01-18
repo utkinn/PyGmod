@@ -14,7 +14,8 @@ def __dir__():
     return __all__
 
 
-# noinspection PyUnresolvedReferences
+# pylint: disable=undefined-all-variable
+
 # Global functions
 __all__ = [
     'AccessorFunc',

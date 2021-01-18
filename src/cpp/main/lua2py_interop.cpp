@@ -1,14 +1,14 @@
 #include <string>
 #include "lua2py_interop.hpp"
-#include "py_extensions/_luastack.hpp"
-#include "py_extensions/stack_utils.hpp"
+#include "_luastack.hpp"
+#include "valueconv.hpp"
 #include "realms.hpp"
 
 #define LUA_FUNC(name) int name(lua_State *state)
 
 // Eexcutes a string of Python code.
 LUA_FUNC(py_Exec) {
-    switchToCurrentRealm(state);
+    prepareInterpreterForCurrentRealm(state);
 
     const char *code = LUA->CheckString();
     PyRun_SimpleString(code);
@@ -16,8 +16,9 @@ LUA_FUNC(py_Exec) {
     return 0;
 }
 
+// Imports a Python module.
 LUA_FUNC(py_Import) {
-    switchToCurrentRealm(state);
+    prepareInterpreterForCurrentRealm(state);
     const char *moduleName = LUA->CheckString();
     PyObject *module = PyImport_ImportModule(moduleName);
     if (module == NULL) {
@@ -25,7 +26,7 @@ LUA_FUNC(py_Import) {
         LUA->ThrowError((std::string("could not import Python module ") + moduleName).c_str());
         return 0;
     }
-    pushPythonObj(LUA, module);
+    convertPyToLua(LUA, module);
     return 1;
 }
 

@@ -6,3 +6,7 @@
 out/
 # Python Virtualenv
 venv
+
+# Python cache
+__pycache__
+*.pyc

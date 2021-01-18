@@ -1,37 +1,52 @@
 #include "Console.hpp"
 
+static const Color RED = {255, 0, 0};
+
 using std::to_string;
 
 void Console::println(const char* message) {
-    lua->PushSpecial(SPECIAL_GLOB);  // Pushing global table to stack
+    lua->PushSpecial(SPECIAL_GLOB);  // Pushing "_G" to the stack, +1 = 1
 
-    lua->GetField(-1, "print");  // Getting "print" field of the global table
-    lua->PushString(message);  // Pushing the message
-    lua->Call(1, 0);  // Calling "print" with 1 argument and 0 return values and popping the function and the arguments from the stack
+    lua->GetField(-1, "print");  // Getting the "print" function from "_G", +1 = 2
+    lua->PushString(message);  // Pushing the message, +1 = 3
+    // Calling "print" with 1 argument and 0 return values
+    // and popping the function and the arguments from the stack,
+    // -1 function and -1 argument = 1
+    lua->Call(1, 0);
 
-    lua->Pop();  // Popping the global table from the stack
+    lua->Pop();  // Popping "_G" off the stack, -1 = 0
 }
 
-void Console::println(const char* message, Color color) {
-    lua->PushSpecial(SPECIAL_GLOB);  // Pushing global table to stack
-
-    lua->GetField(-1, "MsgC");  // Getting "MsgC" field of the global table
-
-    // Creating Color structure
+// Helper for println(const char*, Color) which creates a
+// Lua Color structure from our C++ Color structure
+// and leaves it at the top of the Lua stack.
+// This function expects _G to be at the top of the stack.
+void _pushColor(Color &color) {
+    // Getting the "Color" function, +1 = 2
     lua->GetField(-2, "Color");
-    // Stack here: _G, MsgC, Color
+    // Stack contents here: _G, Color() (2)
     lua->PushNumber(color.r);
     lua->PushNumber(color.g);
     lua->PushNumber(color.b);
-    // Stack here: _G, MsgC, Color, r, g, b
-    lua->Call(3, 1);
-    // Stack here: _G, MsgC, Color structure(r, g, b)
+    // Stack contents here: _G, Color(), r, g, b (5)
+    lua->Call(3, 1);  // -3 args, -1 function, +1 return value = 2
+    // Stack contents here: _G, Color(r, g, b)
+}
+
+void Console::println(const char* message, Color color) {
+    lua->PushSpecial(SPECIAL_GLOB);  // Pushing "_G" to the stack, +1 = 1
+
+    lua->GetField(-1, "MsgC");  // Getting "MsgC" function from "_G", +1 = 2
+
+    _pushColor(color);
 
     lua->PushString(message);  // Pushing the message
     lua->PushString("\n");  // Adding a newline
-    lua->Call(3, 0);  // Calling "MsgC" with 3 arguments (color, message, newline) and 0 return values and popping the function and the arguments from the stack
+    // Calling "MsgC" with 3 arguments (color, message, newline)
+    // and 0 return values and popping the function and the arguments from the stack
+    lua->Call(3, 0);
 
-    lua->Pop();  // Popping the global table from the stack
+    lua->Pop();  // Popping "_G" off the stack, -1 = 0
 }
 
 void Console::log(const char* message) {

@@ -125,11 +125,11 @@ Stack manipulation
 
     Returns the name of the type of the Lua value at the given stack index.
 
-.. function:: get_stack_val_as_python_obj(stack_index=-1)
+.. function:: convert_lua_to_py(stack_index=-1)
 
     Converts a Lua value on the given index of the stack to a Python value and returns it.
 
-.. function:: push_python_obj(o)
+.. function:: convert_py_to_lua(o)
 
     Converts a Python object to a Lua object and pushes it to the stack.
 

@@ -115,9 +115,9 @@ class LuaNamespace(BaseGetNamespace):
     @auto_pop
     def _get(self, key):
         self._push_namespace_object()
-        _luastack.push_python_obj(key)
+        _luastack.convert_py_to_lua(key)
         _luastack.get_table(-2)
-        return _luastack.get_stack_val_as_python_obj()
+        return _luastack.convert_lua_to_py()
 
     # Value setting
 
@@ -125,8 +125,8 @@ class LuaNamespace(BaseGetNamespace):
     def _set(self, key, value):
         """Assigns the value ``value`` to the key ``key`` for the underlying table or userdata."""
         self._push_namespace_object()
-        _luastack.push_python_obj(key)
-        _luastack.push_python_obj(value)
+        _luastack.convert_py_to_lua(key)
+        _luastack.convert_py_to_lua(value)
         _luastack.set_table(-3)
 
     def __setitem__(self, index, value):
@@ -208,7 +208,7 @@ class CallableLuaObject(LuaObject):
         _luastack.reference_push(self._ref)
         # Pushing the arguments
         for arg in args:
-            _luastack.push_python_obj(arg)
+            _luastack.convert_py_to_lua(arg)
         # Calling the function
         _luastack.call(len(args), -1)
 
@@ -217,9 +217,9 @@ class CallableLuaObject(LuaObject):
         if values_returned == 0:  # Function returned nothing; returning None
             return None
         if values_returned == 1:  # One value - just returning it
-            return _luastack.get_stack_val_as_python_obj()
+            return _luastack.convert_lua_to_py()
         # Many values - putting them all in a tuple and returning it
-        return tuple(_luastack.get_stack_val_as_python_obj(i)
+        return tuple(_luastack.convert_lua_to_py(i)
                      for i in
                      range(vals_in_stack_before_call + 1, _luastack.top() + 1))
 
@@ -285,8 +285,8 @@ class Table(CallableLuaObject, LuaNamespace):
                 # noinspection PyMethodFirstArgAssignment
                 self += value
         else:
-            raise ValueError(f'unknown constructor argument type: '
-                             '{type(ref_or_iterable).__name__}')
+            raise ValueError('unknown constructor argument type: '
+                             f'{type(ref_or_iterable).__name__}')
 
         self._ = MethodCallNamespace(self)
 
@@ -353,15 +353,15 @@ class TableBaseIterator(ABC):
 
     @abstractmethod
     def __next__(self):
-        _luastack.push_python_obj(self._table)
-        _luastack.push_python_obj(self._previous_key)
+        _luastack.convert_py_to_lua(self._table)
+        _luastack.convert_py_to_lua(self._previous_key)
 
         iteration_is_not_over = _luastack.next(-2)
         # _luastack.next() == 0 means the iteration end
         if not iteration_is_not_over:
             raise StopIteration
 
-        self._previous_key = _luastack.get_stack_val_as_python_obj(-2)
+        self._previous_key = _luastack.convert_lua_to_py(-2)
 
         # Returning something in overridden methods...
 
@@ -385,7 +385,7 @@ class TableValueIterator(TableBaseIterator):
     @auto_pop
     def __next__(self):
         super().__next__()
-        return _luastack.get_stack_val_as_python_obj()
+        return _luastack.convert_lua_to_py()
 
 
 class TableItemIterator(TableBaseIterator):
@@ -396,7 +396,7 @@ class TableItemIterator(TableBaseIterator):
     @auto_pop
     def __next__(self):
         super().__next__()
-        return self._previous_key, _luastack.get_stack_val_as_python_obj()
+        return self._previous_key, _luastack.convert_lua_to_py()
 
 
 def _table_from_stack(stack_index):

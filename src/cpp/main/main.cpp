@@ -10,8 +10,8 @@
 #include <GarrysMod/Lua/Interface.h>
 
 #include "Console.hpp"
-#include "py_extensions/_luastack.hpp"
-#include "py_extensions/luapyobject.hpp"
+#include "_luastack.hpp"
+#include "luapyobject.hpp"
 #include "lua2py_interop.hpp"
 #include "realms.hpp"
 #include "interpreter_states.hpp"

@@ -1,4 +1,4 @@
-// Lua functions for interacting with Python
+// Defines Lua extension functions for basic Python interoperability.
 
 #pragma once
 
@@ -7,6 +7,5 @@
 
 using namespace GarrysMod::Lua;
 
-extern PyThreadState *clientInterp, *serverInterp;
-
+// Adds the aforementioned functions to the Lua global namespace.
 void extendLua(ILuaBase *lua);

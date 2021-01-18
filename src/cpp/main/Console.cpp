@@ -21,7 +21,7 @@ void Console::println(const char* message) {
 // Lua Color structure from our C++ Color structure
 // and leaves it at the top of the Lua stack.
 // This function expects _G to be at the top of the stack.
-void _pushColor(Color &color) {
+void Console::_pushColor(Color &color) {
     // Getting the "Color" function, +1 = 2
     lua->GetField(-2, "Color");
     // Stack contents here: _G, Color() (2)

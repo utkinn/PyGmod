@@ -1,4 +1,4 @@
-#include "stack_utils.hpp"
+#include "valueconv.hpp"
 #include <string>
 
 void convertPyToLua(ILuaBase *lua, PyObject *obj) {
@@ -101,7 +101,7 @@ PyObject *convertLuaToPy(ILuaBase *lua, int index) {
 
 	// else
 
-	luaModule = PyImport_ImportModule("pygmod.lua");
+	PyObject *luaModule = PyImport_ImportModule("pygmod.lua");
 	if (luaModule == NULL)
 		return NULL;
 	PyObject *tableFromStackFunc = PyObject_GetAttrString(luaModule, "_table_from_stack");

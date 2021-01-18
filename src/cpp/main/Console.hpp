@@ -14,6 +14,8 @@ struct Color {
 class Console {
     ILuaBase *lua;
 
+    void _pushColor(Color &color);
+
 public:
     Console(ILuaBase *lua) : lua(lua) {};
 

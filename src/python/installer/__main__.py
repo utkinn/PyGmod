@@ -155,13 +155,14 @@ def install(path_var):
     if not validate_path(path_var):
         return
 
-    extract_bundle(path_var.get(), "common")
+    path = path_var.get()
+    extract_bundle(path, "common")
 
     bitness = get_bitness()
     if os.name == "nt":
-        extract_bundle(path_var.get(), f"win{bitness}")
+        extract_bundle(path, f"win{bitness}")
     else:
-        extract_bundle(path_var.get(), f"linux{bitness}")
+        extract_bundle(path, f"linux{bitness}")
 
     showinfo("Success", "PyGmod has been installed successfully.")
     sys.exit()

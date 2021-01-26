@@ -15,18 +15,20 @@ def files(*dir, suffix=''):
 
 def generate_common(build_path, args):
     with ZipFile(build_path / 'common.zip', 'w') as common_zip:
+        pygmod_path = Path('garrysmod', 'pygmod')
+
         for file in files('lua'):
             common_zip.write(file, Path('garrysmod') / file.relative_to('lua'))
         for file in files('html'):
-            common_zip.write(file, Path('garrysmod', 'pygmod') / file)
+            common_zip.write(file, pygmod_path / file)
         for file in files('python', 'pygmod'):
-            common_zip.write(file, Path('garrysmod', 'pygmod') / file.relative_to('python'))
+            common_zip.write(file, pygmod_path / file.relative_to('python'))
         if sys.platform.startswith('win32'):
             for file in files('cpp', 'stdlib', 'lib', suffix='.py'):
-                common_zip.write(file, Path('garrysmod', 'pygmod', 'stdlib') / file.relative_to('cpp', 'stdlib', 'lib'))
+                common_zip.write(file, pygmod_path / 'stdlib' / file.relative_to('cpp', 'stdlib', 'lib'))
         elif sys.platform.startswith('linux'):
             for file in files('cpp', 'cpython-out', 'lib', 'python' + args.python_version, suffix='.py'):
-                common_zip.write(file, Path('garrysmod', 'pygmod', 'stdlib') / file.relative_to('cpp', 'cpython-out', 'lib', 'python' + args.python_version))
+                common_zip.write(file, pygmod_path / 'stdlib' / file.relative_to('cpp', 'cpython-out', 'lib', 'python' + args.python_version))
 
 
 def generate_win32(build_path, args):

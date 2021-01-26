@@ -144,24 +144,6 @@ def load_addons():
     LOGGER.info('Loading finished')
 
 
-def check_init_lua_patch():  # TODO: patch if not patched
-    """
-    Checks whether ``garrysmod/lua/includes/init.lua`` is patched.
-    This is necessary because Steam may restore this file to the original version
-    at any time. Patched version contains modified
-    `isfunction() <http://wiki.garrysmod.com/page/Global/isfunction>`_
-    which helps to bypass some silly checks in
-    `hook.Add() <http://wiki.garrysmod.com/page/hook/Add>`_ in order to make it
-    compatible with Python functions.
-    """
-    with open(path.join("garrysmod", "lua", "includes", "init.lua")) as init_lua:
-        if not init_lua.read().startswith("-- PATCHED"):
-            LOGGER.warning("garrysmod/lua/includes/init.lua is not patched. "
-                           "hook.Add() and possibly some other functions which "
-                           "take callbacks won't work in PyGmod. "
-                           "Please reinstall PyGmod to make them working.")
-
-
 def main():
     """
     Finishes the PyGmod initialization.
@@ -172,5 +154,4 @@ def main():
     LOGGER.debug("pygmod.main()")
     _error_notif.setup()
     _repl.setup()
-    check_init_lua_patch()
     load_addons()

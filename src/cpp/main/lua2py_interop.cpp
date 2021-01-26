@@ -3,6 +3,7 @@
 #include "_luastack.hpp"
 #include "valueconv.hpp"
 #include "realms.hpp"
+#include "py_function_registry.hpp"
 
 #define LUA_FUNC(name) int name(lua_State *state)
 
@@ -30,6 +31,20 @@ LUA_FUNC(py_Import) {
     return 1;
 }
 
+LUA_FUNC(passCallToPyFunc) {
+    int argCount = LUA->Top() - 1;  // How much args have we got for our Python function?
+    auto funcId = LUA->CheckNumber(1);
+    auto args = PyTuple_New(argCount);
+
+    for (int i = 0; i < argCount; i++) {
+        PyTuple_SET_ITEM(args, i, convertLuaToPy(LUA, i + 2));  // args for our function start at stack index 2
+    }
+
+    auto result = PyObject_Call(pyFunctionRegistry[funcId], args, NULL);
+    convertPyToLua(LUA, result);
+    return 1;
+}
+
 void extendLua(ILuaBase *lua) {
     lua->PushSpecial(SPECIAL_GLOB);
     lua->CreateTable();  // To be "py" table
@@ -39,6 +54,9 @@ void extendLua(ILuaBase *lua) {
 
     lua->PushCFunction(py_Import);
     lua->SetField(-2, "Import");
+
+    lua->PushCFunction(passCallToPyFunc);
+    lua->SetField(-2, "_passCallToPyFunc");
 
     // Adding "py" table to the global namespace
     lua->SetField(-2, "py");

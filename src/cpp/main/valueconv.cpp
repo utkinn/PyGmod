@@ -1,5 +1,6 @@
-#include "valueconv.hpp"
 #include <string>
+#include "valueconv.hpp"
+#include "py_function_registry.hpp"
 
 void convertPyToLua(ILuaBase *lua, PyObject *obj) {
 	if (obj == Py_None) {
@@ -22,6 +23,19 @@ void convertPyToLua(ILuaBase *lua, PyObject *obj) {
 
 	else if (PyUnicode_Check(obj)) {
 		lua->PushString(PyUnicode_AsUTF8(obj));
+	}
+
+	else if (PyFunction_Check(obj)) {
+		auto funcIdString = std::to_string(pyFunctionRegistry.add(obj));
+
+		lua->PushSpecial(SPECIAL_GLOB);
+		lua->GetField(-1, "RunString");
+		lua->PushString((std::string("_pygmod_func = function(...) return py._passCallToPyFunc(") + funcIdString + ", ...) end").c_str());
+		lua->Call(1, 0);
+		lua->GetField(-1, "_pygmod_func");
+		lua->PushNil();
+		lua->SetField(-3, "_pygmod_func");
+		lua->Remove(-2);  // Removing _G
 	}
 
 	// obj is a pygmod.lua.LuaObject instance.

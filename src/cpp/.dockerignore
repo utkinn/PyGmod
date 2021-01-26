@@ -1,8 +1,0 @@
-CMakeFiles
-CMakeCache.txt
-cmake_install.txt
-Makefile
-*.so
-*.dll
-gmod-module-base-prefix
-.gitignore

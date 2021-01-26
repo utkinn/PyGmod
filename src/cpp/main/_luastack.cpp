@@ -4,6 +4,7 @@
 
 #include "_luastack.hpp"
 #include "valueconv.hpp"
+#include "stack_dump.hpp"
 
 using namespace GarrysMod::Lua;
 
@@ -180,30 +181,8 @@ Py_MODULE_FUNC(convertPyToLua) {
 	Py_RETURN_NONE;
 }
 
-Py_MODULE_FUNC(stackDump) {
-	PyRun_SimpleString("import logging\n" \
-		               "logger = logging.getLogger('pygmod._luastack.stack_dump')\n" \
-		               "logger.debug('--- LUA STACK DUMP ---')\n" \
-		               "logger.debug('----------------------', stack_info=True)");
-	for (int i = 1; i <= MS_LUA->Top(); i++) {
-		int valType = MS_LUA->GetType(i);
-		const char *valTypeName = MS_LUA->GetTypeName(valType);
-		std::string repr;
-		switch (valType) {
-		case Type::Nil:
-			repr = "nil";
-			break;
-		case Type::Number:
-			repr = std::to_string(MS_LUA->GetNumber(i));
-			break;
-		case Type::String:
-			repr = MS_LUA->GetString(i);
-			break;
-		}
-		std::string code = "import logging; logging.getLogger('pygmod._luastack.stack_dump').debug('%i: %s (%s)', " + std::to_string(i) + ", '" + valTypeName + "', '" + repr + "')";
-		PyRun_SimpleString(code.c_str());
-	}
-	PyRun_SimpleString("import logging; logging.getLogger('pygmod._luastack.stack_dump').debug('----------------------')");
+Py_MODULE_FUNC(pyStackDump) {
+	stackDump(MS_LUA);
 
 	Py_RETURN_NONE;
 }
@@ -286,7 +265,7 @@ static PyMethodDef methods[] = {
 	 PyDoc_STR("convert_py_to_lua(o) -> None\n" \
 	 "Converts a Python object to a Lua object and pushes it to the stack.")},
 
-	{"stack_dump", stackDump, METH_NOARGS,
+	{"stack_dump", pyStackDump, METH_NOARGS,
 	 PyDoc_STR("stack_dump() -> None\n" \
 	 "Performs a Lua stack dump. Logs the type and the string representation of every stack object.")},
 

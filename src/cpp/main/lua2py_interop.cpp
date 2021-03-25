@@ -41,6 +41,10 @@ LUA_FUNC(passCallToPyFunc) {
     }
 
     auto result = PyObject_Call(pyFunctionRegistry[funcId], args, NULL);
+    if (!result) {
+        PyErr_Print();
+        LUA->ThrowError("exception in Python function");
+    }
     convertPyToLua(LUA, result);
     return 1;
 }

@@ -144,11 +144,19 @@ void pygmodRunThrowing(Console& cons, lua_State *state) {
 	}
 	if (currentRealm == SERVER) {
 		serverInterp = PyThreadState_Get();  // Saving the server subinterpreter for later use
+		cons.log("Client:");
+		cons.log(to_string(reinterpret_cast<unsigned long long>(clientInterp)));
+		cons.log("Server:");
+		cons.log(to_string(reinterpret_cast<unsigned long long>(serverInterp)));
 	} else {  // Client
 	    // If we should have interpreters for both realms...
         if (serverInterp != nullptr) {
             // Creating a subinterpreter for client and immediately swapping to it
             clientInterp = Py_NewInterpreter();
+			cons.log("Client:");
+		cons.log(to_string(reinterpret_cast<unsigned long long>(clientInterp)));
+		cons.log("Server:");
+		cons.log(to_string(reinterpret_cast<unsigned long long>(serverInterp)));
             PyThreadState_Swap(clientInterp);
 		} else {
 		    clientInterp = PyThreadState_Get();
@@ -215,4 +223,15 @@ int finalize(lua_State *state) {  // TODO: rewrite
 	cons.log("Python finalized!");
 
     return 0;
+}
+
+// ----- Old code above -----
+
+#include "PyGmod.hpp"
+
+pygmod::init::PyGmod pygmod_instance;
+
+GMOD_MODULE_OPEN()
+{
+	// TODO
 }

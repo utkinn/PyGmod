@@ -1,16 +1,25 @@
 #pragma once
 
+#include <GarrysMod/Lua/Interface.h>
+#include "FileSystem.hpp"
+#include "PythonPathProvider.hpp"
+#include "Python.hpp"
+#include "Lua.hpp"
+#include "Logger.hpp"
+
 namespace pygmod::init
 {
 	class PyGmod
 	{
 	public:
-		PyGmod() : fs(FileSystem()), path_provider(PythonPathProvider(fs)), python(Python(path_provider.get_home(), path_provider.get_path())) {};
+		PyGmod(GarrysMod::Lua::ILuaBase&);
 		~PyGmod() {};
 
 	private:
 		FileSystem fs;
 		const PythonPathProvider path_provider;
 		Python python;
+		Lua lua;
+		Logger logger;
 	};
 }

@@ -13,7 +13,7 @@ namespace pygmod::init
 	{
 	public:
 		PyGmod(GarrysMod::Lua::ILuaBase&);
-		~PyGmod() {};
+		~PyGmod();
 
 	private:
 		FileSystem fs;

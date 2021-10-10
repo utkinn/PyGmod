@@ -1,5 +1,9 @@
 #include "PyGmod.hpp"
 
+#include <memory>
+
+#include "LuaStackPyModule.hpp"
+
 namespace pygmod::init
 {
 	PyGmod::PyGmod(GarrysMod::Lua::ILuaBase& lua_base)
@@ -10,5 +14,16 @@ namespace pygmod::init
 		logger(Logger(lua))
 	{
 		logger.println(LogLevel::INFO, "Binary module loaded");
+
+		py_extension::set_lua_base_instance(std::shared_ptr<GarrysMod::Lua::ILuaBase>(&lua_base));
+		py_extension::set_python_instance(std::shared_ptr<IPython>(&python));
+		py_extension::init();
+		python.init();
+		logger.println("Python initialized");
+	}
+
+	PyGmod::~PyGmod()
+	{
+		logger.println(LogLevel::INFO, "Binary module shutting down");
 	}
 }

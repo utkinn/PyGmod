@@ -10,5 +10,8 @@ namespace pygmod::init
 	{
 	public:
 		Python(const std::wstring& home, const std::wstring& path);
+		~Python();
+
+		void init();
 	};
 }

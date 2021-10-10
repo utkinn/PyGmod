@@ -5,7 +5,6 @@
 #include <stdexcept>
 
 #include "InitException.hpp"
-#include "valueconv.hpp"
 
 using std::shared_ptr;
 
@@ -14,8 +13,10 @@ namespace pygmod::py_extension
 	using GarrysMod::Lua::ILuaBase;
 	using init::IPython;
 
-	static ILuaBase* lua_base_instance;
-	static shared_ptr<IPython> python_instance;
+	ILuaBase* lua_base_instance;
+	shared_ptr<IPython> python_instance;
+	shared_ptr<converters::ILuaToPythonValueConverter> lua_to_python_value_converter_instance;
+	shared_ptr<converters::IPythonToLuaValueConverter> python_to_lua_value_converter_instance;
 
 	void set_lua_base_instance(ILuaBase* lua_base)
 	{
@@ -25,6 +26,16 @@ namespace pygmod::py_extension
 	void set_python_instance(const shared_ptr<IPython>& python)
 	{
 		python_instance = python;
+	}
+
+	void set_lua_to_python_value_converter_instance(const shared_ptr<converters::ILuaToPythonValueConverter>& conv)
+	{
+		lua_to_python_value_converter_instance = conv;	
+	}
+
+	void set_python_to_lua_value_converter_instance(const shared_ptr<converters::IPythonToLuaValueConverter>& conv)
+	{
+		python_to_lua_value_converter_instance = conv;	
 	}
 
 #define PY_FUNC(name) static PyObject* name(PyObject* module, PyObject* args)
@@ -201,17 +212,20 @@ namespace pygmod::py_extension
 		if (!PyArg_ParseTuple(args, "|i", &stack_index))
 			return nullptr;
 
-		return convertLuaToPy(lua_base_instance, stack_index);
+		return lua_to_python_value_converter_instance->convert(stack_index);
 	}
 
 	PY_FUNC(convert_py_to_lua)
 	{
-		int stack_index = -1;
+		PyObject* obj;
 
-		if (!PyArg_ParseTuple(args, "|i", &stack_index))
+		if (!PyArg_ParseTuple(args, "O", &obj))
 			return nullptr;
 
-		return convertLuaToPy(lua_base_instance, stack_index);
+		Py_INCREF(obj);
+		python_to_lua_value_converter_instance->convert(obj);
+		Py_DECREF(obj);
+		Py_RETURN_NONE;
 	}
 
 #undef PY_FUNC
@@ -327,10 +341,22 @@ method_def
 		{
 			throw std::logic_error("lua_base_instance was not set by calling set_lua_base_instance");
 		}
+
 		if (!python_instance)
 		{
 			throw std::logic_error("python_instance was not set by calling set_lua_instance");
 		}
+
+		if (!lua_to_python_value_converter_instance)
+		{
+			throw std::logic_error("lua_to_python_value_converter_instance was not set by calling set_lua_to_python_value_converter_instance");
+		}
+
+		if (!python_to_lua_value_converter_instance)
+		{
+			throw std::logic_error("python_to_lua_value_converter_instance was not set by calling set_python_to_lua_value_converter_instance");
+		}
+
 		if (PyImport_AppendInittab("_luastack", PyInit__luastack) == -1)
 		{
 			throw init::InitException("PyImport_AppendInittab(\"_luastack\") failed");

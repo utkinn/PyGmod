@@ -21,10 +21,11 @@ namespace pygmod::init
 
 	void Logger::print(const std::string& message)
 	{
-		const auto globals = lua.globals();
-		const auto msg = (*globals)["Msg"];
-		const auto lua_string = lua.create_string(message);
-		(*msg)(1, &lua_string);
+		lua->PushSpecial(GarrysMod::Lua::SPECIAL_GLOB);
+		lua->GetField(-1, "Msg");
+		lua->PushString(message.c_str());
+		lua->Call(1, 0);
+		lua->Pop();
 	}
 
 	void Logger::print(const LogLevel level, const std::string& message)

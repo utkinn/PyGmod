@@ -14,10 +14,10 @@ namespace pygmod::py_extension
 	using GarrysMod::Lua::ILuaBase;
 	using init::IPython;
 
-	static shared_ptr<ILuaBase> lua_base_instance;
+	static ILuaBase* lua_base_instance;
 	static shared_ptr<IPython> python_instance;
 
-	void set_lua_base_instance(const shared_ptr<ILuaBase>& lua_base)
+	void set_lua_base_instance(ILuaBase* lua_base)
 	{
 		lua_base_instance = lua_base;
 	}
@@ -201,7 +201,7 @@ namespace pygmod::py_extension
 		if (!PyArg_ParseTuple(args, "|i", &stack_index))
 			return nullptr;
 
-		return convertLuaToPy(&lua_base, stack_index);
+		return convertLuaToPy(lua_base_instance, stack_index);
 	}
 
 	PY_FUNC(convert_py_to_lua)
@@ -211,7 +211,7 @@ namespace pygmod::py_extension
 		if (!PyArg_ParseTuple(args, "|i", &stack_index))
 			return nullptr;
 
-		return convertLuaToPy(&lua_base, stack_index);
+		return convertLuaToPy(lua_base_instance, stack_index);
 	}
 
 #undef PY_FUNC
@@ -323,13 +323,13 @@ method_def
 
 	void init()
 	{
-		if (!lua_instance)
+		if (!lua_base_instance)
 		{
-			throw std::logic_error("lua_instance was not set by calling set_lua_instance->");
+			throw std::logic_error("lua_base_instance was not set by calling set_lua_base_instance");
 		}
 		if (!python_instance)
 		{
-			throw std::logic_error("python_instance was not set by calling set_lua_instance->");
+			throw std::logic_error("python_instance was not set by calling set_lua_instance");
 		}
 		if (PyImport_AppendInittab("_luastack", PyInit__luastack) == -1)
 		{

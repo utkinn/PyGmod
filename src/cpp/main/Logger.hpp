@@ -1,19 +1,19 @@
 #pragma once
 
+#include <GarrysMod/Lua/Interface.h>
 #include "ILogger.hpp"
-#include "ILua.hpp"
 
 namespace pygmod::init
 {
 	class Logger : public ILogger
 	{
 	public:
-		Logger(ILua& lua) : lua(lua) {}
+		Logger(GarrysMod::Lua::ILuaBase* lua) : lua(lua) {}
 
 		void print(const std::string&) override;
 		void print(const LogLevel, const std::string&) override;
 
 	private:
-		ILua& lua;
+		GarrysMod::Lua::ILuaBase* lua;
 	};
 }

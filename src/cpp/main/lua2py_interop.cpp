@@ -1,6 +1,5 @@
 #include <string>
 #include "lua2py_interop.hpp"
-#include "_luastack.hpp"
 #include "valueconv.hpp"
 #include "realms.hpp"
 #include "py_function_registry.hpp"

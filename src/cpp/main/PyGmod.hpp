@@ -12,14 +12,13 @@ namespace pygmod::init
 	class PyGmod
 	{
 	public:
-		PyGmod(GarrysMod::Lua::ILuaBase&);
+		PyGmod(GarrysMod::Lua::ILuaBase*);
 		~PyGmod();
 
 	private:
 		FileSystem fs;
 		const PythonPathProvider path_provider;
 		Python python;
-		Lua lua;
 		Logger logger;
 	};
 }

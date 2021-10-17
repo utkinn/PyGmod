@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include <GarrysMod/Lua/Types.h>
+#include "LuaCustomTypes.hpp"
 
 namespace pygmod::converters
 {
@@ -12,9 +13,6 @@ namespace pygmod::converters
 	}
 
 	using namespace GarrysMod::Lua;
-
-	constexpr auto LUA_TYPE_PYOBJECT = 100;
-	constexpr auto LUA_TYPE_PYCALLABLE = 101;
 
 	PyObject* LuaToPythonValueConverter::convert(int stack_index) {
 		switch (lua->GetType(stack_index))
@@ -47,8 +45,8 @@ namespace pygmod::converters
 			return lua_func_object;
 		}
 
-		case LUA_TYPE_PYOBJECT:
-		case LUA_TYPE_PYCALLABLE:
+		case interop::lua::LUA_TYPE_PYOBJECT:
+		case interop::lua::LUA_TYPE_PYCALLABLE:
 		{
 			const auto ud = static_cast<UserData*>(lua->GetUserdata(stack_index));
 			const auto obj = static_cast<PyObject*>(ud->data);

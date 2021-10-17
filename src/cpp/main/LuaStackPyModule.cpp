@@ -328,7 +328,7 @@ namespace pygmod::py_extension
 		{
 			python_instance->register_builtin_module("_luastack", PyInit__luastack);
 		}
-		catch(const std::exception& e)
+		catch(const std::exception&)
 		{
 			std::throw_with_nested(init::InitException("PyImport_AppendInittab(\"_luastack\") failed"));
 		}

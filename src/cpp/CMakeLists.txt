@@ -64,8 +64,24 @@ endif()
 
 add_compile_definitions(GMMODULE GMOD_ALLOW_DEPRECATED)
 
-file(GLOB_RECURSE MAIN_SOURCES main/*.cpp)
-add_library(main ${MAIN_SOURCES})
+add_library(
+    main
+
+    init/AddonLoader.cpp
+    init/PyGmod.cpp
+
+    interop/converters/LuaToPythonValueConverter.cpp
+    interop/converters/PythonToLuaValueConverter.cpp
+
+    interop/python/Python.cpp
+    interop/python/PythonFunctionRegistry.cpp
+    interop/python/PythonPathProvider.cpp
+
+    util/FileSystem.cpp
+    util/Logger.cpp
+
+    main.cpp
+)
 add_dependencies(main gmod-module-base cpython)
 if (WIN32)
     set_target_properties(main PROPERTIES

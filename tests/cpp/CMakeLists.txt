@@ -14,12 +14,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(gtest)
 
 set(TEST_DIR .)
-set(SRC_DIR ../../src/cpp/main)
+set(SRC_DIR ../../src/cpp)
 set(SOURCES
     ${TEST_DIR}/gtest_main.cpp
-    ${TEST_DIR}/test_AddonLoader.cpp
+    ${TEST_DIR}/init/test_AddonLoader.cpp
 
-    ${SRC_DIR}/AddonLoader.cpp
+    ${SRC_DIR}/init/AddonLoader.cpp
 )
 
 add_executable(run_gtests ${SOURCES})

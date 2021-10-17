@@ -3,12 +3,12 @@
 #include <cstdarg>
 #include <string>
 
-#include "IPython.hpp"
+#include "interop/python/IPython.hpp"
 #include <gmock/gmock.h>
 
 namespace pygmod::testing
 {
-    class PythonMock : public init::IPython
+    class PythonMock : public interop::python::IPython
     {
     public:
         MOCK_METHOD(PyObject *, py_long_from_long, (long), (override));
@@ -38,7 +38,8 @@ namespace pygmod::testing
         MOCK_METHOD(void, raise_exception, (PyObject * exception_class, const std::string &message), (override));
         MOCK_METHOD(PyObject *, create_module, (PyModuleDef &), (override));
         MOCK_METHOD(PyObject *, create_tuple, (Py_ssize_t), (override));
-        MOCK_METHOD(void, register_builtin_module, (const std::string &module_name, PyObject *(*initfunc)()), (override));
+        MOCK_METHOD(void, register_builtin_module, (const std::string &module_name, PyObject *(*initfunc)()),
+                    (override));
         MOCK_METHOD(void, run_string, (const std::string &), (override));
     };
 }

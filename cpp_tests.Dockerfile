@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk add --no-cache g++ make cmake gtest gtest-dev git python3-dev
+RUN apk add --no-cache g++ make cmake git python3-dev
 
 # Download GarrysMod headers
 RUN git clone https://github.com/Facepunch/gmod-module-base.git && \

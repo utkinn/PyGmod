@@ -31,12 +31,25 @@ namespace pygmod::init
         return PyLong_FromLong(l);
     }
 
-    void Python::parse_arg_tuple(PyObject *arg_tuple, const char *fmt, ...)
+    void Python::parse_arg_tuple(PyObject *arg_tuple, const string &fmt, ...)
     {
         va_list args;
         va_start(args, fmt);
-        const auto ret = PyArg_VaParse(arg_tuple, fmt, args);
+        try
+        {
+            return parse_arg_tuple_va(arg_tuple, fmt, args);
+        }
+        catch (...)
+        {
+            va_end(args);
+            throw;
+        }
         va_end(args);
+    }
+
+    void Python::parse_arg_tuple_va(PyObject *arg_tuple, const string &fmt, va_list args)
+    {
+        const auto ret = PyArg_VaParse(arg_tuple, fmt.c_str(), args);
 
         if (!ret)
         {
@@ -44,14 +57,14 @@ namespace pygmod::init
         }
     }
 
-    PyObject *Python::py_string_from_c_string(const char *s)
+    PyObject *Python::py_string_from_c_string(const string &s)
     {
-        return PyUnicode_FromString(s);
+        return PyUnicode_FromString(s.c_str());
     }
 
-    PyObject *Python::import_module(const char *module_name)
+    PyObject *Python::import_module(const string &module_name)
     {
-        const auto module_obj = PyImport_ImportModule(module_name);
+        const auto module_obj = PyImport_ImportModule(module_name.c_str());
         if (!module_obj)
         {
             string msg = "failed to import the ";
@@ -61,14 +74,14 @@ namespace pygmod::init
         }
     }
 
-    PyObject *Python::get_attr(PyObject *obj, const char *attr)
+    PyObject *Python::get_attr(PyObject *obj, const string &attr)
     {
-        return PyObject_GetAttrString(obj, attr);
+        return PyObject_GetAttrString(obj, attr.c_str());
     }
 
-    void Python::raise_exception(PyObject *exception_class, const char *message)
+    void Python::raise_exception(PyObject *exception_class, const string &message)
     {
-        PyErr_SetString(exception_class, message);
+        PyErr_SetString(exception_class, message.c_str());
     }
 
     PyObject *Python::create_module(PyModuleDef &module_def)
@@ -81,18 +94,18 @@ namespace pygmod::init
         return PyTuple_New(size);
     }
 
-    void Python::register_builtin_module(const char *module_name, PyObject *(*initfunc)())
+    void Python::register_builtin_module(const string &module_name, PyObject *(*initfunc)())
     {
-        const auto result = PyImport_AppendInittab(module_name, initfunc);
+        const auto result = PyImport_AppendInittab(module_name.c_str(), initfunc);
         if (result == -1)
         {
             throw PythonException("failed to register builtin module");
         }
     }
 
-    void Python::run_string(const char *code)
+    void Python::run_string(const string &code)
     {
-        PyRun_SimpleString(code);
+        PyRun_SimpleString(code.c_str());
 
         PyObject *exc_type, *exc_value, *exc_traceback;
         PyErr_Fetch(&exc_type, &exc_value, &exc_traceback);

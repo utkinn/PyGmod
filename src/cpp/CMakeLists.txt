@@ -64,8 +64,6 @@ endif()
 
 add_compile_definitions(GMMODULE GMOD_ALLOW_DEPRECATED)
 
-# Main module
-
 file(GLOB_RECURSE MAIN_SOURCES main/*.cpp)
 add_library(main ${MAIN_SOURCES})
 add_dependencies(main gmod-module-base cpython)
@@ -110,51 +108,6 @@ elseif(UNIX)
 else()
     unknown_os_error()
 endif()
-
-# Client and server modules
-
-macro(realm_module realm gm_prefix)
-    file(GLOB REALM_DLL_SOURCES ${realm}/*.cpp)
-    add_library(${realm} ${REALM_DLL_SOURCES})
-    add_dependencies(${realm} gmod-module-base)
-    if (WIN32)
-        set_target_properties(${realm} PROPERTIES
-            PREFIX ""
-            SUFFIX ".dll"
-        )
-        if(BITS EQUAL 32)
-            set_target_properties(${realm} PROPERTIES
-                OUTPUT_NAME gm${gm_prefix}_pygmod_win32
-            )
-        else()
-            set_target_properties(${realm} PROPERTIES
-                OUTPUT_NAME gm${gm_prefix}_pygmod_win64
-            )
-        endif()
-    elseif(UNIX)
-        set_target_properties(${realm} PROPERTIES
-            PREFIX ""
-            SUFFIX ".dll"
-        )
-        if(BITS EQUAL 32)
-            set_target_properties(${realm} PROPERTIES
-                OUTPUT_NAME gm${gm_prefix}_pygmod_linux
-                COMPILE_OPTIONS -m32
-                LINK_OPTIONS -m32
-            )
-        else()
-            set_target_properties(${realm} PROPERTIES
-                OUTPUT_NAME gm${gm_prefix}_pygmod_linux64
-            )
-        endif()
-    else()
-        unknown_os_error()
-    endif()
-    target_link_libraries(${realm} main)
-endmacro()
-
-realm_module(client cl)
-realm_module(server sv)
 
 # Python standard library collection
 

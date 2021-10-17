@@ -74,7 +74,7 @@ add_custom_target(installer ALL
     DEPENDS ${installer_file}
     COMMENT "Packing PyGmod installer"
 )
-add_dependencies(installer main client server)
+add_dependencies(installer main)
 if(WIN32)
     add_dependencies(installer python-stdlib-dir)
 endif()

@@ -34,15 +34,13 @@ def generate_common(build_path, args):
 def generate_win32(build_path, args):
     with ZipFile(build_path / f'win{args.bits}.zip', 'w') as win_zip:
         bin_build_dir = Path('cpp', 'Debug' if args.debug else 'Release')
-        win_zip.write(bin_build_dir / 'pygmod.dll', 'pygmod.dll')
+        win_zip.write(bin_build_dir / 'pygmod.dll', Path('garrysmod', 'lua', 'bin', f'gmsv_pygmod_win{args.bits}.dll'))
+        win_zip.write(bin_build_dir / 'pygmod.dll', Path('garrysmod', 'lua', 'bin', f'gmcl_pygmod_win{args.bits}.dll'))
 
         python_dll = 'python' + args.python_version.replace('.', '')
         python_dll += '_d.dll' if args.debug else '.dll'
         pcbuild_dir = 'win32' if args.bits == 32 else 'amd64'
         win_zip.write(Path('cpp', 'cpython-prefix', 'src', 'cpython', 'PCBuild', pcbuild_dir, python_dll), python_dll)
-
-        for realm_dll in bin_build_dir.glob(f'gm*_pygmod_win{args.bits}.dll'):
-            win_zip.write(realm_dll, Path('garrysmod', 'lua', 'bin') / realm_dll.relative_to(bin_build_dir))
 
         for file in files('cpp', 'stdlib', 'lib', suffix='.pyd'):
             win_zip.write(file, Path('garrysmod', 'pygmod') / file.relative_to('cpp'))
@@ -54,11 +52,8 @@ def generate_linux(build_path, args):
         libpython_filename = 'libpython' + args.python_version + '.so.1.0'
         linux_zip.write(build_path / Path('cpython-out', 'lib', libpython_filename), Path('bin') / libpython_filename)
 
-        linux_zip.write(build_path / Path('libpygmod.so'), Path('bin', 'libpygmod.so'))
-
-        realm_dll_glob = 'gm*_pygmod_linux.dll' if args.bits == 32 else 'gm*_pygmod_linux64.dll'
-        for realm_dll in build_path.glob(realm_dll_glob):
-            linux_zip.write(realm_dll, Path('garrysmod', 'lua', 'bin') / realm_dll.relative_to(build_path))
+        linux_zip.write(build_path / Path('libpygmod.so'), Path('garrysmod', 'lua', 'bin', 'gmsv_pygmod_linux64.dll'))
+        linux_zip.write(build_path / Path('libpygmod.so'), Path('garrysmod', 'lua', 'bin', 'gmcl_pygmod_linux64.dll'))
 
         stdlib_path = build_path / Path('cpython-out', 'lib', 'python' + args.python_version, 'lib-dynload')
         for file in files(stdlib_path):

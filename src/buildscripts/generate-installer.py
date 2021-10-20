@@ -4,7 +4,6 @@ from argparse import ArgumentParser
 from os import path
 import sys
 from pathlib import Path
-from itertools import chain
 from zipfile import ZipFile
 
 
@@ -44,8 +43,11 @@ def generate_win32(build_path, args):
         for realm_dll in bin_build_dir.glob(f'gm*_pygmod_win{args.bits}.dll'):
             win_zip.write(realm_dll, Path('garrysmod', 'lua', 'bin') / realm_dll.relative_to(bin_build_dir))
 
-        for file in files('cpp', 'stdlib', 'lib', suffix='.pyd'):
-            win_zip.write(file, Path('garrysmod', 'pygmod') / file.relative_to('cpp'))
+        for file in files('cpp', 'cpython-prefix', 'src', 'cpython', 'PCbuild', pcbuild_dir, suffix='.pyd'):
+            win_zip.write(file, Path('garrysmod', 'pygmod', 'stdlib') / file.relative_to('cpp', 'cpython-prefix', 'src', 'cpython','PCbuild', pcbuild_dir))
+
+        # libffi for ctypes
+        win_zip.write(Path('cpp', 'cpython-prefix', 'src', 'cpython', 'externals', 'libffi-3.3.0', pcbuild_dir, 'libffi-7.dll'), Path('garrysmod', 'pygmod', 'stdlib', 'libffi-7.dll'))
 
 
 def generate_linux(build_path, args):

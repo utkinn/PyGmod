@@ -12,9 +12,9 @@ namespace pygmod::testing
     {
     public:
         MOCK_METHOD(PyObject *, py_long_from_long, (long), (override));
-        MOCK_METHOD(void, parse_arg_tuple_va, (PyObject * arg_tuple, const std::string &fmt, va_list), (override));
+        MOCK_METHOD(void, parse_arg_tuple_va, (PyObject * arg_tuple, const char *fmt, va_list), (override));
 
-        void parse_arg_tuple(PyObject *arg_tuple, const std::string &fmt, ...) override
+        void parse_arg_tuple(PyObject *arg_tuple, const char *fmt, ...) override
         {
             va_list args;
             va_start(args, fmt);

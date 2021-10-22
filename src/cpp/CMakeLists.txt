@@ -73,6 +73,9 @@ add_library(
     interop/converters/LuaToPythonValueConverter.cpp
     interop/converters/PythonToLuaValueConverter.cpp
 
+    interop/lua/LuaValueFactory.cpp
+    interop/lua/Table.cpp
+
     interop/python/Python.cpp
     interop/python/PythonFunctionRegistry.cpp
     interop/python/PythonPathProvider.cpp

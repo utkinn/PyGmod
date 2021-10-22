@@ -5,9 +5,19 @@
 
 namespace pygmod::init
 {
-	class InitException : std::exception
-	{
-	public:
-		InitException(const char* message) : std::exception(message) {}
-	};
+    class InitException : public std::exception
+    {
+    public:
+        InitException(const char *message) : message(message)
+        {
+        }
+
+        const char *what() const noexcept override
+        {
+            return message;
+        }
+
+    private:
+        const char *message;
+    };
 }

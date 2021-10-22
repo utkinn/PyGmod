@@ -12,3 +12,37 @@ venv
 # Python cache
 __pycache__
 *.pyc
+
+installer-build
+
+# CMake cache
+CMakeFiles
+CMakeCache.txt
+CTestTestfile.cmake
+cmake_install.cmake
+run_gtests*.cmake
+Makefile
+
+# Build products
+*.dll*
+*.lib
+*.ilk
+*.pdb
+*.exp
+*.cbp
+*.so
+*.pyc
+
+_deps
+*.dir
+*-prefix
+*-out
+stdlib
+Win32
+x64
+Testing
+*.vcxproj*
+*.sln
+*.generated
+Debug
+Release

@@ -11,8 +11,8 @@ namespace pygmod::interop::python
     {
     public:
         virtual PyObject *py_long_from_long(long) = 0;
-        virtual void parse_arg_tuple(PyObject *arg_tuple, const std::string &fmt, ...) = 0;
-        virtual void parse_arg_tuple_va(PyObject *arg_tuple, const std::string &fmt, va_list) = 0;
+        virtual void parse_arg_tuple(PyObject *arg_tuple, const char *fmt, ...) = 0;
+        virtual void parse_arg_tuple_va(PyObject *arg_tuple, const char *fmt, va_list) = 0;
         virtual PyObject *py_string_from_c_string(const std::string &) = 0;
         virtual PyObject *import_module(const std::string &) = 0;
         virtual PyObject *get_attr(PyObject *obj, const std::string &attr) = 0;

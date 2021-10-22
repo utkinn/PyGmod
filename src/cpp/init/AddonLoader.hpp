@@ -10,12 +10,12 @@ namespace pygmod::init
     class AddonLoader : public IAddonLoader
     {
     public:
-        AddonLoader(IPython &python) : python(python)
+        AddonLoader(interop::python::IPython &python) : python(python)
         {
         }
         void load() override;
 
     private:
-        IPython &python;
+        interop::python::IPython &python;
     };
 }

@@ -1,22 +1,22 @@
 # To compile PyGmod for Windows, run in Developer Command Prompt for VS:
 # Debug build for stable 32-bit Garry's Mod branch:
-#   cmake -A Win32 -DCMAKE_BUILD_TYPE=Debug . && msbuild -m PyGmod.sln -p:Configuration=Debug
+#   cmake -A Win32 -B build -DCMAKE_BUILD_TYPE=Debug . && cmake --build build --config Debug
 # Debug build for x86-64 Garry's Mod branch:
-#   cmake -A x64 -DCMAKE_BUILD_TYPE=Debug . && msbuild -m PyGmod.sln -p:Configuration=Debug
+#   cmake -A x64 -B build -DCMAKE_BUILD_TYPE=Debug . && cmake --build build --config Debug
 # Release build for stable 32-bit Garry's Mod branch:
-#   cmake -A Win32 . && msbuild -m PyGmod.sln -p:Configuration=Release
+#   cmake -A Win32 -B build . && cmake --build build --config Release
 # Release build for x86-64 Garry's Mod branch:
-#   cmake -A x64 . && msbuild -m PyGmod.sln -p:Configuration=Release
+#   cmake -A x64 -B build . && cmake --build build --config Release
 #
 # To compile version of PyGmod for Linux, run in terminal:
 # Debug build for stable 32-bit Garry's Mod branch:
-#   cmake -DCMAKE_BUILD_TYPE=Debug . && make
+#   cmake -B build -DCMAKE_BUILD_TYPE=Debug . && cmake --build build
 # Debug build for x86-64 Garry's Mod branch:
-#   cmake -DCMAKE_BUILD_TYPE=Debug -DBITS=64 . && make
+#   cmake -B build -DCMAKE_BUILD_TYPE=Debug -DBITS=64 . && cmake --build build
 # Release build for stable 32-bit Garry's Mod branch:
-#   cmake . && make
+#   cmake -B build . && cmake --build build
 # Release build for x86-64 Garry's Mod branch:
-#   cmake -DBITS=64 . && make
+#   cmake -B build -DBITS=64 . && cmake --build build
 
 cmake_minimum_required(VERSION 3.13)
 
@@ -26,21 +26,14 @@ macro(unknown_os_error)
     message(FATAL_ERROR "Unknown OS. PyGmod is supported only on Windows and Linux.")
 endmacro()
 
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
-endif()
-
-if(NOT PYTHON_VERSION)
-    set(PYTHON_VERSION 3.8)
-endif()
-
+set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type (Release/Debug/RelWithDebugInfo)")
+set(PYTHON_VERSION 3.10 CACHE STRING "Embedded Python version (3.10)")
 string(REPLACE "." "" PYTHON_VERSION_NO_DOT ${PYTHON_VERSION})
-
 if(NOT BITS)
     if(CMAKE_GENERATOR_PLATFORM STREQUAL x64)
-        set(BITS 64)
+        set(BITS 64 CACHE STRING "PyGmod binary module bitness (32/64)")
     else()
-        set(BITS 32)
+        set(BITS 32 CACHE STRING "PyGmod binary module bitness (32/64)")
     endif()
 endif()
 
@@ -54,27 +47,22 @@ else()
     unknown_os_error()
 endif()
 
-if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
-    set(installer_generator_args -d)
-endif()
+set(installer_generator_args -b ${BITS})
 
-if(BITS EQUAL 64)
-    list(APPEND installer_generator_args -b 64)
+if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    list(APPEND installer_generator_args -d)
 endif()
 
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
-    string(APPEND installer_suffix -debug)
+    list(APPEND installer_suffix -debug)
 endif()
 
-set(installer_file installer-build/pygmod-${installer_suffix}.pyz)
+set(installer_file ${CMAKE_CURRENT_BINARY_DIR}/installer/pygmod-${installer_suffix}.pyz)
 add_custom_command(OUTPUT ${installer_file}
-    COMMAND buildscripts/generate-installer.py ${installer_generator_args} ${PYTHON_VERSION} ${installer_file}
+    COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/buildscripts/installer_generator.py ${installer_generator_args} ${PYTHON_VERSION} ${CMAKE_CURRENT_BINARY_DIR} ${installer_file}
 )
 add_custom_target(installer ALL
     DEPENDS ${installer_file}
     COMMENT "Packing PyGmod installer"
 )
 add_dependencies(installer main)
-if(WIN32)
-    add_dependencies(installer python-stdlib-dir)
-endif()

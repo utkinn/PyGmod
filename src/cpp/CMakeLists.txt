@@ -2,52 +2,69 @@ cmake_minimum_required(VERSION 3.13)
 
 project(BinaryModulesAndPythonStdlib CXX)
 
-set(BUILD_SHARED_LIBS ON)
+include(FetchContent)
+include(ExternalProject)
+
+set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
+
+if(NOT PYTHON_VERSION)
+    message(FATAL_ERROR "PYTHON_VERSION is required. Try using src/CMakeLists.txt for building instead.")
+endif()
 
 # Setting up Garry's Mod module headers
-include(ExternalProject)
-ExternalProject_Add(gmod-module-base
+FetchContent_Declare(
+    gmod_module_base
     GIT_REPOSITORY https://github.com/Facepunch/gmod-module-base
     GIT_TAG origin/development
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
+    GIT_SHALLOW true
 )
-ExternalProject_Get_Property(gmod-module-base SOURCE_DIR)
-include_directories(${SOURCE_DIR}/include)
+FetchContent_MakeAvailable(gmod_module_base)
+set_target_properties(HelloWorld MetaTable PROPERTIES EXCLUDE_FROM_ALL true)
 
 # Download Python source
 if(WIN32)
     set(python_build_flags --no-tkinter)
+
     if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
         list(APPEND python_build_flags -d)
     endif()
+
     if(BITS EQUAL 64)
         list(APPEND python_build_flags -p x64)
     endif()
-    ExternalProject_Add(cpython
+    
+    ExternalProject_Add(
+        cpython
         URL https://github.com/python/cpython/archive/${PYTHON_VERSION}.zip
+        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/cpython
+        DOWNLOAD_DIR cpython/download
+        SOURCE_DIR cpython/source
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND "${PROJECT_SOURCE_DIR}\\cpython-prefix\\src\\cpython\\PCbuild\\build.bat" ${python_build_flags}
+        BUILD_COMMAND "${CMAKE_CURRENT_BINARY_DIR}\\cpython\\source\\PCbuild\\build.bat" ${python_build_flags}
         INSTALL_COMMAND ""
     )
 elseif(UNIX)
-    set(python_install_prefix ${PROJECT_SOURCE_DIR}/cpython-out)
+    set(python_install_prefix ${CMAKE_CURRENT_BINARY_DIR}/cpython/out)
     if(BITS EQUAL 32)
         set(python_toolchain_flags CFLAGS=-m32 LDFLAGS=-m32)
     endif()
     if(${CMAKE_BUILD_TYPE} STREQUAL Release)
         set(python_configure_flags --enable-optimizations)
     endif()
-    ExternalProject_Add(cpython
+    ExternalProject_Add(
+        cpython
         URL https://github.com/python/cpython/archive/${PYTHON_VERSION}.zip
-        CONFIGURE_COMMAND ${python_toolchain_flags} "${PROJECT_SOURCE_DIR}/cpython-prefix/src/cpython/configure" --config-cache "--prefix=${PROJECT_SOURCE_DIR}/cpython-out" --enable-shared ${python_configure_flags}
+        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/cpython
+        DOWNLOAD_DIR cpython/download
+        SOURCE_DIR cpython/source
+        CONFIGURE_COMMAND ${python_toolchain_flags} "${CMAKE_CURRENT_BINARY_DIR}/cpython/source/configure" --config-cache "--prefix=${CMAKE_CURRENT_BINARY_DIR}/cpython/out" --enable-shared ${python_configure_flags}
         BUILD_COMMAND make -j
         INSTALL_COMMAND make -j install
     )
 else()
     unknown_os_error()
 endif()
+
 ExternalProject_Get_Property(cpython SOURCE_DIR)
 set(PYTHON_SOURCE_DIR ${SOURCE_DIR})
 ExternalProject_Get_Property(cpython BINARY_DIR)
@@ -62,10 +79,13 @@ else()
     unknown_os_error()
 endif()
 
-add_compile_definitions(GMMODULE GMOD_ALLOW_DEPRECATED)
+add_compile_definitions()
 
 add_library(
-    main
+    main SHARED
+
+    extensions/LuaStackPythonModule.cpp
+    extensions/PyGmodLuaModule.cpp
 
     init/AddonLoader.cpp
     init/PyGmod.cpp
@@ -73,8 +93,9 @@ add_library(
     interop/converters/LuaToPythonValueConverter.cpp
     interop/converters/PythonToLuaValueConverter.cpp
 
+    interop/lua/Lua.cpp
+    interop/lua/LuaValue.cpp
     interop/lua/LuaValueFactory.cpp
-    interop/lua/Table.cpp
 
     interop/python/Python.cpp
     interop/python/PythonFunctionRegistry.cpp
@@ -85,14 +106,17 @@ add_library(
 
     main.cpp
 )
-add_dependencies(main gmod-module-base cpython)
+add_dependencies(main cpython)
+target_include_directories(main PRIVATE . ${gmod_module_base_SOURCE_DIR}/include)
+target_link_directories(main PRIVATE ${PYTHON_SOURCE_DIR}/PCbuild/win32 ${PYTHON_SOURCE_DIR}/PCbuild/amd64)
+set_target_properties(
+    main PROPERTIES
+    COMPILE_DEFINITIONS "PY_SSIZE_T_CLEAN;GMOD_ALLOW_DEPRECATED"
+    OUTPUT_NAME pygmod
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED true
+)
 if (WIN32)
-    set_target_properties(main PROPERTIES
-        COMPILE_DEFINITIONS PY_SSIZE_T_CLEAN
-        OUTPUT_NAME pygmod
-        CXX_STANDARD 20
-        CXX_STANDARD_REQUIRED ON
-    )
     if(BITS EQUAL 32)
         set(pcbuild_dir win32)
     else()
@@ -108,14 +132,9 @@ if (WIN32)
         )
     endif()
 elseif(UNIX)
-    set_target_properties(main PROPERTIES
-        COMPILE_DEFINITIONS "PY_SSIZE_T_CLEAN;PYTHON_VERSION=${PYTHON_VERSION}"
-        OUTPUT_NAME pygmod
-        CXX_STANDARD 20
-        CXX_STANDARD_REQUIRED ON
-    )
     if(BITS EQUAL 32)
-        set_target_properties(main PROPERTIES
+        set_target_properties(
+            main PROPERTIES
             COMPILE_OPTIONS -m32
             LINK_OPTIONS -m32
         )
@@ -127,16 +146,3 @@ elseif(UNIX)
 else()
     unknown_os_error()
 endif()
-
-# Python standard library collection
-
-if(WIN32)
-    add_custom_command(OUTPUT stdlib.generated
-        COMMAND ${CMAKE_COMMAND} "-DPYTHON_SOURCE_DIR=${PYTHON_SOURCE_DIR}" -P buildscripts/python-stdlib-dir.cmake
-    )
-    add_custom_target(python-stdlib-dir ALL
-        DEPENDS stdlib.generated
-        COMMENT "Python standard library directiory"
-    )
-    add_dependencies(python-stdlib-dir cpython)
-endif()  # On Linux, cpython's make install collects stdlib into cpython-out/lib/python3.X by itself

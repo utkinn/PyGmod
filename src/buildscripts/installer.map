@@ -1,0 +1,40 @@
+### Common ###
+
+${SRC}/lua/addons -> ${INST}/common/garrysmod/addons/
+${SRC}/html -> ${INST}/common/garrysmod/pygmod/
+${SRC}/python/pygmod -> ${INST}/common/garrysmod/pygmod/
+
+!if PLATFORM == win32
+    ${BUILD}/cpp/cpython/source/Lib/* -> ${INST}/common/garrysmod/pygmod/stdlib/
+!endif
+!if PLATFORM == linux
+    # TODO
+!endif
+!del ${INST}/common/garrysmod/pygmod/stdlib/__pycache__
+!del ${INST}/common/garrysmod/pygmod/stdlib/**/__pycache__
+!del ${INST}/common/garrysmod/pygmod/stdlib/test
+!del ${INST}/common/garrysmod/pygmod/stdlib/ctypes/test
+!del ${INST}/common/garrysmod/pygmod/stdlib/distutils/tests
+!del ${INST}/common/garrysmod/pygmod/stdlib/idlelib
+!del ${INST}/common/garrysmod/pygmod/stdlib/lib2to3
+!del ${INST}/common/garrysmod/pygmod/stdlib/sqlite3/test
+!del ${INST}/common/garrysmod/pygmod/stdlib/tkinter
+!del ${INST}/common/garrysmod/pygmod/stdlib/turtledemo
+!del ${INST}/common/garrysmod/pygmod/stdlib/unittest/test
+
+### Windows ###
+
+!if PLATFORM == win32
+    ${BUILD}/cpp/${BUILD_CONFIG}/pygmod.dll -> ${INST}/win${BITS}/garrysmod/lua/bin/gmsv_pygmod_win${BITS}.dll
+    ${BUILD}/cpp/${BUILD_CONFIG}/pygmod.dll -> ${INST}/win${BITS}/garrysmod/lua/bin/gmcl_pygmod_win${BITS}.dll
+    ${BUILD}/cpp/cpython/source/PCbuild/${PCBUILD_SUBDIR}/python*.dll -> ${INST}/win${BITS}/
+    !del ${INST}/win${BITS}/python3.dll  # There are two DLLs: python3.dll and python310.dll, leave only one of them
+    ${BUILD}/cpp/cpython/source/PCbuild/${PCBUILD_SUBDIR}/*.pyd -> ${INST}/win${BITS}/garrysmod/pygmod/stdlib/
+    
+!endif
+
+### Linux ###
+
+!if PLATFORM == linux
+    # TODO
+!endif

@@ -20,7 +20,7 @@ namespace pygmod::interop::python
         const auto home = get_home_path_object();
         if (!fs.exists(home))
         {
-            throw InitException("Python standard library directory (garrysmod/pygmod/stdlib) not found.");
+            throw init::InitException("Python standard library directory (garrysmod/pygmod/stdlib) not found.");
         }
 
         return home.wstring();

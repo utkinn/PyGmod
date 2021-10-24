@@ -11,8 +11,8 @@
 namespace pygmod::extensions::python
 {
 	void set_lua_base_instance(GarrysMod::Lua::ILuaBase*);
-	void set_python_instance(const std::shared_ptr<init::IPython>&);
-	void set_lua_to_python_value_converter_instance(const std::shared_ptr<converters::ILuaToPythonValueConverter>&);
-	void set_python_to_lua_value_converter_instance(const std::shared_ptr<converters::IPythonToLuaValueConverter>&);
+	void set_python_instance(const std::shared_ptr<interop::python::IPython>&);
+	void set_lua_to_python_value_converter_instance(const std::shared_ptr<interop::converters::ILuaToPythonValueConverter>&);
+	void set_python_to_lua_value_converter_instance(const std::shared_ptr<interop::converters::IPythonToLuaValueConverter>&);
 	void init();
 }

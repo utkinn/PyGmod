@@ -6,7 +6,7 @@
 
 using GarrysMod::Lua::ILuaBase;
 
-namespace pygmod::converters
+namespace pygmod::interop::converters
 {
     void PythonToLuaValueConverter::convert(PyObject *obj)
     {

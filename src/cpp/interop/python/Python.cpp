@@ -31,7 +31,7 @@ namespace pygmod::interop::python
         return PyLong_FromLong(l);
     }
 
-    void Python::parse_arg_tuple(PyObject *arg_tuple, const string &fmt, ...)
+    void Python::parse_arg_tuple(PyObject *arg_tuple, const char *fmt, ...)
     {
         va_list args;
         va_start(args, fmt);
@@ -47,9 +47,9 @@ namespace pygmod::interop::python
         va_end(args);
     }
 
-    void Python::parse_arg_tuple_va(PyObject *arg_tuple, const string &fmt, va_list args)
+    void Python::parse_arg_tuple_va(PyObject *arg_tuple, const char *fmt, va_list args)
     {
-        const auto ret = PyArg_VaParse(arg_tuple, fmt.c_str(), args);
+        const auto ret = PyArg_VaParse(arg_tuple, fmt, args);
 
         if (!ret)
         {
@@ -72,6 +72,7 @@ namespace pygmod::interop::python
             msg += " module";
             throw PythonException(msg.c_str());
         }
+        return module_obj;
     }
 
     PyObject *Python::get_attr(PyObject *obj, const string &attr)

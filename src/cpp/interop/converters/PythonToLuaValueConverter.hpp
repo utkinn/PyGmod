@@ -13,7 +13,7 @@ namespace pygmod::interop::converters
     {
     public:
         PythonToLuaValueConverter(GarrysMod::Lua::ILuaBase *lua,
-                                  std::shared_ptr<interop::IPythonFunctionRegistry> py_func_registry)
+                                  std::shared_ptr<interop::python::IPythonFunctionRegistry> py_func_registry)
             : lua(lua), py_func_registry(py_func_registry)
         {
         }
@@ -22,6 +22,6 @@ namespace pygmod::interop::converters
 
     private:
         GarrysMod::Lua::ILuaBase *lua;
-        std::shared_ptr<interop::IPythonFunctionRegistry> &py_func_registry;
+        std::shared_ptr<interop::python::IPythonFunctionRegistry> &py_func_registry;
     };
 }

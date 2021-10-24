@@ -15,8 +15,8 @@ namespace pygmod::interop::python
         void init();
 
         PyObject *py_long_from_long(long) override;
-        void parse_arg_tuple(PyObject *arg_tuple, const std::string &fmt, ...) override;
-        void parse_arg_tuple_va(PyObject *arg_tuple, const std::string &fmt, va_list) override;
+        void parse_arg_tuple(PyObject *arg_tuple, const char *fmt, ...) override;
+        void parse_arg_tuple_va(PyObject *arg_tuple, const char *fmt, va_list) override;
         PyObject *py_string_from_c_string(const std::string &) override;
         PyObject *import_module(const std::string &) override;
         PyObject *get_attr(PyObject *obj, const std::string &attr) override;

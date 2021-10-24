@@ -9,7 +9,7 @@ namespace pygmod::interop::python
     class PythonPathProvider
     {
     public:
-        PythonPathProvider(IFileSystem &fs) : fs(fs)
+        PythonPathProvider(util::IFileSystem &fs) : fs(fs)
         {
         }
 
@@ -17,7 +17,7 @@ namespace pygmod::interop::python
         std::wstring get_path() const;
 
     private:
-        IFileSystem &fs;
+        util::IFileSystem &fs;
 
         std::filesystem::path get_home_path_object() const;
     };

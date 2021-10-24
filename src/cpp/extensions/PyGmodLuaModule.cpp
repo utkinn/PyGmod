@@ -8,11 +8,11 @@ namespace pygmod::extensions::lua
 {
 #define LUA_FUNC(name) int name(lua_State *state)
 
-    shared_ptr<init::IPython> python_instance;
+    shared_ptr<interop::python::IPython> python_instance;
     GarrysMod::Lua::ILuaBase *lua_instance;
-    shared_ptr<converters::IPythonToLuaValueConverter> py_to_lua_conv_instance;
-    shared_ptr<converters::ILuaToPythonValueConverter> lua_to_py_conv_instance;
-    shared_ptr<interop::IPythonFunctionRegistry> py_func_registry;
+    shared_ptr<interop::converters::IPythonToLuaValueConverter> py_to_lua_conv_instance;
+    shared_ptr<interop::converters::ILuaToPythonValueConverter> lua_to_py_conv_instance;
+    shared_ptr<interop::python::IPythonFunctionRegistry> py_func_registry;
 
     LUA_FUNC(py_exec)
     {
@@ -34,7 +34,7 @@ namespace pygmod::extensions::lua
     LUA_FUNC(pass_call_to_py_func)
     {
         int arg_count = lua_instance->Top() - 1; // How much args have we got for our Python function?
-        auto func_id = static_cast<interop::PyFuncId>(lua_instance->CheckNumber(1));
+        auto func_id = static_cast<interop::python::PyFuncId>(lua_instance->CheckNumber(1));
         auto args = python_instance->create_tuple(arg_count);
 
         for (int i = 0; i < arg_count; i++)
@@ -55,7 +55,7 @@ namespace pygmod::extensions::lua
 
 #undef LUA_FUNC
 
-    void set_python_instance(const shared_ptr<init::IPython> &python)
+    void set_python_instance(const shared_ptr<interop::python::IPython> &python)
     {
         python_instance = python;
     }
@@ -65,17 +65,17 @@ namespace pygmod::extensions::lua
         lua_instance = lua;
     }
 
-    void set_python_to_lua_value_converter_instance(const shared_ptr<converters::IPythonToLuaValueConverter> &conv)
+    void set_python_to_lua_value_converter_instance(const shared_ptr<interop::converters::IPythonToLuaValueConverter> &conv)
     {
         py_to_lua_conv_instance = conv;
     }
 
-    void set_lua_to_python_value_converter_instance(const shared_ptr<converters::ILuaToPythonValueConverter> &conv)
+    void set_lua_to_python_value_converter_instance(const shared_ptr<interop::converters::ILuaToPythonValueConverter> &conv)
     {
         lua_to_py_conv_instance = conv;
     }
 
-    void set_python_function_registry_instance(const std::shared_ptr<interop::IPythonFunctionRegistry> &reg)
+    void set_python_function_registry_instance(const std::shared_ptr<interop::python::IPythonFunctionRegistry> &reg)
     {
         py_func_registry = reg;
     }

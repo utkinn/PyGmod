@@ -56,22 +56,22 @@ Building on Windows
     .. code-block:: doscon
 
         Release build for stable 32-bit Garry's Mod branch:
-        > cmake -A Win32 . && msbuild -m PyGmod.sln -p:Configuration=Release
+        > cmake -A Win32 -B build . && cmake --build build --config Release
 
         Debug build for stable 32-bit Garry's Mod branch:
-        > cmake -A Win32 -DCMAKE_BUILD_TYPE=Debug . && msbuild -m PyGmod.sln -p:Configuration=Debug
+        > cmake -A Win32 -B build -DCMAKE_BUILD_TYPE=Debug . && cmake --build build --config Debug
 
         Release build for x86-64 Garry's Mod branch:
-        > cmake -A x64 . && msbuild -m PyGmod.sln -p:Configuration=Release
+        > cmake -A x64 -B build . && cmake --build build --config Release
 
         Debug build for x86-64 Garry's Mod branch:
-        > cmake -A x64 -DCMAKE_BUILD_TYPE=Debug . && msbuild -m PyGmod.sln -p:Configuration=Debug
+        > cmake -A x64 -B build -DCMAKE_BUILD_TYPE=Debug . && cmake --build build --config Debug
 
     Debug builds are intended for aiding to track down bugs in the C++ part of PyGmod.
     These builds are generally less optimized and not distributable as they're linked against debug versions of Visual C++ runtime
     which ship with Visual Studio only.
 
-#. After a few minutes, a ``.pyz`` file should appear in ``src\installer-build`` directory. This is the PyGmod installer.
+#. After a few minutes, a ``.pyz`` file should appear in ``src\build\installer`` directory. This is the PyGmod installer.
    You can run it to install the freshly compiled version of PyGmod.
 
 Building on Linux
@@ -83,19 +83,19 @@ Building on Linux
     .. code-block:: console
 
         Release build for stable 32-bit Garry's Mod branch:
-        $ cmake . && make
+        $ cmake -B build . && cmake --build build
 
         Debug build for stable 32-bit Garry's Mod branch:
-        $ cmake -DCMAKE_BUILD_TYPE=Debug . && make
+        $ cmake -B build -DCMAKE_BUILD_TYPE=Debug . && cmake --build build
 
         Release build for x86-64 Garry's Mod branch:
-        $ cmake -DBITS=64 . && make
+        $ cmake -B build -DBITS=64 . && cmake --build build
 
         Debug build for x86-64 Garry's Mod branch:
-        $ cmake -DCMAKE_BUILD_TYPE=Debug -DBITS=64 . && make
+        $ cmake -B build -DCMAKE_BUILD_TYPE=Debug -DBITS=64 . && cmake --build build
 
-#. After a few minutes, a ``.pyz`` file should appear in ``src\installer-build`` directory. This is the PyGmod installer.
-   You can run ``python3 pygmod-linuxXX.pyz`` to install the freshly compiled version of PyGmod.
+#. After a few minutes, a ``.pyz`` file should appear in ``src/build/installer`` directory. This is the PyGmod installer.
+   You can run ``python3 pygmod-linux??.pyz`` to install the freshly compiled version of PyGmod.
 
 .. seealso::
 

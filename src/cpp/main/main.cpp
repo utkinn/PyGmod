@@ -132,6 +132,37 @@ void registerShutdownHook(lua_State *state) {
     LUA->Pop(2);  // "hook" table, _G
 }
 
+void transitionToPythonLoader() {
+	PyObject *loader_module = nullptr, *main_func = nullptr;
+	bool errorOccurred = false;
+
+	loader_module = PyImport_ImportModule("pygmod._loader");
+	if (!loader_module) {
+		errorOccurred = true;
+		goto exit;
+	}
+
+	main_func = PyObject_GetAttrString(loader_module, "main");
+	if (!main_func) {
+		errorOccurred = true;
+		goto exit;
+	}
+
+	PyObject_CallNoArgs(main_func);
+	if (PyErr_Occurred()) {
+		errorOccurred = true;
+	}
+
+exit:
+	Py_XDECREF(loader_module);
+	Py_XDECREF(main_func);
+
+	if (errorOccurred) {
+		PyErr_Print();
+		throw SetupFailureException("Exception occurred after an attempt to call _loader.main()");
+	}
+}
+
 // PyGmod main init routine which may throw SetupFailureException.
 // This exception is handled at pygmod_run, the function just below.
 void pygmodRunThrowing(Console& cons, lua_State *state) {
@@ -172,12 +203,7 @@ void pygmodRunThrowing(Console& cons, lua_State *state) {
     registerShutdownHook(state);
     cons.log("Shutdown hook registered");
 
-	PyRun_SimpleString("from pygmod import _loader; _loader.main()");  // See python/loader.py
-
-	if (PyErr_Occurred()) {
-		PyErr_Print();
-		throw SetupFailureException("Exception occurred after an attempt to call _loader.main()");
-	}
+	transitionToPythonLoader();
 }
 
 // Main init routine.

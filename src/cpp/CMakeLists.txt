@@ -25,6 +25,9 @@ if(WIN32)
     if(BITS EQUAL 64)
         list(APPEND python_build_flags -p x64)
     endif()
+    if(BITS EQUAL 32)
+        list(APPEND python_build_flags -p Win32)
+    endif()
     ExternalProject_Add(cpython
         URL https://github.com/python/cpython/archive/${PYTHON_VERSION}.zip
         CONFIGURE_COMMAND ""

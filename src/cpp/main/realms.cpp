@@ -14,6 +14,10 @@ bool prepareInterpreterForCurrentRealm(lua_State *state) {
     PyThreadState *targetState = currentRealm == CLIENT ? clientInterp : serverInterp;
 	if (targetState == nullptr)
 		return false;
+
+	auto gil = PyGILState_Ensure();
     PyThreadState_Swap(targetState);
+	PyGILState_Release(gil);
+	
 	return true;
 }

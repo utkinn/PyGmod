@@ -223,6 +223,8 @@ int finalize(lua_State *state) {  // TODO: rewrite
 	Console cons(LUA);  // Creating a Console object for printing to the Garry's Mod console
 	cons.log("Binary module shutting down.");
 
+	auto gil = PyGILState_Ensure();
+
 	Realm currentRealm = getCurrentRealm(state);
 
 	auto currentInterp = currentRealm == CLIENT ? clientInterp : serverInterp;
@@ -232,6 +234,8 @@ int finalize(lua_State *state) {  // TODO: rewrite
 		Py_FinalizeEx();
 	else
 		Py_EndInterpreter(currentInterp);
+
+	PyGILState_Release(gil);
 
 	if (currentRealm == CLIENT)
 		clientInterp = nullptr;
